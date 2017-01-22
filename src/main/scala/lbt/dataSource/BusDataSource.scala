@@ -3,13 +3,11 @@ package lbt.dataSource
 import java.io.{BufferedReader, InputStreamReader}
 
 import com.typesafe.scalalogging.StrictLogging
-import fs2.Task
-import lbt.{DataSourceConfig, LBTConfig}
+import lbt.{ConfigLoader, DataSourceConfig, LBTConfig}
 import org.apache.http.HttpStatus
 import org.apache.http.auth.{UsernamePasswordCredentials, AuthScope}
 import org.apache.http.client.CredentialsProvider
 import org.apache.http.client.config.RequestConfig
-import org.apache.http.client.config.RequestConfig.Builder
 import org.apache.http.client.methods.{HttpGet, CloseableHttpResponse}
 import org.apache.http.impl.client.{BasicCredentialsProvider, CloseableHttpClient, HttpClientBuilder}
 
@@ -21,38 +19,40 @@ import Scalaz._
  * Some code adapted from Stack Overflow: http://stackoverflow.com/questions/6024376/apache-httpcomponents-httpclient-timeout
  */
 
-object DataSource extends StrictLogging {
+object BusDataSource extends Iterator[String] {
+  
+  def busDataSource: Option[BusDataSource] = new BusDataSource
+  
+  def refreshDataSource = 
 
-  var currentHttpClient: Option[CloseableHttpClient] = None
-  var currentHttpResponse: Option[CloseableHttpResponse] = None
+  override def hasNext: Boolean = currentDataSource.hasNext
 
-  def getNewStream(config: DataSourceConfig): Exception \/ Stream[String] = {
-    logger.info("Closing existing streams (if existing")
+  override def next(): String = currentDataSource.next
+}
 
-    if (currentHttpClient.isDefined) currentHttpClient.get.close()
-    if (currentHttpResponse.isDefined) currentHttpResponse.get.close()
+private class BusDataSource (config: DataSourceConfig) extends Iterator[String] with StrictLogging {
 
-    logger.info("Opening new stream")
+  private val httpRequestConfig = buildHttpRequestConfig(config.timeout)
+  private val httpAuthScope = buildAuthScope(config.authScopeURL, config.authScopePort)
+  private val httpCredentialsProvider = buildHttpCredentialsProvider(config.username, config.password, httpAuthScope)
+  private val httpClient: CloseableHttpClient = buildHttpClient(httpRequestConfig, httpCredentialsProvider)
+  private val httpResponse: CloseableHttpResponse = getHttpResponse(httpClient, config.sourceUrl)
+  private val streamIterator:Iterator[String] = getStreamIterator(httpResponse)
 
-    val requestConfig = buildHttpRequestConfig(config.timeout)
-    val authScope = buildAuthScope(config.authScopeURL, config.authScopePort)
-    val credentialsProvider = buildHttpCredentialsProvider(config.username, config.password, authScope)
-    val httpClient = buildHttpClient(requestConfig, credentialsProvider)
-    val response = getHttpResponse(httpClient, config.sourceUrl)
+  override def hasNext: Boolean = streamIterator.hasNext
 
-    response.getStatusLine.getStatusCode match {
+  override def next() = streamIterator.next()
+  
+  def getStreamIterator(httpResponse: CloseableHttpResponse) = {
+    httpResponse.getStatusLine.getStatusCode match {
       case HttpStatus.SC_OK =>
-        currentHttpClient = Some(httpClient)
-        currentHttpResponse= Some(response)
-        val br = new BufferedReader(new InputStreamReader(response.getEntity.getContent))
-        \/.right(Stream.continually(br.readLine()).takeWhile(_ != null).drop(config.linesToDisregard))
-
-      case error: Int =>
-        response.close()
-        httpClient.close()
-        \/.left(new Exception(s"Error opening data stream. Error code: $error"))
+          val br = new BufferedReader(new InputStreamReader(httpResponse.getEntity.getContent))
+          Stream.continually(br.readLine()).takeWhile(_ != null).drop(config.linesToDisregard).iterator
+      case otherStatus: Int => 
+          logger.debug(s"Error getting Stream Iterator. Http Status Code: $otherStatus")
+          throw new IllegalStateException("Unable to retrieve input stream")
     }
-
+  }
 
     def getHttpResponse(client: CloseableHttpClient, url: String): CloseableHttpResponse = {
       val httpGet = new HttpGet(url)
@@ -82,6 +82,6 @@ object DataSource extends StrictLogging {
 
     def buildAuthScope(authScopeUrl: String, authScopePort: Int): AuthScope = {
       new AuthScope(authScopeUrl, authScopePort)
-    }
-  }
+    }   
+  
 }
