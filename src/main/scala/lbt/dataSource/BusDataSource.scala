@@ -15,73 +15,82 @@ import scalaz._
 import Scalaz._
 
 
-/**
- * Some code adapted from Stack Overflow: http://stackoverflow.com/questions/6024376/apache-httpcomponents-httpclient-timeout
- */
+case class SourceLine(route: String, direction: String, stopID: String, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-object BusDataSource extends Iterator[String] {
-  
-  def busDataSource: Option[BusDataSource] = new BusDataSource
-  
-  def refreshDataSource = 
+object BusDataSource extends Iterator[SourceLine] with StrictLogging {
 
-  override def hasNext: Boolean = currentDataSource.hasNext
+  val config = ConfigLoader.defaultConfig.dataSourceConfig
 
-  override def next(): String = currentDataSource.next
+  private var dataSource:BusDataSource = new BusDataSource(config)
+  private var dataSourceIterator = dataSource.dataStream
+
+
+  def reloadIterator() = {
+
+      logger.info("closing data source iterator before getting new one")
+      dataSource.closeDataSource
+      dataSource = new BusDataSource(config)
+      dataSourceIterator = dataSource.dataStream
+  }
+
+  override def hasNext: Boolean = dataSourceIterator.hasNext
+
+  override def next() = SourceLineValidator(dataSourceIterator.next())
 }
 
-private class BusDataSource (config: DataSourceConfig) extends Iterator[String] with StrictLogging {
+private class BusDataSource(config: DataSourceConfig) extends StrictLogging {
 
   private val httpRequestConfig = buildHttpRequestConfig(config.timeout)
   private val httpAuthScope = buildAuthScope(config.authScopeURL, config.authScopePort)
   private val httpCredentialsProvider = buildHttpCredentialsProvider(config.username, config.password, httpAuthScope)
   private val httpClient: CloseableHttpClient = buildHttpClient(httpRequestConfig, httpCredentialsProvider)
   private val httpResponse: CloseableHttpResponse = getHttpResponse(httpClient, config.sourceUrl)
-  private val streamIterator:Iterator[String] = getStreamIterator(httpResponse)
+  val dataStream = getStream(httpResponse).iterator
 
-  override def hasNext: Boolean = streamIterator.hasNext
-
-  override def next() = streamIterator.next()
-  
-  def getStreamIterator(httpResponse: CloseableHttpResponse) = {
+  private def getStream(httpResponse: CloseableHttpResponse) = {
     httpResponse.getStatusLine.getStatusCode match {
       case HttpStatus.SC_OK =>
-          val br = new BufferedReader(new InputStreamReader(httpResponse.getEntity.getContent))
-          Stream.continually(br.readLine()).takeWhile(_ != null).drop(config.linesToDisregard).iterator
-      case otherStatus: Int => 
-          logger.debug(s"Error getting Stream Iterator. Http Status Code: $otherStatus")
-          throw new IllegalStateException("Unable to retrieve input stream")
+        val br = new BufferedReader(new InputStreamReader(httpResponse.getEntity.getContent))
+        Stream.continually(br.readLine()).takeWhile(_ != null).drop(config.linesToDisregard)
+      case otherStatus: Int =>
+        logger.debug(s"Error getting Stream Iterator. Http Status Code: $otherStatus")
+        throw new IllegalStateException("Unable to retrieve input stream")
     }
   }
 
-    def getHttpResponse(client: CloseableHttpClient, url: String): CloseableHttpResponse = {
-      val httpGet = new HttpGet(url)
-      client.execute(httpGet)
-    }
+  private def getHttpResponse(client: CloseableHttpClient, url: String): CloseableHttpResponse = {
+    val httpGet = new HttpGet(url)
+    client.execute(httpGet)
+  }
 
-    def buildHttpClient(requestConfig: RequestConfig, credentialsProvider: CredentialsProvider): CloseableHttpClient = {
-      val client = HttpClientBuilder.create()
-      client.setDefaultRequestConfig(requestConfig)
-      client.setDefaultCredentialsProvider(credentialsProvider)
-      client.build()
-    }
+  private def buildHttpClient(requestConfig: RequestConfig, credentialsProvider: CredentialsProvider): CloseableHttpClient = {
+    val client = HttpClientBuilder.create()
+    client.setDefaultRequestConfig(requestConfig)
+    client.setDefaultCredentialsProvider(credentialsProvider)
+    client.build()
+  }
 
-    def buildHttpRequestConfig(connectionTimeout: Int): RequestConfig = {
-      val requestBuilder = RequestConfig.custom()
-      requestBuilder.setConnectionRequestTimeout(connectionTimeout)
-      requestBuilder.setConnectTimeout(connectionTimeout)
-      requestBuilder.build()
-    }
+  private def buildHttpRequestConfig(connectionTimeout: Int): RequestConfig = {
+    val requestBuilder = RequestConfig.custom()
+    requestBuilder.setConnectionRequestTimeout(connectionTimeout)
+    requestBuilder.setConnectTimeout(connectionTimeout)
+    requestBuilder.build()
+  }
 
-    def buildHttpCredentialsProvider(userName: String, password: String, authScope: AuthScope): BasicCredentialsProvider = {
-      val credentialsProvider = new BasicCredentialsProvider()
-      val credentials = new UsernamePasswordCredentials(userName, password)
-      credentialsProvider.setCredentials(authScope, credentials)
-      credentialsProvider
-    }
+  private def buildHttpCredentialsProvider(userName: String, password: String, authScope: AuthScope): BasicCredentialsProvider = {
+    val credentialsProvider = new BasicCredentialsProvider()
+    val credentials = new UsernamePasswordCredentials(userName, password)
+    credentialsProvider.setCredentials(authScope, credentials)
+    credentialsProvider
+  }
 
-    def buildAuthScope(authScopeUrl: String, authScopePort: Int): AuthScope = {
-      new AuthScope(authScopeUrl, authScopePort)
-    }   
-  
+  private def buildAuthScope(authScopeUrl: String, authScopePort: Int): AuthScope = {
+    new AuthScope(authScopeUrl, authScopePort)
+  }
+
+  def closeDataSource = {
+    httpClient.close()
+    httpResponse.close()
+  }
+
 }

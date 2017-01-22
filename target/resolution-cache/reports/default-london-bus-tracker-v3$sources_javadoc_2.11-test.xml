@@ -7,40 +7,76 @@
 		revision="1.0"
 		conf="test"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170122162031"/>
+		date="20170122171755"/>
 	<dependencies>
-		<module organisation="co.fs2" name="fs2-io_2.11">
-			<revision name="0.9.2" status="release" pubdate="20161103000955" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/functional-streams-for-scala/fs2" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="13">
-				<license name="MIT" url="http://opensource.org/licenses/MIT"/>
-				<metadata-artifact status="no" details="" size="2648" time="0" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-io_2.11/ivy-0.9.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2.pom"/>
-				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="test, compile, runtime" rev="0.9.2" rev-constraint-default="0.9.2" rev-constraint-dynamic="0.9.2" callerrev="1.0"/>
+		<module organisation="org.scalatest" name="scalatest_2.11">
+			<revision name="3.0.1" status="release" pubdate="20161110035601" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scalatest.org" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="13">
+				<license name="the Apache License, ASL Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="5161" time="0" location="/home/chrischivers/.ivy2/cache/org.scalatest/scalatest_2.11/ivy-3.0.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="test, compile, runtime" rev="3.0.1" rev-constraint-default="3.0.1" rev-constraint-dynamic="3.0.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="fs2-io_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="18968" time="113" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-io_2.11/srcs/fs2-io_2.11-0.9.2-sources.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-sources.jar"/>
+					<artifact name="scalatest_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1643660" time="1468" location="/home/chrischivers/.ivy2/cache/org.scalatest/scalatest_2.11/srcs/scalatest_2.11-3.0.1-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-sources.jar"/>
 					</artifact>
-					<artifact name="fs2-io_2.11" type="jar" ext="jar" status="no" details="" size="345868" time="0" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-io_2.11/jars/fs2-io_2.11-0.9.2.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2.jar"/>
+					<artifact name="scalatest_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="8424668" time="10478" location="/home/chrischivers/.ivy2/cache/org.scalatest/scalatest_2.11/docs/scalatest_2.11-3.0.1-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="fs2-io_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="409252" time="535" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-io_2.11/docs/fs2-io_2.11-0.9.2-javadoc.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-javadoc.jar"/>
+					<artifact name="scalatest_2.11" type="jar" ext="jar" status="successful" details="" size="10423607" time="8487" location="/home/chrischivers/.ivy2/cache/org.scalatest/scalatest_2.11/jars/scalatest_2.11-3.0.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
-		<module organisation="co.fs2" name="fs2-core_2.11">
-			<revision name="0.9.2" status="release" pubdate="20161103001015" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/functional-streams-for-scala/fs2" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="12">
-				<license name="MIT" url="http://opensource.org/licenses/MIT"/>
-				<metadata-artifact status="no" details="" size="2516" time="0" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-core_2.11/ivy-0.9.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2.pom"/>
-				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="test, compile, runtime" rev="0.9.2" rev-constraint-default="0.9.2" rev-constraint-dynamic="0.9.2" callerrev="1.0"/>
+		<module organisation="org.scala-lang.modules" name="scala-parser-combinators_2.11">
+			<revision name="1.0.4" status="release" pubdate="20150430150747" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="15">
+				<license name="BSD 3-clause" url="http://opensource.org/licenses/BSD-3-Clause"/>
+				<metadata-artifact status="no" details="" size="2803" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/ivy-1.0.4.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="test, compile, runtime" rev="1.0.4" rev-constraint-default="1.0.4" rev-constraint-dynamic="1.0.4" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="fs2-core_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="88993" time="213" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-core_2.11/srcs/fs2-core_2.11-0.9.2-sources.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-sources.jar"/>
+					<artifact name="scala-parser-combinators_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="695301" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/docs/scala-parser-combinators_2.11-1.0.4-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4-javadoc.jar"/>
 					</artifact>
-					<artifact name="fs2-core_2.11" type="jar" ext="jar" status="no" details="" size="1821464" time="0" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-core_2.11/jars/fs2-core_2.11-0.9.2.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2.jar"/>
+					<artifact name="scala-parser-combinators_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="42276" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/srcs/scala-parser-combinators_2.11-1.0.4-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4-sources.jar"/>
 					</artifact>
-					<artifact name="fs2-core_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="907598" time="834" location="/home/chrischivers/.ivy2/cache/co.fs2/fs2-core_2.11/docs/fs2-core_2.11-0.9.2-javadoc.jar">
-						<origin-location is-local="false" location="https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-javadoc.jar"/>
+					<artifact name="scala-parser-combinators_2.11" type="jar" ext="jar" status="no" details="" size="423753" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/jars/scala-parser-combinators_2.11-1.0.4.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.4/scala-parser-combinators_2.11-1.0.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang.modules" name="scala-xml_2.11">
+			<revision name="1.0.5" status="release" pubdate="20150724201224" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="14">
+				<license name="BSD 3-clause" url="http://opensource.org/licenses/BSD-3-Clause"/>
+				<metadata-artifact status="no" details="" size="3011" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/ivy-1.0.5.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.11/1.0.5/scala-xml_2.11-1.0.5.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="test, compile, runtime" rev="1.0.5" rev-constraint-default="1.0.5" rev-constraint-dynamic="1.0.5" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scala-xml_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="109244" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/srcs/scala-xml_2.11-1.0.5-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.11/1.0.5/scala-xml_2.11-1.0.5-sources.jar"/>
+					</artifact>
+					<artifact name="scala-xml_2.11" type="jar" ext="jar" status="no" details="" size="671138" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/jars/scala-xml_2.11-1.0.5.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.11/1.0.5/scala-xml_2.11-1.0.5.jar"/>
+					</artifact>
+					<artifact name="scala-xml_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1230464" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/docs/scala-xml_2.11-1.0.5-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.11/1.0.5/scala-xml_2.11-1.0.5-javadoc.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scalactic" name="scalactic_2.11">
+			<revision name="3.0.1" status="release" pubdate="20161110035324" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scalatest.org" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="12">
+				<license name="the Apache License, ASL Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="2841" time="0" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/ivy-3.0.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="test, compile, runtime" rev="3.0.1" rev-constraint-default="3.0.1" rev-constraint-dynamic="3.0.1" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scalactic_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="1096589" time="1081" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/docs/scalactic_2.11-3.0.1-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar"/>
+					</artifact>
+					<artifact name="scalactic_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="201082" time="379" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/srcs/scalactic_2.11-3.0.1-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar"/>
+					</artifact>
+					<artifact name="scalactic_2.11" type="jar" ext="jar" status="successful" details="" size="740209" time="706" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/jars/scalactic_2.11-3.0.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>

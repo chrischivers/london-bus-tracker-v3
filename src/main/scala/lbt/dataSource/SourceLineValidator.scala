@@ -1,13 +1,14 @@
 package lbt.dataSource
 
-object BusSourceLineFormatter{
+import com.typesafe.scalalogging.StrictLogging
+import lbt.comon.BusRoute
 
-  def apply(sourceLineString: String): BusSourceLine = {
-    val x = splitLine(sourceLineString)
-    checkArrayCorrectLength(x)
-    val busRoute = BusRoute(x(1).toUpperCase, getDirection(x(2).toInt))
-    //val busStop = BusDefinitions.busRouteDefinitions(busRoute).filter(stop => stop.busStop.busStopID == x(0)).head.busStop
-    new BusSourceLine(busRoute, x(0), x(3), x(4), x(5).toLong)
+object SourceLineValidator extends StrictLogging {
+
+  def apply(sourceLineString: String): SourceLine = {
+    val split = splitLine(sourceLineString)
+    checkArrayCorrectLength(split)
+    SourceLine(split(1).toUpperCase, getDirection(split(2).toInt), split(0), split(3), split(4), split(5).toLong)
   }
 
 
@@ -19,14 +20,14 @@ object BusSourceLineFormatter{
      .tail // discards the first element (always '1')
 
   def checkArrayCorrectLength(array: Array[String]) = {
-    if (array.length != BusDataSource.fieldVector.length) {
-      Logger.debug("Source array has incorrect number of elements. Or invalid web page retrieved \n " + array)
-      throw new IllegalArgumentException("Source array has incorrect number of elements. Or invalid web page retrieved \n " + array)
+    if (array.length != 6) {
+      throw new IllegalArgumentException(s"Source array has incorrect number of elements (${array.length}. 6 expected. Or invalid web page retrieved \n " + array)
     }
   }
 
-  def getDirection(integerDirection:Int) = {
+  def getDirection(integerDirection: Int) = {
     if (integerDirection == 1) "outbound"
     else if (integerDirection == 2) "inbound"
     else throw new IllegalArgumentException("Unknown Direction")
   }
+}

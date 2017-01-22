@@ -1,6 +1,6 @@
 package lbt.comon
 
-case class Direction()
+trait Direction
 
 case class Inbound() extends Direction
 

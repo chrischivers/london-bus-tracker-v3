@@ -7,26 +7,21 @@ import scalaz.{-\/, \/-}
 
 class BusDataSourceTest extends FunSuite {
 
-  val config = ConfigLoader.defaultConfig.dataSourceConfig
-
-  test("Data stream should be returned") {
+  test("Data stream should be returned with next value") {
     withClue("No data stream returned") {
-      BusDataSource.getNewStream(config).isRight shouldBe true
-      BusDataSource.getNewStream(config).isLeft shouldBe false
+      BusDataSource.hasNext shouldBe true
     }
   }
 
-   test("Stream should not be opened without previous being closed") {
-     val x = BusDataSource.getNewStream(config).getOrElse(throw new IllegalStateException)
-     val y = BusDataSource.getNewStream(config).getOrElse(throw new IllegalStateException)
+   test("Iterator should reload when required") {
 
-     println(x.head)
-
-
-     y.headOption.get.length should be > 0
-     x.headOption.isEmpty shouldBe true
-
-
+     BusDataSource.hasNext shouldBe true
+     BusDataSource.reloadIterator()
+     BusDataSource.hasNext shouldBe true
    }
 
+  test("Iterator should return a response in the expected format") {
+    val line = BusDataSource.next()
+      line.route.length should be > 1
+  }
 }

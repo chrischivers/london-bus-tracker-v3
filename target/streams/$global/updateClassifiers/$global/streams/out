@@ -1,3 +1,5 @@
+[warn] Multiple dependencies with the same organization/name but different versions. To avoid conflict, pick one version:
+[warn]  * org.scala-lang.modules:scala-xml_2.11:(1.0.5, 1.0.4)
 [debug] :: resolving dependencies :: default#london-bus-tracker-v3$sources_javadoc_2.11;1.0
 [debug] 	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool]
 [debug] 	validate = true
@@ -6,7 +8,7 @@
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.11.8 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7e2f6cfa
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@75805e83
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.8
 [debug] 	found org.scala-lang#scala-library;2.11.8 in sbt-chain
 [debug] 	[2.11.8] org.scala-lang#scala-library;2.11.8
@@ -15,7 +17,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->ch.qos.logback#logback-classic;1.1.9 [compile->default(compile)]
 [info] Resolving ch.qos.logback#logback-classic;1.1.9 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5595a764
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4a963d86
 [debug] sbt-chain: module revision found in cache: ch.qos.logback#logback-classic;1.1.9
 [debug] 	found ch.qos.logback#logback-classic;1.1.9 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->ch.qos.logback#logback-classic;1.1.9 [compile->runtime]
@@ -23,7 +25,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->ch.qos.logback#logback-classic;1.1.9 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->ch.qos.logback#logback-core;1.1.9 [compile->default(compile)]
 [info] Resolving ch.qos.logback#logback-core;1.1.9 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@652e860d
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@132e2090
 [debug] sbt-chain: module revision found in cache: ch.qos.logback#logback-core;1.1.9
 [debug] 	found ch.qos.logback#logback-core;1.1.9 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->ch.qos.logback#logback-core;1.1.9 [compile->runtime]
@@ -31,7 +33,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->ch.qos.logback#logback-core;1.1.9 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.slf4j#slf4j-api;1.7.22 [compile->default(compile)]
 [info] Resolving org.slf4j#slf4j-api;1.7.22 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@65ab4508
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@712250b9
 [debug] sbt-chain: module revision found in cache: org.slf4j#slf4j-api;1.7.22
 [debug] 	found org.slf4j#slf4j-api;1.7.22 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.slf4j#slf4j-api;1.7.22 [compile->runtime]
@@ -39,7 +41,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.slf4j#slf4j-api;1.7.22 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->com.typesafe.scala-logging#scala-logging_2.11;3.5.0 [compile->default(compile)]
 [info] Resolving com.typesafe.scala-logging#scala-logging_2.11;3.5.0 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@62427b3f
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7df3d946
 [debug] sbt-chain: module revision found in cache: com.typesafe.scala-logging#scala-logging_2.11;3.5.0
 [debug] 	found com.typesafe.scala-logging#scala-logging_2.11;3.5.0 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->com.typesafe.scala-logging#scala-logging_2.11;3.5.0 [compile->runtime]
@@ -47,7 +49,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->com.typesafe.scala-logging#scala-logging_2.11;3.5.0 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-reflect;2.11.8 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-reflect;2.11.8 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@518ba64e
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@64a02c3f
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-reflect;2.11.8
 [debug] 	found org.scala-lang#scala-reflect;2.11.8 in sbt-chain
 [debug] 	[2.11.8] org.scala-lang#scala-reflect;2.11.8
@@ -56,7 +58,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-reflect;2.11.8 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)]
 [info] Resolving org.apache.httpcomponents#httpclient;4.5.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@1ae7ade4
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@43f4c4fb
 [debug] sbt-chain: module revision found in cache: org.apache.httpcomponents#httpclient;4.5.2
 [debug] 	found org.apache.httpcomponents#httpclient;4.5.2 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
@@ -64,7 +66,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.apache.httpcomponents#httpcore;4.4.4 [compile->default(compile)]
 [info] Resolving org.apache.httpcomponents#httpcore;4.4.4 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@7fc5d29f
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@300fa2bf
 [debug] sbt-chain: module revision found in cache: org.apache.httpcomponents#httpcore;4.4.4
 [debug] 	found org.apache.httpcomponents#httpcore;4.4.4 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.apache.httpcomponents#httpcore;4.4.4 [compile->runtime]
@@ -72,7 +74,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.apache.httpcomponents#httpcore;4.4.4 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->commons-logging#commons-logging;1.2 [compile->default(compile)]
 [info] Resolving commons-logging#commons-logging;1.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4573c17a
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@127dc5b5
 [debug] sbt-chain: module revision found in cache: commons-logging#commons-logging;1.2
 [debug] 	found commons-logging#commons-logging;1.2 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->commons-logging#commons-logging;1.2 [compile->runtime]
@@ -80,7 +82,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->commons-logging#commons-logging;1.2 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->commons-codec#commons-codec;1.9 [compile->default(compile)]
 [info] Resolving commons-codec#commons-codec;1.9 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@24dd913b
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@67868883
 [debug] sbt-chain: module revision found in cache: commons-codec#commons-codec;1.9
 [debug] 	found commons-codec#commons-codec;1.9 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->commons-codec#commons-codec;1.9 [compile->runtime]
@@ -88,7 +90,7 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->commons-codec#commons-codec;1.9 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->com.typesafe#config;1.3.1 [compile->default(compile)]
 [info] Resolving com.typesafe#config;1.3.1 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@34c5e965
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@e551c77
 [debug] sbt-chain: module revision found in cache: com.typesafe#config;1.3.1
 [debug] 	found com.typesafe#config;1.3.1 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->com.typesafe#config;1.3.1 [compile->runtime]
@@ -96,28 +98,20 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->com.typesafe#config;1.3.1 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->default(compile)]
 [info] Resolving org.scalaz#scalaz-core_2.11;7.2.8 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@6e1b1056
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@52b5405f
 [debug] sbt-chain: module revision found in cache: org.scalaz#scalaz-core_2.11;7.2.8
 [debug] 	found org.scalaz#scalaz-core_2.11;7.2.8 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->default(compile)]
-[info] Resolving co.fs2#fs2-core_2.11;0.9.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@663ecd61
-[debug] sbt-chain: module revision found in cache: co.fs2#fs2-core_2.11;0.9.2
-[debug] 	found co.fs2#fs2-core_2.11;0.9.2 in sbt-chain
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->default(compile)]
-[info] Resolving co.fs2#fs2-io_2.11;0.9.2 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@37abc5bf
-[debug] sbt-chain: module revision found in cache: co.fs2#fs2-io_2.11;0.9.2
-[debug] 	found co.fs2#fs2-io_2.11;0.9.2 in sbt-chain
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->default(compile)]
+[info] Resolving org.scalactic#scalactic_2.11;3.0.1 ...
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4c93b811
+[debug] sbt-chain: module revision found in cache: org.scalactic#scalactic_2.11;3.0.1
+[debug] 	found org.scalactic#scalactic_2.11;3.0.1 in sbt-chain
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->master]
 [debug] resolving dependencies for configuration 'runtime'
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [runtime]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [compile]
@@ -169,14 +163,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->compile]
@@ -225,14 +215,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->master]
 [debug] resolving dependencies for configuration 'test'
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [test]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [runtime]
@@ -285,14 +271,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->compile]
@@ -341,14 +323,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test->compile]
@@ -397,14 +375,34 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->default(compile)]
+[info] Resolving org.scalatest#scalatest_2.11;3.0.1 ...
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@c0549bf
+[debug] sbt-chain: module revision found in cache: org.scalatest#scalatest_2.11;3.0.1
+[debug] 	found org.scalatest#scalatest_2.11;3.0.1 in sbt-chain
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->default(compile)]
+[info] Resolving org.scala-lang.modules#scala-xml_2.11;1.0.5 ...
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@6b66fb93
+[debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-xml_2.11;1.0.5
+[debug] 	found org.scala-lang.modules#scala-xml_2.11;1.0.5 in sbt-chain
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->default(compile)]
+[info] Resolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 ...
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@44e30a9a
+[debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4
+[debug] 	found org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 in sbt-chain
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->master]
 [debug] resolving dependencies for configuration 'provided'
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [provided]
 [debug] resolving dependencies for configuration 'optional'
@@ -460,14 +458,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->master]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [optional]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [provided]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [compile-internal->default(compile)]
@@ -518,14 +512,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile-internal->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile-internal->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile-internal->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile-internal->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile-internal->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile-internal->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile-internal->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile-internal->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile-internal->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile-internal->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile-internal->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile-internal->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile-internal->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile-internal->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile-internal->master]
 [debug] resolving dependencies for configuration 'runtime-internal'
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [runtime-internal]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [runtime]
@@ -578,14 +568,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->compile]
@@ -634,14 +620,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->master]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [optional]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime-internal->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime-internal->runtime]
@@ -691,14 +673,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime-internal->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime-internal->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime-internal->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime-internal->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime-internal->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime-internal->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime-internal->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime-internal->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime-internal->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime-internal->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime-internal->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime-internal->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime-internal->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime-internal->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime-internal->master]
 [debug] resolving dependencies for configuration 'test-internal'
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [test-internal]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [test]
@@ -752,14 +730,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [compile->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [compile->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [compile->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [runtime->compile]
@@ -808,14 +782,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [runtime->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [runtime->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [runtime->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test->compile]
@@ -864,14 +834,22 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test->master]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [optional]
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [provided]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-library;2.11.8 [test-internal->default(compile)]
@@ -922,14 +900,22 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test-internal->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test-internal->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalaz#scalaz-core_2.11;7.2.8 [test-internal->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test-internal->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test-internal->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test-internal->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-core_2.11;0.9.2 [test-internal->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test-internal->default(compile)]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test-internal->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test-internal->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->co.fs2#fs2-io_2.11;0.9.2 [test-internal->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test-internal->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test-internal->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test-internal->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalactic#scalactic_2.11;3.0.1 [test-internal->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test-internal->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test-internal->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test-internal->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scalatest#scalatest_2.11;3.0.1 [test-internal->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test-internal->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test-internal->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test-internal->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.5 [test-internal->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test-internal->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test-internal->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test-internal->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [test-internal->master]
 [debug] resolving dependencies for configuration 'plugin'
 [debug] == resolving dependencies for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 [plugin]
 [debug] resolving dependencies for configuration 'sources'
@@ -948,6 +934,10 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-reflect;2.11.8 [scala-tool->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-reflect;2.11.8 [scala-tool->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-reflect;2.11.8 [scala-tool->master]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->default(compile)]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->runtime]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->compile]
+[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang#scala-compiler;2.11.8 [scala-tool->default(compile)]
 [info] Resolving org.scala-lang#scala-compiler;2.11.8 ...
 [debug] sbt-chain: Checking cache for: dependency: org.scala-lang#scala-compiler;2.11.8 {scala-tool=[default(compile)]}
@@ -964,14 +954,6 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.4 [scala-tool->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.4 [scala-tool->compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-xml_2.11;1.0.4 [scala-tool->master]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->default(compile)]
-[info] Resolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 ...
-[debug] sbt-chain: Checking cache for: dependency: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 {scala-tool=[default(compile)]}
-[debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4
-[debug] 	found org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 in sbt-chain
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->runtime]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->compile]
-[debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 [scala-tool->master]
 [debug] == resolving dependencies default#london-bus-tracker-v3$sources_javadoc_2.11;1.0->jline#jline;2.12.1 [scala-tool->default(compile)]
 [info] Resolving jline#jline;2.12.1 ...
 [debug] sbt-chain: Checking cache for: dependency: jline#jline;2.12.1 {scala-tool=[default(compile)]}
@@ -1018,53 +1000,73 @@
 [debug] 	[NOT REQUIRED] org.scalaz#scalaz-core_2.11;7.2.8!scalaz-core_2.11.jar(doc)
 [debug] 	[NOT REQUIRED] org.scalaz#scalaz-core_2.11;7.2.8!scalaz-core_2.11.jar
 [debug] 	[NOT REQUIRED] org.scalaz#scalaz-core_2.11;7.2.8!scalaz-core_2.11.jar(src)
-[debug] 		tried /home/chrischivers/.ivy2/local/co.fs2/fs2-core_2.11/0.9.2/srcs/fs2-core_2.11-sources.jar
-[debug] 	[NOT REQUIRED] co.fs2#fs2-core_2.11;0.9.2!fs2-core_2.11.jar
-[debug] 		tried /home/chrischivers/.ivy2/local/co.fs2/fs2-core_2.11/0.9.2/docs/fs2-core_2.11-javadoc.jar
-[debug] 		tried /home/chrischivers/Code/activator-dist/repository/co.fs2/fs2-core_2.11/0.9.2/srcs/fs2-core_2.11-sources.jar
-[debug] 		tried /home/chrischivers/Code/activator-dist/repository/co.fs2/fs2-core_2.11/0.9.2/docs/fs2-core_2.11-javadoc.jar
-[debug] 		tried /home/chrischivers/.activator/repository/co.fs2/fs2-core_2.11/0.9.2/srcs/fs2-core_2.11-sources.jar
-[debug] 		tried /home/chrischivers/.activator/repository/co.fs2/fs2-core_2.11/0.9.2/docs/fs2-core_2.11-javadoc.jar
-[debug] 		tried https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-sources.jar
-[info] downloading https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-sources.jar ...
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-sources.jar
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-sources.jar.sha1
-[debug] sha1 OK for https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-sources.jar
-[info] 	[SUCCESSFUL ] co.fs2#fs2-core_2.11;0.9.2!fs2-core_2.11.jar(src) (213ms)
-[debug] 		tried https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-javadoc.jar
-[info] downloading https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-javadoc.jar ...
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-javadoc.jar
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-javadoc.jar.sha1
-[debug] sha1 OK for https://repo1.maven.org/maven2/co/fs2/fs2-core_2.11/0.9.2/fs2-core_2.11-0.9.2-javadoc.jar
-[info] 	[SUCCESSFUL ] co.fs2#fs2-core_2.11;0.9.2!fs2-core_2.11.jar(doc) (834ms)
-[debug] 		tried /home/chrischivers/.ivy2/local/co.fs2/fs2-io_2.11/0.9.2/srcs/fs2-io_2.11-sources.jar
-[debug] 	[NOT REQUIRED] co.fs2#fs2-io_2.11;0.9.2!fs2-io_2.11.jar
-[debug] 		tried /home/chrischivers/.ivy2/local/co.fs2/fs2-io_2.11/0.9.2/docs/fs2-io_2.11-javadoc.jar
-[debug] 		tried /home/chrischivers/Code/activator-dist/repository/co.fs2/fs2-io_2.11/0.9.2/srcs/fs2-io_2.11-sources.jar
-[debug] 		tried /home/chrischivers/Code/activator-dist/repository/co.fs2/fs2-io_2.11/0.9.2/docs/fs2-io_2.11-javadoc.jar
-[debug] 		tried /home/chrischivers/.activator/repository/co.fs2/fs2-io_2.11/0.9.2/srcs/fs2-io_2.11-sources.jar
-[debug] 		tried /home/chrischivers/.activator/repository/co.fs2/fs2-io_2.11/0.9.2/docs/fs2-io_2.11-javadoc.jar
-[debug] 		tried https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-sources.jar
-[info] downloading https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-sources.jar ...
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-sources.jar
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-sources.jar.sha1
-[debug] sha1 OK for https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-sources.jar
-[info] 	[SUCCESSFUL ] co.fs2#fs2-io_2.11;0.9.2!fs2-io_2.11.jar(src) (113ms)
-[debug] 		tried https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-javadoc.jar
-[info] downloading https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-javadoc.jar ...
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-javadoc.jar
-[debug] 	public: downloading https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-javadoc.jar.sha1
-[debug] sha1 OK for https://repo1.maven.org/maven2/co/fs2/fs2-io_2.11/0.9.2/fs2-io_2.11-0.9.2-javadoc.jar
-[info] 	[SUCCESSFUL ] co.fs2#fs2-io_2.11;0.9.2!fs2-io_2.11.jar(doc) (535ms)
+[debug] 		tried /home/chrischivers/.ivy2/local/org.scalactic/scalactic_2.11/3.0.1/docs/scalactic_2.11-javadoc.jar
+[debug] 		tried /home/chrischivers/.ivy2/local/org.scalactic/scalactic_2.11/3.0.1/srcs/scalactic_2.11-sources.jar
+[debug] 		tried /home/chrischivers/.ivy2/local/org.scalactic/scalactic_2.11/3.0.1/jars/scalactic_2.11.jar
+[debug] 		tried /home/chrischivers/Code/activator-dist/repository/org.scalactic/scalactic_2.11/3.0.1/docs/scalactic_2.11-javadoc.jar
+[debug] 		tried /home/chrischivers/Code/activator-dist/repository/org.scalactic/scalactic_2.11/3.0.1/srcs/scalactic_2.11-sources.jar
+[debug] 		tried /home/chrischivers/Code/activator-dist/repository/org.scalactic/scalactic_2.11/3.0.1/jars/scalactic_2.11.jar
+[debug] 		tried /home/chrischivers/.activator/repository/org.scalactic/scalactic_2.11/3.0.1/docs/scalactic_2.11-javadoc.jar
+[debug] 		tried /home/chrischivers/.activator/repository/org.scalactic/scalactic_2.11/3.0.1/srcs/scalactic_2.11-sources.jar
+[debug] 		tried /home/chrischivers/.activator/repository/org.scalactic/scalactic_2.11/3.0.1/jars/scalactic_2.11.jar
+[debug] 		tried https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar
+[info] 	[SUCCESSFUL ] org.scalactic#scalactic_2.11;3.0.1!scalactic_2.11.jar(doc) (1081ms)
+[debug] 		tried https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar
+[info] 	[SUCCESSFUL ] org.scalactic#scalactic_2.11;3.0.1!scalactic_2.11.jar(src) (379ms)
+[debug] 		tried https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar
+[info] 	[SUCCESSFUL ] org.scalactic#scalactic_2.11;3.0.1!scalactic_2.11.jar (706ms)
+[debug] 		tried /home/chrischivers/.ivy2/local/org.scalatest/scalatest_2.11/3.0.1/srcs/scalatest_2.11-sources.jar
+[debug] 		tried /home/chrischivers/.ivy2/local/org.scalatest/scalatest_2.11/3.0.1/docs/scalatest_2.11-javadoc.jar
+[debug] 		tried /home/chrischivers/.ivy2/local/org.scalatest/scalatest_2.11/3.0.1/jars/scalatest_2.11.jar
+[debug] 		tried /home/chrischivers/Code/activator-dist/repository/org.scalatest/scalatest_2.11/3.0.1/srcs/scalatest_2.11-sources.jar
+[debug] 		tried /home/chrischivers/Code/activator-dist/repository/org.scalatest/scalatest_2.11/3.0.1/docs/scalatest_2.11-javadoc.jar
+[debug] 		tried /home/chrischivers/Code/activator-dist/repository/org.scalatest/scalatest_2.11/3.0.1/jars/scalatest_2.11.jar
+[debug] 		tried /home/chrischivers/.activator/repository/org.scalatest/scalatest_2.11/3.0.1/srcs/scalatest_2.11-sources.jar
+[debug] 		tried /home/chrischivers/.activator/repository/org.scalatest/scalatest_2.11/3.0.1/docs/scalatest_2.11-javadoc.jar
+[debug] 		tried /home/chrischivers/.activator/repository/org.scalatest/scalatest_2.11/3.0.1/jars/scalatest_2.11.jar
+[debug] 		tried https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-sources.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-sources.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-sources.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-sources.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-sources.jar
+[info] 	[SUCCESSFUL ] org.scalatest#scalatest_2.11;3.0.1!scalatest_2.11.jar(src) (1468ms)
+[debug] 		tried https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-javadoc.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-javadoc.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-javadoc.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-javadoc.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1-javadoc.jar
+[info] 	[SUCCESSFUL ] org.scalatest#scalatest_2.11;3.0.1!scalatest_2.11.jar(doc) (10478ms)
+[debug] 		tried https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.jar
+[info] downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/scalatest/scalatest_2.11/3.0.1/scalatest_2.11-3.0.1.jar
+[info] 	[SUCCESSFUL ] org.scalatest#scalatest_2.11;3.0.1!scalatest_2.11.jar (8487ms)
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.5!scala-xml_2.11.jar(src)
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.5!scala-xml_2.11.jar
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.5!scala-xml_2.11.jar(doc)
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(doc)
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(src)
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.8!scala-compiler.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.11.8!scala-compiler.jar(doc)
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(doc)
-[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(doc)
-[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(src)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar(src)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar(doc)
-[debug] :: resolution report :: resolve 266ms :: artifacts dl 1721ms
+[debug] :: resolution report :: resolve 273ms :: artifacts dl 22931ms
 [debug] 	report for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 compile produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_javadoc_2.11-compile.xml
 [debug] 	report for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 runtime produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_javadoc_2.11-runtime.xml
 [debug] 	report for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 test produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_javadoc_2.11-test.xml
@@ -1078,4 +1080,4 @@
 [debug] 	report for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 docs produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_javadoc_2.11-docs.xml
 [debug] 	report for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 pom produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_javadoc_2.11-pom.xml
 [debug] 	report for default#london-bus-tracker-v3$sources_javadoc_2.11;1.0 scala-tool produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_javadoc_2.11-scala-tool.xml
-[debug] 	resolve done (266ms resolve - 1721ms download)
+[debug] 	resolve done (273ms resolve - 22931ms download)

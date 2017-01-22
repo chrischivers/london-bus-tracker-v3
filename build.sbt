@@ -14,8 +14,5 @@ libraryDependencies += "com.typesafe" % "config" % "1.3.1"
 
 libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.8"
 
-// available for Scala 2.11.8, 2.12.0
-libraryDependencies += "co.fs2" %% "fs2-core" % "0.9.2"
-
-// optional I/O library
-libraryDependencies += "co.fs2" %% "fs2-io" % "0.9.2"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
