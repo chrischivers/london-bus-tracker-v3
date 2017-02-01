@@ -16,3 +16,5 @@ libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.8"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+
+libraryDependencies += "com.thenewmotion" %% "akka-rabbitmq" % "3.0.0"

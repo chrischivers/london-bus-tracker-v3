@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170122171742"
+		publication="20170129185058"
 	>
 		<description>
 		london-bus-tracker-v3
@@ -39,5 +39,6 @@
 		<dependency org="org.scalaz" name="scalaz-core_2.11" rev="7.2.8" conf="compile->default(compile)"/>
 		<dependency org="org.scalactic" name="scalactic_2.11" rev="3.0.1" conf="compile->default(compile)"/>
 		<dependency org="org.scalatest" name="scalatest_2.11" rev="3.0.1" conf="test->default(compile)"/>
+		<dependency org="com.thenewmotion" name="akka-rabbitmq_2.11" rev="3.0.0" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

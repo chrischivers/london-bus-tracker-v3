@@ -20,13 +20,11 @@ case class SourceLine(route: String, direction: String, stopID: String, destinat
 object BusDataSource extends Iterator[SourceLine] with StrictLogging {
 
   val config = ConfigLoader.defaultConfig.dataSourceConfig
-
   private var dataSource:BusDataSource = new BusDataSource(config)
   private var dataSourceIterator = dataSource.dataStream
 
 
   def reloadIterator() = {
-
       logger.info("closing data source iterator before getting new one")
       dataSource.closeDataSource
       dataSource = new BusDataSource(config)

@@ -7,21 +7,95 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170122171755"/>
+		date="20170129185103"/>
 	<dependencies>
+		<module organisation="com.thenewmotion" name="akka-rabbitmq_2.11">
+			<revision name="3.0.0" status="release" pubdate="20161209181854" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/thenewmotion/akka-rabbitmq" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="13">
+				<license name="Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="3228" time="0" location="/home/chrischivers/.ivy2/cache/com.thenewmotion/akka-rabbitmq_2.11/ivy-3.0.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/thenewmotion/akka-rabbitmq_2.11/3.0.0/akka-rabbitmq_2.11-3.0.0.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="3.0.0" rev-constraint-default="3.0.0" rev-constraint-dynamic="3.0.0" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="akka-rabbitmq_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="445349" time="1108" location="/home/chrischivers/.ivy2/cache/com.thenewmotion/akka-rabbitmq_2.11/docs/akka-rabbitmq_2.11-3.0.0-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/thenewmotion/akka-rabbitmq_2.11/3.0.0/akka-rabbitmq_2.11-3.0.0-javadoc.jar"/>
+					</artifact>
+					<artifact name="akka-rabbitmq_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="7307" time="399" location="/home/chrischivers/.ivy2/cache/com.thenewmotion/akka-rabbitmq_2.11/srcs/akka-rabbitmq_2.11-3.0.0-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/thenewmotion/akka-rabbitmq_2.11/3.0.0/akka-rabbitmq_2.11-3.0.0-sources.jar"/>
+					</artifact>
+					<artifact name="akka-rabbitmq_2.11" type="jar" ext="jar" status="no" details="" size="128602" time="0" location="/home/chrischivers/.ivy2/cache/com.thenewmotion/akka-rabbitmq_2.11/jars/akka-rabbitmq_2.11-3.0.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/thenewmotion/akka-rabbitmq_2.11/3.0.0/akka-rabbitmq_2.11-3.0.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.rabbitmq" name="amqp-client">
+			<revision name="4.0.0" status="release" pubdate="20161123142008" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.rabbitmq.com" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="16">
+				<license name="ASL 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+				<license name="GPL v2" url="http://www.gnu.org/licenses/gpl-2.0.txt"/>
+				<license name="MPL 1.1" url="http://www.mozilla.org/MPL/MPL-1.1.txt"/>
+				<metadata-artifact status="no" details="" size="6384" time="0" location="/home/chrischivers/.ivy2/cache/com.rabbitmq/amqp-client/ivy-4.0.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/4.0.0/amqp-client-4.0.0.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="4.0.0" rev-constraint-default="4.0.0" rev-constraint-dynamic="4.0.0" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="amqp-client" type="jar" ext="jar" status="no" details="" size="480605" time="0" location="/home/chrischivers/.ivy2/cache/com.rabbitmq/amqp-client/jars/amqp-client-4.0.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/4.0.0/amqp-client-4.0.0.jar"/>
+					</artifact>
+					<artifact name="amqp-client" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="268338" time="302" location="/home/chrischivers/.ivy2/cache/com.rabbitmq/amqp-client/srcs/amqp-client-4.0.0-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/4.0.0/amqp-client-4.0.0-sources.jar"/>
+					</artifact>
+					<artifact name="amqp-client" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="2152461" time="811" location="/home/chrischivers/.ivy2/cache/com.rabbitmq/amqp-client/docs/amqp-client-4.0.0-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/4.0.0/amqp-client-4.0.0-javadoc.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.typesafe.akka" name="akka-actor_2.11">
+			<revision name="2.4.14" status="release" pubdate="20161121150106" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://akka.io/" extra-info.apiURL="http://doc.akka.io/api/akka/2.4.14" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="14">
+				<license name="Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="3102" time="0" location="/home/chrischivers/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/ivy-2.4.14.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/typesafe/akka/akka-actor_2.11/2.4.14/akka-actor_2.11-2.4.14.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="2.4.14" rev-constraint-default="2.4.14" rev-constraint-dynamic="2.4.14" callerrev="1.0" extra-info.apiURL="http://doc.akka.io/api/akka/2.4.14"/>
+				<artifacts>
+					<artifact name="akka-actor_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="399239" time="718" location="/home/chrischivers/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/srcs/akka-actor_2.11-2.4.14-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/typesafe/akka/akka-actor_2.11/2.4.14/akka-actor_2.11-2.4.14-sources.jar"/>
+					</artifact>
+					<artifact name="akka-actor_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="4051791" time="3173" location="/home/chrischivers/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/docs/akka-actor_2.11-2.4.14-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/typesafe/akka/akka-actor_2.11/2.4.14/akka-actor_2.11-2.4.14-javadoc.jar"/>
+					</artifact>
+					<artifact name="akka-actor_2.11" type="jar" ext="jar" status="no" details="" size="3301847" time="0" location="/home/chrischivers/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/jars/akka-actor_2.11-2.4.14.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/typesafe/akka/akka-actor_2.11/2.4.14/akka-actor_2.11-2.4.14.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang.modules" name="scala-java8-compat_2.11">
+			<revision name="0.7.0" status="release" pubdate="20150831120233" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="15">
+				<license name="BSD 3-clause" url="http://opensource.org/licenses/BSD-3-Clause"/>
+				<metadata-artifact status="no" details="" size="2886" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-java8-compat_2.11/ivy-0.7.0.xml" searched="false" origin-is-local="false" origin-location="http://repo1.maven.org/maven2/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.pom"/>
+				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="0.7.0" rev-constraint-default="0.7.0" rev-constraint-dynamic="0.7.0" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scala-java8-compat_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1193196" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-java8-compat_2.11/docs/scala-java8-compat_2.11-0.7.0-javadoc.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0-javadoc.jar"/>
+					</artifact>
+					<artifact name="scala-java8-compat_2.11" type="jar" ext="jar" status="no" details="" size="582358" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-java8-compat_2.11/jars/scala-java8-compat_2.11-0.7.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar"/>
+					</artifact>
+					<artifact name="scala-java8-compat_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="12469" time="0" location="/home/chrischivers/.ivy2/cache/org.scala-lang.modules/scala-java8-compat_2.11/srcs/scala-java8-compat_2.11-0.7.0-sources.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0-sources.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
 		<module organisation="org.scalactic" name="scalactic_2.11">
 			<revision name="3.0.1" status="release" pubdate="20161110035324" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scalatest.org" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="12">
 				<license name="the Apache License, ASL Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
 				<metadata-artifact status="no" details="" size="2841" time="0" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/ivy-3.0.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.pom"/>
 				<caller organisation="default" name="london-bus-tracker-v3$sources_javadoc_2.11" conf="compile-internal, compile, provided, optional" rev="3.0.1" rev-constraint-default="3.0.1" rev-constraint-dynamic="3.0.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="scalactic_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="successful" details="" size="1096589" time="1081" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/docs/scalactic_2.11-3.0.1-javadoc.jar">
+					<artifact name="scalactic_2.11" type="doc" ext="jar" extra-classifier="javadoc" status="no" details="" size="1096589" time="0" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/docs/scalactic_2.11-3.0.1-javadoc.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-javadoc.jar"/>
 					</artifact>
-					<artifact name="scalactic_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="201082" time="379" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/srcs/scalactic_2.11-3.0.1-sources.jar">
+					<artifact name="scalactic_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="201082" time="0" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/srcs/scalactic_2.11-3.0.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1-sources.jar"/>
 					</artifact>
-					<artifact name="scalactic_2.11" type="jar" ext="jar" status="successful" details="" size="740209" time="706" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/jars/scalactic_2.11-3.0.1.jar">
+					<artifact name="scalactic_2.11" type="jar" ext="jar" status="no" details="" size="740209" time="0" location="/home/chrischivers/.ivy2/cache/org.scalactic/scalactic_2.11/jars/scalactic_2.11-3.0.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalactic/scalactic_2.11/3.0.1/scalactic_2.11-3.0.1.jar"/>
 					</artifact>
 				</artifacts>

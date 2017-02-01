@@ -4,8 +4,11 @@ import com.typesafe.config.ConfigFactory
 
 case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int)
 
+case class MessagingConfig(exchangeName: String, dataStreamQueueName : String)
+
 case class LBTConfig(
-                   dataSourceConfig: DataSourceConfig
+                   dataSourceConfig: DataSourceConfig,
+                    messagingConfig: MessagingConfig
                       )
 
 object ConfigLoader {
@@ -14,6 +17,7 @@ object ConfigLoader {
 
   val defaultConfig: LBTConfig = {
     val dataSourceStreamingParamsPrefix = "dataSource.streaming-parameters."
+    val messagingParamsPrefix = "messaging.rabbitmq."
     new LBTConfig(
         new DataSourceConfig(
             defaultConfigFactory.getString(dataSourceStreamingParamsPrefix + "tfl-url"),
@@ -24,7 +28,11 @@ object ConfigLoader {
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "connection-timeout"),
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-lines-disregarded"),
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "wait-time-after-close")
-        )
+        ),
+    new MessagingConfig(
+        defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),
+        defaultConfigFactory.getString(messagingParamsPrefix + "data-stream-queue-name")
+    )
     )
 
   }
