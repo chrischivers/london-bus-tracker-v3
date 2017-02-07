@@ -4,7 +4,7 @@ import com.typesafe.config.ConfigFactory
 
 case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int)
 
-case class MessagingConfig(exchangeName: String, dataStreamQueueName : String)
+case class MessagingConfig(exchangeName: String, historicalRecorderQueueName : String, historicalRecorderRoutingKey: String, liveTrackerQueueName: String, liveTrackerRoutingKey: String)
 
 case class LBTConfig(
                    dataSourceConfig: DataSourceConfig,
@@ -31,12 +31,13 @@ object ConfigLoader {
         ),
     new MessagingConfig(
         defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "data-stream-queue-name")
+        defaultConfigFactory.getString(messagingParamsPrefix + "historical-recorder-queue-name"),
+        defaultConfigFactory.getString(messagingParamsPrefix + "historical-recorder-routing-key"),
+        defaultConfigFactory.getString(messagingParamsPrefix + "live-tracker-queue-name"),
+        defaultConfigFactory.getString(messagingParamsPrefix + "live-tracker-routing-key")
     )
     )
 
   }
-
-
-
 }
+

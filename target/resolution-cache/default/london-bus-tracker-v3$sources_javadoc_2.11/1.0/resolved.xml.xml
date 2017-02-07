@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3$sources_javadoc_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170129185103"
+		publication="20170203220531"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
@@ -76,21 +76,21 @@
 			<artifact name="scalactic_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 			<artifact name="scalactic_2.11" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
 		</dependency>
-		<dependency org="com.thenewmotion" name="akka-rabbitmq_2.11" rev="3.0.0" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
-			<artifact name="akka-rabbitmq_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
-			<artifact name="akka-rabbitmq_2.11" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
+		<dependency org="com.github.sstone" name="amqp-client_2.11" rev="1.5" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
+			<artifact name="amqp-client_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
+			<artifact name="amqp-client_2.11" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
 		</dependency>
-		<dependency org="com.typesafe.akka" name="akka-actor_2.11" rev="2.4.14" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)" info.apiURL="http://doc.akka.io/api/akka/2.4.14">
+		<dependency org="com.rabbitmq" name="amqp-client" rev="3.5.2" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
+			<artifact name="amqp-client" type="src" ext="jar" conf="sources" e:classifier="sources"/>
+			<artifact name="amqp-client" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
+		</dependency>
+		<dependency org="com.typesafe.akka" name="akka-actor_2.11" rev="2.4.16" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)" info.apiURL="http://doc.akka.io/api/akka/2.4.16">
 			<artifact name="akka-actor_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 			<artifact name="akka-actor_2.11" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
 		</dependency>
 		<dependency org="org.scala-lang.modules" name="scala-java8-compat_2.11" rev="0.7.0" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
 			<artifact name="scala-java8-compat_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 			<artifact name="scala-java8-compat_2.11" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
-		</dependency>
-		<dependency org="com.rabbitmq" name="amqp-client" rev="4.0.0" transitive="false" conf="compile->default(compile);runtime->default(compile);test->default(compile);compile-internal->default(compile);runtime-internal->default(compile);test-internal->default(compile)">
-			<artifact name="amqp-client" type="src" ext="jar" conf="sources" e:classifier="sources"/>
-			<artifact name="amqp-client" type="doc" ext="jar" conf="docs" e:classifier="javadoc"/>
 		</dependency>
 		<dependency org="org.scalatest" name="scalatest_2.11" rev="3.0.1" transitive="false" conf="test->default(compile);test-internal->default(compile)">
 			<artifact name="scalatest_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
