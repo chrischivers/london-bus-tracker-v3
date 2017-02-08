@@ -4,7 +4,10 @@ import java.util.concurrent.TimeUnit
 
 import com.github.sstone.amqp.Amqp._
 import com.github.sstone.amqp.{ChannelOwner, ConnectionOwner}
+import com.rabbitmq.tools.json.JSONWriter
 import lbt.RabbitMQ
+import net.liftweb.json._
+import net.liftweb.json.Serialization.write
 
 import scala.concurrent.duration._
 
@@ -18,18 +21,14 @@ class SourceLinePublisher extends RabbitMQ  {
   producer ! DeclareExchange(ExchangeParameters(config.exchangeName, passive = true, "direct"))
 
   def publish (sourceLine: SourceLine) = {
-    val sourceLineBytes = sourceLineToString(sourceLine).getBytes
+    val sourceLineBytes = sourceLineToJson(sourceLine).getBytes
     producer ! Publish(config.exchangeName, config.historicalRecorderRoutingKey, sourceLineBytes, properties = None, mandatory = true, immediate = false)
-    producer ! Publish(config.exchangeName, config.liveTrackerRoutingKey, sourceLineBytes, properties = None, mandatory = true, immediate = false)
+    //producer ! Publish(config.exchangeName, config.liveTrackerRoutingKey, sourceLineBytes, properties = None, mandatory = true, immediate = false)
   }
 
-  def sourceLineToString(sourceLine: SourceLine): String = {
+  def sourceLineToJson(sourceLine: SourceLine): String = {
+    implicit val formats = DefaultFormats
+    write(sourceLine)
     //route: String, direction: String, stopID: String, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
-    sourceLine.route + "," +
-      sourceLine.direction + "," +
-      sourceLine.stopID + "," +
-      sourceLine.destinationText + "," +
-      sourceLine.vehicleID + "," +
-      sourceLine.arrival_TimeStamp
   }
 }

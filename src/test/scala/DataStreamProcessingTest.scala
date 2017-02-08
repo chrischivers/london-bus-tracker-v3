@@ -28,7 +28,7 @@ class DataStreamProcessingTest extends FunSuite {
 
   test("Data Stream Processor processes same number of messages as those queued") {
 
-    implicit val patienceConfig =  PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(500, Millis)))
+    implicit val patienceConfig =  PatienceConfig(timeout = scaled(Span(20, Seconds)), interval = scaled(Span(500, Millis)))
 
     val messageProcessor = createTestMessageProcessor()
     val consumer = new MessageConsumer(messageProcessor, config.exchangeName, config.historicalRecorderQueueName, config.historicalRecorderRoutingKey)

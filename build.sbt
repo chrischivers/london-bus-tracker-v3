@@ -21,3 +21,5 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 libraryDependencies += "com.github.sstone" % "amqp-client_2.11" % "1.5"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.4.16"
+
+libraryDependencies += "net.liftweb" % "lift-json_2.11" % "3.0.1"
