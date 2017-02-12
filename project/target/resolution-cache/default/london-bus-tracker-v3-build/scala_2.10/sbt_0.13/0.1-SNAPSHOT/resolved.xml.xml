@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20170208073456"
+		publication="20170212173431"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>

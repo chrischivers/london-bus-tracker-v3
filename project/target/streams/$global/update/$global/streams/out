@@ -16,7 +16,7 @@
 [debug] == resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [provided]
 [debug] == resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-lang#scala-library;2.10.4 [provided->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.10.4 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@e6df7c4
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@573e0ca4
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.10.4
 [debug] 	found org.scala-lang#scala-library;2.10.4 in sbt-chain
 [debug] 	[2.10.4] org.scala-lang#scala-library;2.10.4
@@ -1766,7 +1766,7 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar
 [debug] 	[NOT REQUIRED] org.scala-lang#jline;2.10.4!jline.jar
 [debug] 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
-[debug] :: resolution report :: resolve 2369ms :: artifacts dl 80ms
+[debug] :: resolution report :: resolve 978ms :: artifacts dl 28ms
 [debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile.xml
 [debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime.xml
 [debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test.xml
@@ -1780,5 +1780,5 @@
 [debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT docs produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-docs.xml
 [debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT pom produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-pom.xml
 [debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT scala-tool produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-scala-tool.xml
-[debug] 	resolve done (2369ms resolve - 80ms download)
+[debug] 	resolve done (978ms resolve - 28ms download)
 [info] Done updating.

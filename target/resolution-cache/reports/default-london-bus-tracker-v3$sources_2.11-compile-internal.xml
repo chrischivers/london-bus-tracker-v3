@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170212151601"/>
+		date="20170212173437"/>
 	<dependencies>
 		<module organisation="org.mongodb" name="casbah-gridfs_2.11">
 			<revision name="3.1.1" status="release" pubdate="20160301143408" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://github.com/mongodb/casbah" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="32">
