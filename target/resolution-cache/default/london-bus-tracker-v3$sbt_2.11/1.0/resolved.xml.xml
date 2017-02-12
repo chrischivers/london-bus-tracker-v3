@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3$sbt_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170208182138"
+		publication="20170212151600"
 	/>
 	<configurations>
 		<conf name="default" visibility="public"/>

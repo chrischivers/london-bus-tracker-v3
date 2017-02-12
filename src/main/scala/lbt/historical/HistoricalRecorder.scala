@@ -1,8 +1,8 @@
 package lbt.historical
 
-import lbt.dataSource.SourceLine
+import lbt.dataSource.Stream.SourceLine
 import lbt.{ConfigLoader, MessageConsumer, MessageProcessor}
-import net.liftweb.json._
+import play.api.libs.json.Json
 
 
 object HistoricalRecorder {
@@ -11,11 +11,10 @@ object HistoricalRecorder {
 }
 
 object  HistoricalMessageProcessor extends MessageProcessor {
-  implicit val formats = DefaultFormats
   override def apply(message: Array[Byte]): Unit = {
     println("message received")
-    val jValue = parse(message.toString)
-    val sourceLine = jValue.extract[SourceLine]
+   // val jValue = Json.parse(message.toString)
+    // val sourceLine = jValue.extract[SourceLine]
 
   }
 }

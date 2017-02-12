@@ -1,5 +1,5 @@
 import lbt.ConfigLoader
-import lbt.dataSource.BusDataSource
+import lbt.dataSource.Stream.BusDataSource
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 

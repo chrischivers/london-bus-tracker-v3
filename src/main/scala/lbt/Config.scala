@@ -4,10 +4,13 @@ import com.typesafe.config.ConfigFactory
 
 case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int)
 
+case class DefinitionsConfig(sourceUrl: String)
+
 case class MessagingConfig(exchangeName: String, historicalRecorderQueueName : String, historicalRecorderRoutingKey: String, liveTrackerQueueName: String, liveTrackerRoutingKey: String)
 
 case class LBTConfig(
                    dataSourceConfig: DataSourceConfig,
+                   definitionsConfig: DefinitionsConfig,
                     messagingConfig: MessagingConfig
                       )
 
@@ -17,6 +20,7 @@ object ConfigLoader {
 
   val defaultConfig: LBTConfig = {
     val dataSourceStreamingParamsPrefix = "dataSource.streaming-parameters."
+    val definitionsParamsPrefix = "dataSource.definitions."
     val messagingParamsPrefix = "messaging.rabbitmq."
     new LBTConfig(
         new DataSourceConfig(
@@ -29,6 +33,9 @@ object ConfigLoader {
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-lines-disregarded"),
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "wait-time-after-close")
         ),
+      new DefinitionsConfig(
+        defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-url")
+      ),
     new MessagingConfig(
         defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),
         defaultConfigFactory.getString(messagingParamsPrefix + "historical-recorder-queue-name"),

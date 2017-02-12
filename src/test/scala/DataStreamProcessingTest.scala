@@ -1,10 +1,11 @@
-import lbt.{ConfigLoader, MessageProcessor, MessagingConfig, MessageConsumer}
-import lbt.dataSource.{SourceLine, SourceLinePublisher, DataStreamProcessingController}
-import lbt.historical.{HistoricalMessageProcessor}
+import lbt.dataSource.Stream.{DataStreamProcessingController, SourceLine, SourceLinePublisher}
+import lbt.{ConfigLoader, MessageConsumer, MessageProcessor, MessagingConfig}
+import lbt.historical.HistoricalMessageProcessor
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.time.{Millis, Seconds, Span}
+
 import scala.concurrent.duration._
 
 class DataStreamProcessingTest extends FunSuite {
@@ -37,13 +38,12 @@ class DataStreamProcessingTest extends FunSuite {
     Thread.sleep(1000)
     DataStreamProcessingController.stop()
     Thread.sleep(1000)
-    val numberProcessed = DataStreamProcessingController.numberProcessed
 
     eventually {
-      numberProcessed shouldBe consumer.messageCounter
+        DataStreamProcessingController.numberProcessed shouldBe consumer.messageCounter
       lastReceivedMessage.isDefined shouldBe true
     }
-    println("Number processed: " + numberProcessed + ". Number in queue: " + consumer.messageCounter)
+    println("Number processed: " + DataStreamProcessingController.numberProcessed + ". Number in queue: " + consumer.messageCounter)
   }
 
 

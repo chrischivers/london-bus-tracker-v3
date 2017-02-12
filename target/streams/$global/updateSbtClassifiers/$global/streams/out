@@ -703,9 +703,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-agent;0.13.8!test-agent.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar
-[debug] :: resolution report :: resolve 408ms :: artifacts dl 19ms
+[debug] :: resolution report :: resolve 581ms :: artifacts dl 15ms
 [debug] 	report for default#london-bus-tracker-v3$sbt_2.11;1.0 default produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sbt_2.11-default.xml
-[debug] 	resolve done (408ms resolve - 19ms download)
+[debug] 	resolve done (581ms resolve - 15ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#london-bus-tracker-v3$sources_2.11;1.0
 [debug] 	confs: [default]
@@ -1069,6 +1069,6 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_8_2;0.13.8!precompiled-2_8_2.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_2;0.13.8!precompiled-2_9_2.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_3;0.13.8!precompiled-2_9_3.jar(src)
-[debug] :: resolution report :: resolve 90ms :: artifacts dl 15ms
+[debug] :: resolution report :: resolve 81ms :: artifacts dl 17ms
 [debug] 	report for default#london-bus-tracker-v3$sources_2.11;1.0 default produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_2.11-default.xml
-[debug] 	resolve done (90ms resolve - 15ms download)
+[debug] 	resolve done (81ms resolve - 17ms download)

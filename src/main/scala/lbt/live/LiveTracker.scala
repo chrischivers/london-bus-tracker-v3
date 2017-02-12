@@ -1,8 +1,7 @@
 package lbt.live
 
-import lbt.dataSource.SourceLine
+import lbt.dataSource.Stream.SourceLine
 import lbt.{ConfigLoader, MessageConsumer, MessageProcessor}
-import net.liftweb.json._
 
 
 object LiveTracker {
@@ -11,11 +10,10 @@ object LiveTracker {
 }
 
 object  LiveMessageProcessor extends MessageProcessor {
-  implicit val formats = DefaultFormats
   override def apply(message: Array[Byte]): Unit = {
     println("message received")
-    val jValue = parse(message.toString)
-    val sourceLine = jValue.extract[SourceLine]
+ //   val jValue = parse(message.toString)
+  //  val sourceLine = jValue.extract[SourceLine]
 
   }
 }
