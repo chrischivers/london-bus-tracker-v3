@@ -17,6 +17,10 @@ object  HistoricalMessageProcessor extends MessageProcessor {
     // val sourceLine = jValue.extract[SourceLine]
 
   }
+
+  def existsInRouteDefinition: Boolean = true
+
+  def notOnIgnoreList: Boolean = true
 }
 
 

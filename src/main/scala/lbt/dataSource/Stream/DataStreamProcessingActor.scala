@@ -6,7 +6,7 @@ import com.typesafe.scalalogging.StrictLogging
 /**
  * Actor that iterates over live stream sending lines to be processed. On crash, the supervisor strategy restarts it
  */
-class DataStreamProcessingActor extends Actor with StrictLogging {
+class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLinePublisher) extends Actor with StrictLogging {
 
   // Iterating pattern for this actor based on code snippet posted on StackOverflow
   //http://stackoverflow.com/questions/5626285/pattern-for-interruptible-loops-using-actors
@@ -23,14 +23,14 @@ class DataStreamProcessingActor extends Actor with StrictLogging {
       context.become(inactive)
       logger.info("DataStreamProcessingActor becoming inactive")
     case Next =>
-      DataStreamProcessingController.publisher.publish(BusDataSource.next())
+     publisher.publish(dataSource.next())
       context.parent ! Increment
       self ! Next
   }
 
   override def postRestart(reason: Throwable): Unit = {
     logger.debug("DataStreamProcessingActor Restarting")
-    BusDataSource.reloadIterator()
+    dataSource.reloadDataSource()
     self ! Start
     self ! Next
   }

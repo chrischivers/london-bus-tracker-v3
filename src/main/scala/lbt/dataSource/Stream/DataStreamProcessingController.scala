@@ -1,10 +1,11 @@
 package lbt.dataSource.Stream
 
 import akka.actor.SupervisorStrategy.{Escalate, Restart}
-import akka.actor.{Actor, ActorSystem, OneForOneStrategy, Props}
+import akka.actor.{Actor, ActorRef, ActorSystem, OneForOneStrategy, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
+import lbt.{ConfigLoader, MessagingConfig}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, TimeoutException}
@@ -15,11 +16,15 @@ case class Next()
 case class Increment()
 case class GetNumberProcessed()
 
-class DataStreamProcessingController extends Actor with StrictLogging {
+class DataStreamProcessingController(dataSource: BusDataSource, config: MessagingConfig) extends Actor with StrictLogging {
 
-  val iteratingActor = context.actorOf(Props[DataStreamProcessingActor])
+  val publisher = new SourceLinePublisher(config)
+  val iteratingActor: ActorRef = context.actorOf(Props(new DataStreamProcessingActor(dataSource, publisher)))
+
   var numberProcessed:Long = 0
   var numberProcessedSinceRestart:Long = 0
+
+  implicit val timeout = Timeout(5 seconds) // needed for `?` below
 
   def receive = {
     case  Start=>
@@ -59,31 +64,16 @@ class DataStreamProcessingController extends Actor with StrictLogging {
 
 }
 
-
-object DataStreamProcessingController extends StrictLogging {
-
-  implicit val timeout = Timeout(5 seconds) // needed for `?` below
-
+object DataStreamProcessingController {
   implicit val system = ActorSystem("lbtSystem")
+  val defaultMessagingConfig = ConfigLoader.defaultConfig.messagingConfig
+  val defaultDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
 
-  val publisher = new SourceLinePublisher
+  def apply(): ActorRef = apply(defaultMessagingConfig)
 
-  val supervisor = system.actorOf(Props[DataStreamProcessingController])
+  def apply(config: MessagingConfig): ActorRef = apply(BusDataSource(defaultDataSourceConfig), config)
 
-  def start(): Unit = {
-    logger.info("Starting Bus Stream Supervisor")
-    supervisor ! Start
-
-  }
-
-  def stop(): Unit = {
-    logger.info("Stopping Bus Stream Supervisor")
-    supervisor ! Stop
-  }
-
-  def numberProcessed: Long = {
-    val answer = Await.result(supervisor ? GetNumberProcessed, 10 seconds)
-    answer.asInstanceOf[Long]
-  }
-
+  def apply(dataSource: BusDataSource, config: MessagingConfig) =
+    system.actorOf(Props(
+    new DataStreamProcessingController(dataSource, config)))
 }

@@ -3,27 +3,39 @@ package lbt.database
 import com.mongodb.DBObject
 import com.mongodb.casbah.Imports._
 import com.typesafe.scalalogging.StrictLogging
+import lbt.{ConfigLoader, DatabaseConfig}
 
-object MongoDatabase extends StrictLogging with App{
+class MongoDatabase(dbConfig: DatabaseConfig) extends StrictLogging {
 
-  val dBName: String = "LbtDB"
+  val dBName: String = dbConfig.databaseName
 
   val client = MongoClient()
   val db = client(dBName)
 
-  getCollection(BusRouteDefinitionsDB)
-
-  def getCollection(dbc:DatabaseCollections): MongoCollection = {
-    val coll = db(dbc.collectionName)
-    createIndex(coll, dbc)
-    logger.info("Index Info: " + coll.getIndexInfo)
-    coll
+  def getCollection(collectionName: String, indexKeyList: List[(String, Int)], unique: Boolean): MongoCollection = {
+    logger.info(s"getting collection for colName: $collectionName")
+    val col = db(collectionName)
+    setIndex(collectionName, indexKeyList, unique)
+    col
   }
 
- // def closeConnection() = client.close()
+  def closeConnection() = client.close()
 
-  def createIndex(mongoCollection: MongoCollection, dbc: DatabaseCollections) = {
-    if (dbc.uniqueIndex) mongoCollection.createIndex(MongoDBObject(dbc.indexKeyList),MongoDBObject("unique" -> true))
-    else mongoCollection.createIndex(MongoDBObject(dbc.indexKeyList),MongoDBObject("unique" -> false))
+  def dropDatabase = {
+    db.dropDatabase()
   }
+
+  private def setIndex(collectionName: String, indexKeyList: List[(String, Int)], unique: Boolean) = {
+    val col = db.getCollection(collectionName)
+    col.createIndex(MongoDBObject(indexKeyList),MongoDBObject("unique" -> unique))
+  }
+}
+
+object MongoDatabase {
+  private val defaultDbConfig = ConfigLoader.defaultConfig.databaseConfig
+
+  def apply(): MongoDatabase = apply(defaultDbConfig)
+
+  def apply(dbConfig: DatabaseConfig): MongoDatabase = new MongoDatabase(dbConfig)
+
 }

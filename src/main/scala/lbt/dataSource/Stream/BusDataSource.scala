@@ -14,26 +14,42 @@ import org.apache.http.impl.client.{BasicCredentialsProvider, CloseableHttpClien
 
 case class SourceLine(route: String, direction: String, stopID: String, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-object BusDataSource extends Iterator[SourceLine] with StrictLogging {
+object BusDataSource {
+  val defaultDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
+  private var dataSource: Option[BusDataSource] = None
 
-  val config = ConfigLoader.defaultConfig.dataSourceConfig
-  private var dataSource:BusDataSource = new BusDataSource(config)
-  private var dataSourceIterator = dataSource.dataStream
+  def apply():BusDataSource = apply(defaultDataSourceConfig)
 
-
-  def reloadIterator() = {
-      logger.info("closing data source iterator before getting new one")
-      dataSource.closeDataSource
-      dataSource = new BusDataSource(config)
-      dataSourceIterator = dataSource.dataStream
+  def apply(config: DataSourceConfig): BusDataSource = dataSource match {
+    case None =>
+      dataSource = Some(new BusDataSource(config))
+      dataSource.get
+    case Some(source) => source
   }
+
+  def reloadDataSource() = dataSource match {
+    case None => apply(defaultDataSourceConfig)
+    case Some(source) => source.reloadDataSource()
+  }
+}
+
+class BusDataSource(config: DataSourceConfig) extends Iterator[SourceLine] with StrictLogging {
+
+  private var dataSourceClient = new BusDataSourceClient(config)
+  private var dataSourceIterator = dataSourceClient.dataStream
 
   override def hasNext: Boolean = dataSourceIterator.hasNext
 
   override def next() = SourceLineValidator(dataSourceIterator.next())
+
+  def reloadDataSource() = {
+    dataSourceClient.closeDataSource
+    dataSourceClient = new BusDataSourceClient(config)
+    dataSourceIterator = dataSourceClient.dataStream
+  }
 }
 
-private class BusDataSource(config: DataSourceConfig) extends StrictLogging {
+class BusDataSourceClient(config: DataSourceConfig) extends StrictLogging {
 
   private val httpRequestConfig = buildHttpRequestConfig(config.timeout)
   private val httpAuthScope = buildAuthScope(config.authScopeURL, config.authScopePort)

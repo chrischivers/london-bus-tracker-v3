@@ -4,11 +4,11 @@ import java.util.concurrent.TimeUnit
 
 import com.github.sstone.amqp.Amqp._
 import com.github.sstone.amqp.{ChannelOwner, ConnectionOwner}
-import lbt.RabbitMQ
+import lbt.{MessagingConfig, RabbitMQConfig}
 
 import scala.concurrent.duration._
 
-class SourceLinePublisher extends RabbitMQ  {
+class SourceLinePublisher(config: MessagingConfig) extends RabbitMQConfig  {
 
   val conn = system.actorOf(ConnectionOwner.props(connFactory, 1 second))
   val producer = ConnectionOwner.createChildActor(conn, ChannelOwner.props())
