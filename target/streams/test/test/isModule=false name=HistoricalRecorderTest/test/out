@@ -1,0 +1,3 @@
+[0m[[0minfo[0m] [0m[32mHistoricalRecorderTest:[0m[0m
+[0m[[0minfo[0m] [0m[31m- Line should be disregarded if not in definitions *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 130 times over 1.0062978437999999 minutes. Last failure message: 25735 was not equal to 1590. (HistoricalRecorderTest.scala:34)[0m[0m

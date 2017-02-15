@@ -1,0 +1,16 @@
+[0m[[0mdebug[0m] [0mRunning TaskDef(HistoricalRecorderTest, org.scalatest.tools.Framework$$anon$1@3c04e78d, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(BusDataSourceTest, org.scalatest.tools.Framework$$anon$1@3c04e78d, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(DefinitionsTest, org.scalatest.tools.Framework$$anon$1@3c04e78d, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(DataStreamProcessingTest, org.scalatest.tools.Framework$$anon$1@3c04e78d, false, [SuiteSelector])[0m
+[0m[[0minfo[0m] [0m[36mRun completed in 1 minute, 2 seconds.[0m[0m
+[0m[[0minfo[0m] [0m[36mTotal number of tests run: 11[0m[0m
+[0m[[0minfo[0m] [0m[36mSuites: completed 4, aborted 0[0m[0m
+[0m[[0minfo[0m] [0m[36mTests: succeeded 7, failed 4, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0minfo[0m] [0m[31m*** 4 TESTS FAILED ***[0m[0m
+[0m[[0mdebug[0m] [0mPassed tests:[0m
+[0m[[0mdebug[0m] [0m	DefinitionsTest[0m
+[0m[[31merror[0m] [0mFailed tests:[0m
+[0m[[31merror[0m] [0m	HistoricalRecorderTest[0m
+[0m[[31merror[0m] [0m	DataStreamProcessingTest[0m
+[0m[[31merror[0m] [0m	BusDataSourceTest[0m
+[0m[[31merror[0m] [0m(test:[31mtest[0m) sbt.TestsFailedException: Tests unsuccessful[0m

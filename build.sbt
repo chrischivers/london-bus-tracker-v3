@@ -22,6 +22,6 @@ libraryDependencies += "com.github.sstone" % "amqp-client_2.11" % "1.5"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.4.16"
 
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.0-M2"
+libraryDependencies += "net.liftweb" % "lift-json_2.11" % "3.0.1"
 
 libraryDependencies += "org.mongodb" %% "casbah" % "3.1.1"

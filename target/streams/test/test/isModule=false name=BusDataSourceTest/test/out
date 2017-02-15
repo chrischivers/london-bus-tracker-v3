@@ -1,0 +1,5 @@
+[0m[[0minfo[0m] [0m[32mBusDataSourceTest:[0m[0m
+[0m[[0minfo[0m] [0m[32m- Data stream should be opened and return with next value[0m[0m
+[0m[[0minfo[0m] [0m[32m- Iterator should reload when required[0m[0m
+[0m[[0minfo[0m] [0m[31m- Iterator should not create new instance when requested again *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  601940550 did not equal non-empty iterator (BusDataSourceTest.scala:37)[0m[0m

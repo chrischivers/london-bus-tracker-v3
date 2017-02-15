@@ -1,0 +1,7 @@
+[0m[[0minfo[0m] [0m[32mDataStreamProcessingTest:[0m[0m
+[0m[[0minfo[0m] [0m[32m- Data Stream Processor starts up iterator and starts publishing messages[0m[0m
+[0m[[0minfo[0m] [0m[31m- Data Stream Processor processes same number of messages as those queued *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 10 times over 154.426084 milliseconds. Last failure message: 2536 was not equal to 439. (DataStreamProcessingTest.scala:53)[0m[0m
+[0m[[0minfo[0m] [0m[31m- Messages should be placed on messaging queue and fetched by consumer *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 70 times over 30.205410989999997 seconds. Last failure message: 22404 was not equal to 4130. (DataStreamProcessingTest.scala:74)[0m[0m
+[0m[[0minfo[0m] [0m[32m- Message should be received and stored in database[0m[0m

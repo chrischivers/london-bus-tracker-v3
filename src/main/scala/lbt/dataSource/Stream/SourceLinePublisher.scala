@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit
 import com.github.sstone.amqp.Amqp._
 import com.github.sstone.amqp.{ChannelOwner, ConnectionOwner}
 import lbt.{MessagingConfig, RabbitMQConfig}
+import net.liftweb.json._
+import net.liftweb.json.Serialization.write
 
 import scala.concurrent.duration._
 
@@ -24,8 +26,9 @@ class SourceLinePublisher(config: MessagingConfig) extends RabbitMQConfig  {
   }
 
   def sourceLineToJson(sourceLine: SourceLine): String = {
-    //write(sourceLine)
-    sourceLine.toString
+    implicit val formats = DefaultFormats
+    write(sourceLine)
+    //sourceLine.toString
     //route: String, direction: String, stopID: String, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
   }
 }

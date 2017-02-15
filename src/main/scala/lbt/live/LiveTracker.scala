@@ -10,10 +10,11 @@ object LiveTracker {
 }
 
 object  LiveMessageProcessor extends MessageProcessor {
-  override def apply(message: Array[Byte]): Unit = {
+  override def apply(message: Array[Byte]): Boolean = {
     println("message received")
  //   val jValue = parse(message.toString)
   //  val sourceLine = jValue.extract[SourceLine]
+    true
 
   }
 }

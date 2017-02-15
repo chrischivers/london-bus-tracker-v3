@@ -16,7 +16,7 @@ trait RabbitMQConfig  {
 }
 
 trait MessageProcessor {
-  def apply(message: Array[Byte])
+  def apply(message: Array[Byte]): Boolean
 }
 
 class MessageConsumer(processor: MessageProcessor, exchangeName: String, queueName: String, routingKey: String) extends RabbitMQConfig  {
@@ -27,13 +27,13 @@ class MessageConsumer(processor: MessageProcessor, exchangeName: String, queueNa
   import scala.concurrent.duration._
 
   val conn = system.actorOf(ConnectionOwner.props(connFactory, 1 second))
-  var messageCounter: Long = 0
+  var messagesReceived: Long = 0
 
   val listener = system.actorOf(Props(new Actor {
     def receive = {
       case Delivery(consumerTag, envelope, properties, body) => {
         processor(body)
-        messageCounter += 1
+        messagesReceived += 1
         sender ! Ack(envelope.getDeliveryTag)
       }
     }

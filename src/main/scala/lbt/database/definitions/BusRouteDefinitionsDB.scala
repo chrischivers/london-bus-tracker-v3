@@ -43,8 +43,8 @@ class BusDefinitionsDBSupervisor(busDefinitionsCollection: BusDefinitionsCollect
           BUS_STOP_SEQUENCE_DEFINITION.SEQUENCE_NO -> seq._2,
           BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_ID -> seq._1.id,
           BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_NAME -> seq._1.name,
-          BUS_STOP_SEQUENCE_DEFINITION.LONGITUDE -> seq._1.longitude.toString,
-          BUS_STOP_SEQUENCE_DEFINITION.LATITUDE -> seq._1.latitude.toString)
+          BUS_STOP_SEQUENCE_DEFINITION.LONGITUDE -> seq._1.longitude,
+          BUS_STOP_SEQUENCE_DEFINITION.LATITUDE -> seq._1.latitude)
 
       })
 

@@ -9,18 +9,14 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 
 class DefinitionsTest extends FunSuite with BeforeAndAfter {
 
-  implicit val patienceConfig =  PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(1, Millis)))
+  implicit val patienceConfig =  PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(1000, Millis)))
 
   val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(databaseName = "TestDB")
   val dbCol = DbCollections.loadBusDefinitionsCollection(dbConfig = testDBConfig)
 
-  before {
-    dbCol.db.dropDatabase
-  }
+  before {dbCol.db.dropDatabase}
 
-  after {
-    dbCol.db.dropDatabase
-  }
+  after {dbCol.db.dropDatabase}
 
   test("Route definitions for bus number 3 can be loaded from web into DB") {
 

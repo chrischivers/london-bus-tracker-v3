@@ -7,7 +7,7 @@ object SourceLineValidator extends StrictLogging {
   def apply(sourceLineString: String): SourceLine = {
     val split = splitLine(sourceLineString)
     checkArrayCorrectLength(split)
-    SourceLine(split(1).toUpperCase, getDirection(split(2).toInt), split(0), split(3), split(4), split(5).toLong)
+    SourceLine(split(1).toUpperCase, split(2).toInt, split(0), split(3), split(4), split(5).toLong)
   }
 
 
@@ -22,11 +22,5 @@ object SourceLineValidator extends StrictLogging {
     if (array.length != 6) {
       throw new IllegalArgumentException(s"Source array has incorrect number of elements (${array.length}. 6 expected. Or invalid web page retrieved \n " + array)
     }
-  }
-
-  def getDirection(integerDirection: Int) = {
-    if (integerDirection == 1) "outbound"
-    else if (integerDirection == 2) "inbound"
-    else throw new IllegalArgumentException("Unknown Direction")
   }
 }

@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170212173436"
+		publication="20170214224404"
 	>
 		<description>
 		london-bus-tracker-v3
@@ -43,7 +43,7 @@
 		<dependency org="org.scalatest" name="scalatest_2.11" rev="3.0.1" conf="test->default(compile)"/>
 		<dependency org="com.github.sstone" name="amqp-client_2.11" rev="1.5" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.akka" name="akka-actor_2.11" rev="2.4.16" conf="compile->default(compile)"/>
-		<dependency org="com.typesafe.play" name="play-json_2.11" rev="2.6.0-M2" conf="compile->default(compile)"/>
+		<dependency org="net.liftweb" name="lift-json_2.11" rev="3.0.1" conf="compile->default(compile)"/>
 		<dependency org="org.mongodb" name="casbah_2.11" rev="3.1.1" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

@@ -10,7 +10,7 @@ case class Outbound() extends Direction {
   override def toString: String = "outbound"
 }
 
-case class BusStop(id: String, name: String, longitude: String, latitude: String)
+case class BusStop(id: String, name: String, longitude: Double, latitude: Double)
 
 case class BusRoute(id: String, direction: Direction)
 

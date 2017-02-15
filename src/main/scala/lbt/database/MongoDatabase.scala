@@ -13,7 +13,7 @@ class MongoDatabase(dbConfig: DatabaseConfig) extends StrictLogging {
   val db = client(dBName)
 
   def getCollection(collectionName: String, indexKeyList: List[(String, Int)], unique: Boolean): MongoCollection = {
-    logger.info(s"getting collection for colName: $collectionName")
+    logger.info(s"Getting collection for colName: $collectionName")
     val col = db(collectionName)
     setIndex(collectionName, indexKeyList, unique)
     col
@@ -26,6 +26,7 @@ class MongoDatabase(dbConfig: DatabaseConfig) extends StrictLogging {
   }
 
   private def setIndex(collectionName: String, indexKeyList: List[(String, Int)], unique: Boolean) = {
+    logger.info(s"Setting index for collection $collectionName with indexKeyList: $indexKeyList")
     val col = db.getCollection(collectionName)
     col.createIndex(MongoDBObject(indexKeyList),MongoDBObject("unique" -> unique))
   }

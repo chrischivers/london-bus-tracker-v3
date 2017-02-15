@@ -12,7 +12,7 @@ import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
 import org.apache.http.impl.client.{BasicCredentialsProvider, CloseableHttpClient, HttpClientBuilder}
 
 
-case class SourceLine(route: String, direction: String, stopID: String, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
+case class SourceLine(route: String, direction: Int, stopID: String, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
 object BusDataSource {
   val defaultDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
