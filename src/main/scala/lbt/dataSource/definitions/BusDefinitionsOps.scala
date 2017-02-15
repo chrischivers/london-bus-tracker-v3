@@ -15,7 +15,7 @@ import scala.io.Source
 
 object BusDefinitionsOps {
   type BusRouteDefinitions = Map[BusRoute, List[BusStop]]
-  def loadBusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection) = {
+  def loadBusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection = DbCollections.loadBusDefinitionsCollection()) = {
     new BusDefinitionsOps(busDefinitionsCollection)
   }
 }
@@ -56,7 +56,7 @@ class BusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection) exte
         logger.info(s"Currently processing route ${route._1._1.toUpperCase} and direction $directionStr")
         try {
           val routeIDString = route._1._1.toUpperCase
-          val direction = Commons.directionStrToDirection(directionStr)
+          val direction = Commons.toDirection(directionStr)
           val busRoute = BusRoute(routeIDString, direction)
           if((busRouteDefinitions.get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
             logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")

@@ -1,8 +1,14 @@
 package lbt.historical
 
+import lbt.comon.{BusRoute, Commons}
 import lbt.dataSource.Stream.SourceLine
+import lbt.dataSource.definitions.BusDefinitionsOps
+import lbt.database.DbCollections
 import lbt.{ConfigLoader, MessageConsumer, MessageProcessor, MessagingConfig}
 import net.liftweb.json.{DefaultFormats, parse}
+import scala.concurrent.ExecutionContext.Implicits.global
+
+import scala.concurrent.Future
 
 
 object HistoricalRecorder {
@@ -24,15 +30,30 @@ class HistoricalMessageProcessor extends MessageProcessor {
   implicit val formats = DefaultFormats
   override def apply(message: Array[Byte]): Boolean = {
 
-    val jValue = parse(new String(message, "UTF-8"))
-    val sourceLine = jValue.extract[SourceLine]
+    val sourceLine = parse(new String(message, "UTF-8")).extract[SourceLine]
+    println(s"message received: $sourceLine")
     lastProcessedMessage = Some(sourceLine)
     messagesProcessed += 1
-    println(s"message received: $sourceLine")
+    for {
+      _ <- routeIsDefined(sourceLine)
+    } yield {
+      lastValidatedMessage = Some(sourceLine)
+      messagesValidated += 1
+    }
+
     true
   }
 
-  def existsInRouteDefinition: Boolean = true
+  def routeIsDefined(sourceLine: SourceLine): Future[Unit] = {
+    Future {
+      val busRoute = BusRoute(sourceLine.route, Commons.toDirection(sourceLine.direction))
+      val definitions = BusDefinitionsOps.loadBusDefinitionsOps()
+      definitions.busRouteDefinitions.get(busRoute) match {
+        case Some(_) => Future.successful()
+        case None => Future.failed(throw new IllegalArgumentException(s"Route $busRoute not defined in definitions"))
+      }
+    }
+  }
 
   def notOnIgnoreList: Boolean = true
 }

@@ -23,9 +23,12 @@ class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLine
       context.become(inactive)
       logger.info("DataStreamProcessingActor becoming inactive")
     case Next =>
-     publisher.publish(dataSource.next())
-      context.parent ! Increment
-      self ! Next
+     if(dataSource.hasNext){
+       publisher.publish(dataSource.next())
+       context.parent ! Increment
+       self ! Next
+     } else logger.info("Data source iterator is empty. No line to process.")
+
   }
 
   override def postRestart(reason: Throwable): Unit = {

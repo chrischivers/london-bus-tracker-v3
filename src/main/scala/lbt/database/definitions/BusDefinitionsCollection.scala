@@ -30,7 +30,7 @@ class BusDefinitionsCollection(val defConfig: DefinitionsConfig, val dbConfig: D
     cursor.map(routeDef => {
       BusRoute(
         routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID).get,
-        Commons.directionStrToDirection(routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION).get)) ->
+        Commons.toDirection(routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION).get)) ->
         routeDef.getAs[List[DBObject]](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE).get
           .sortBy(stopDef => stopDef.getAs[Int](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.SEQUENCE_NO))
           .map(stopDef => {
