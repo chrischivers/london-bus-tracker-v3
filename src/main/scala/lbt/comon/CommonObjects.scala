@@ -17,6 +17,9 @@ case class BusRoute(id: String, direction: Direction)
 case class Bus(id: String, route: BusRoute)
 
 object Commons {
+
+  type BusRouteDefinitions = Map[BusRoute, List[BusStop]]
+
   def toDirection(directionStr: String) = {
     directionStr match {
       case "inbound" => Inbound()

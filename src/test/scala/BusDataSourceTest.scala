@@ -1,5 +1,6 @@
 import lbt.ConfigLoader
 import lbt.dataSource.Stream.BusDataSource
+import org.apache.http.TruncatedChunkException
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
@@ -15,25 +16,20 @@ class BusDataSourceTest extends FunSuite {
     }
   }
 
-   test("Iterator should reload when required") {
-
-     val dataSource = BusDataSource(testDataSourceConfig)
-     dataSource.hasNext shouldBe true
-
-     dataSource.reloadDataSource()
-
-     val reloadedDataSource = BusDataSource(testDataSourceConfig)
-     reloadedDataSource.hasNext shouldBe true
-     reloadedDataSource.hashCode() shouldNot equal(dataSource)
-   }
-
-  test("Iterator should not create new instance when requested again") {
+  test("Iterator should close previous instance when new instance is created") {
 
     val dataSource = BusDataSource(testDataSourceConfig)
     dataSource.hasNext shouldBe true
 
     val newDataSource = BusDataSource(testDataSourceConfig)
     newDataSource.hasNext shouldBe true
-    newDataSource.hashCode() shouldEqual(dataSource)
+
+    withClue("checks that iterating over the old data source (which has been closed) results in an error") {
+      assertThrows[TruncatedChunkException] {
+        for (_ <- 0 to 100) {
+          dataSource.next()
+        }
+      }
+    }
   }
 }

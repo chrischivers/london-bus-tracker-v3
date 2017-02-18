@@ -2,6 +2,7 @@ package lbt.dataSource.Stream
 
 import akka.actor.Actor
 import com.typesafe.scalalogging.StrictLogging
+import lbt.dataSource.Stream.BusDataSource.BusDataSource
 
 /**
  * Actor that iterates over live stream sending lines to be processed. On crash, the supervisor strategy restarts it
@@ -33,7 +34,6 @@ class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLine
 
   override def postRestart(reason: Throwable): Unit = {
     logger.debug("DataStreamProcessingActor Restarting")
-    dataSource.reloadDataSource()
     self ! Start
     self ! Next
   }

@@ -7,7 +7,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3_2.11;1.0 [compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->default(compile)][0m
 [0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.11.7 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@275b8d55[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@2193f2b9[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7[0m
 [0m[[0mdebug[0m] [0m	found org.scala-lang#scala-library;2.11.7 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m	[2.11.7] org.scala-lang#scala-library;2.11.7[0m
@@ -2065,7 +2065,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scalatest#scalatest_2.11;3.0.1!scalatest_2.11.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.5!scala-xml_2.11.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] jline#jline;2.12.1!jline.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 694ms :: artifacts dl 23ms[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 754ms :: artifacts dl 32ms[0m
 [0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 compile produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 runtime produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 test produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml[0m
@@ -2079,7 +2079,7 @@
 [0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 docs produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-docs.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 pom produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-pom.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 scala-tool produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (694ms resolve - 23ms download)[0m
+[0m[[0mdebug[0m] [0m	resolve done (754ms resolve - 32ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m
 [0m[[33mwarn[0m] [0mScala version was updated by one of library dependencies:[0m
 [0m[[33mwarn[0m] [0m	* org.scala-lang:scala-library:(2.11.7, 2.11.0, 2.11.6, 2.11.4) -> 2.11.8[0m

@@ -1,64 +1,58 @@
+import lbt.ConfigLoader
 import lbt.comon.{BusRoute, Outbound}
 import lbt.dataSource.definitions.BusDefinitionsOps
-import lbt.{ConfigLoader, DefinitionsConfig}
-import lbt.database.{DbCollections, MongoDatabase}
+import lbt.database.definitions.BusDefinitionsCollection
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.{BeforeAndAfter, FunSuite, fixture}
+import scala.concurrent.duration._
 
-class DefinitionsTest extends FunSuite with BeforeAndAfter {
+class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
 
-  implicit val patienceConfig =  PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(1000, Millis)))
 
-  val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(databaseName = "TestDB")
-  val dbCol = DbCollections.loadBusDefinitionsCollection(dbConfig = testDBConfig)
+  type FixtureParam = TestFixture
 
-  before {dbCol.db.dropDatabase}
+  override implicit val patienceConfig =
+    PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(500, Millis)))
 
-  after {dbCol.db.dropDatabase}
-
-  test("Route definitions for bus number 3 can be loaded from web into DB") {
-
-    val testBusRoute = BusRoute("3", Outbound())
-    val getOnlyList = List(testBusRoute)
-    BusDefinitionsOps.loadBusDefinitionsOps(dbCol).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
-    eventually {
-      val busDefinitions = BusDefinitionsOps.loadBusDefinitionsOps(dbCol)
-      busDefinitions.busRouteDefinitions.get(testBusRoute) shouldBe defined
-      busDefinitions.busRouteDefinitions(testBusRoute).count(stop => stop.name.contains("Brixton")) should be > 1
+  override def withFixture(test: OneArgTest) = {
+    val fixture = new TestFixture
+    try test(fixture)
+    finally {
+      fixture.consumer.unbindAndDelete
+      fixture.testDefinitionsCollection.db.dropDatabase
     }
   }
 
-  test("Bus Route  already in DB is not reloaded from web when flag set") {
+  test("Route definitions for bus number 3 can be loaded from web into DB") { f =>
 
     val testBusRoute = BusRoute("3", Outbound())
     val getOnlyList = List(testBusRoute)
-    BusDefinitionsOps.loadBusDefinitionsOps(dbCol)
-      .refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(getOnlyList))
 
-    // Fake url would throw error if called
-    val testDefConfig = ConfigLoader.defaultConfig.definitionsConfig.copy(sourceSingleUrl = "fake#RouteID#fake#Direction#")
-    val dbCol2 = DbCollections.loadBusDefinitionsCollection(dbConfig = testDBConfig, defConfig = testDefConfig)
-    BusDefinitionsOps.loadBusDefinitionsOps(dbCol2)
-      .refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(getOnlyList))
+    new BusDefinitionsOps(f.testDefinitionsCollection).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
     eventually {
-      val busDefinitions = BusDefinitionsOps.loadBusDefinitionsOps(dbCol)
-      busDefinitions.busRouteDefinitions.get(testBusRoute) shouldBe defined
-      busDefinitions.busRouteDefinitions(testBusRoute).count(stop => stop.name.contains("Brixton")) should be > 1
+      val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitionsFromDB
+      busDefinitions.get(testBusRoute) shouldBe defined
+      busDefinitions(testBusRoute).count(stop => stop.name.contains("Brixton")) should be > 1
     }
   }
 
-  test("Sequence is kept in order when loaded from web and retrieved from db") {
+  test("Bus Route already in DB is not reloaded from web when flag set") { f =>
+      //TODO
+  }
+
+  test("Sequence is kept in order when loaded from web and retrieved from db") { f =>
     val testBusRoute = BusRoute("3", Outbound())
     val getOnlyList = List(testBusRoute)
-    BusDefinitionsOps.loadBusDefinitionsOps(dbCol).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
+    new BusDefinitionsOps(f.testDefinitionsCollection).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
     eventually {
-      val busDefinitions = BusDefinitionsOps.loadBusDefinitionsOps(dbCol)
-      busDefinitions.busRouteDefinitions.get(testBusRoute) shouldBe defined
-      busDefinitions.busRouteDefinitions(testBusRoute).head.name should include ("Conduit Street")
-      busDefinitions.busRouteDefinitions(testBusRoute).last.name should include ("Crystal Palace")
+      val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitionsFromDB
+      busDefinitions.get(testBusRoute) shouldBe defined
+      busDefinitions(testBusRoute).head.name should include ("Conduit Street")
+      busDefinitions(testBusRoute).last.name should include ("Crystal Palace")
 
     }
   }

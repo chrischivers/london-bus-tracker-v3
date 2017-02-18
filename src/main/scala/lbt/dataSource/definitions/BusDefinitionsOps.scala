@@ -1,24 +1,16 @@
 package lbt.dataSource.definitions
 
 import com.typesafe.scalalogging.StrictLogging
-import lbt.DefinitionsConfig
+import lbt.comon.Commons.BusRouteDefinitions
 import lbt.comon._
-import lbt.dataSource.definitions.BusDefinitionsOps.BusRouteDefinitions
-import lbt.database.DbCollections
 import lbt.database.definitions.BusDefinitionsCollection
 import net.liftweb.json.JsonAST._
-import net.liftweb.json.{DefaultFormats, JValue, JsonAST, parse}
+import net.liftweb.json.{DefaultFormats, JValue, parse}
 import org.bson.json.JsonParseException
 
 import scala.collection.immutable.Seq
 import scala.io.Source
 
-object BusDefinitionsOps {
-  type BusRouteDefinitions = Map[BusRoute, List[BusStop]]
-  def loadBusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection = DbCollections.loadBusDefinitionsCollection()) = {
-    new BusDefinitionsOps(busDefinitionsCollection)
-  }
-}
 
 class BusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection) extends StrictLogging {
 
@@ -53,18 +45,18 @@ class BusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection) exte
     logger.info(s"number of routes to process: $numberToProcess")
     busRoutes.foreach(route => {
       route._2.foreach(directionStr => {
-        logger.info(s"Currently processing route ${route._1._1.toUpperCase} and direction $directionStr")
+       // logger.info(s"Currently processing route ${route._1._1.toUpperCase} and direction $directionStr")
         try {
           val routeIDString = route._1._1.toUpperCase
           val direction = Commons.toDirection(directionStr)
           val busRoute = BusRoute(routeIDString, direction)
           if((busRouteDefinitions.get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
-            logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
+             // logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
           } else {
-            logger.info("processing route " + routeIDString + ", direction " + direction)
+           // logger.info("processing route " + routeIDString + ", direction " + direction)
             val singleRouteJsonDataRaw = Source.fromURL(getSingleRouteUrl(busRoute)).mkString
             val singleRouteJsonDataParsed = parse(singleRouteJsonDataRaw)
-            val busStopSequence = ((singleRouteJsonDataParsed \ "stopPointSequences").extract[List[JObject]].head \ "stopPoint").extract[List[JValue]]
+            val busStopSequence = ((singleRouteJsonDataParsed \ "stopPointSequences").extract[List[JValue]].head \ "stopPoint").extract[List[JValue]]
             val busStopList = convertBusStopSequenceToBusStopList(busStopSequence)
             persistBusRouteDefinitionToDB(busRoute, busStopList)
           }

@@ -1,85 +1,61 @@
-import akka.util.Timeout
+import akka.actor.PoisonPill
+import akka.pattern.ask
 import lbt.dataSource.Stream._
-import lbt._
-import lbt.database.DbCollections
-import lbt.historical.{HistoricalMessageProcessor, HistoricalRecorder}
-import net.liftweb.json.{DefaultFormats, parse}
-import org.scalatest.{BeforeAndAfter, FunSuite}
-import org.scalatest.Matchers.{message, _}
-import org.scalatest.concurrent.Eventually._
+import org.scalatest.Matchers._
+import org.scalatest.concurrent.Eventually.eventually
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.fixture
 import org.scalatest.time.{Millis, Seconds, Span}
 
-import scala.language.postfixOps
-import akka.pattern.ask
-
-import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
-class DataStreamProcessingTest extends FunSuite with BeforeAndAfter {
+class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
 
-  before {
-    BusDataSource.reloadDataSource()
-  }
+  type FixtureParam = TestFixture
 
-  val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
-    exchangeName = "test-lbt-exchange",
-    historicalRecorderQueueName = "test-historical-recorder-queue-name",
-    historicalRecorderRoutingKey = "test-historical-recorder-routing-key")
+  override implicit val patienceConfig =
+    PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(500, Millis)))
 
-  val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
-
-  test("Data Stream Processor starts up iterator and starts publishing messages") {
-
-    implicit val patienceConfig = PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(500, Millis)))
-
-    val messageProcessor = new HistoricalMessageProcessor()
-    val consumer = HistoricalRecorder(messageProcessor, testMessagingConfig)
-
-    DataStreamProcessingController(testMessagingConfig) ! Start
-    eventually {
-      messageProcessor.lastProcessedMessage.isDefined shouldBe true
-      consumer.messagesReceived should be > 1.toLong
+  override def withFixture(test: OneArgTest) = {
+    val fixture = new TestFixture
+    try test(fixture)
+    finally {
+      fixture.dataStreamProcessingControllerReal ! Stop
+      fixture.dataStreamProcessingControllerReal ! PoisonPill
+      fixture.consumer.unbindAndDelete
+      fixture.testDefinitionsCollection.db.dropDatabase
+      Thread.sleep(5000)
     }
   }
 
-  test("Data Stream Processor processes same number of messages as those queued") {
+  test("Data Stream Processor processes same number of messages as those queued") { f =>
 
-    implicit val patienceConfig = PatienceConfig(timeout = scaled(Span(60, Seconds)), interval = scaled(Span(500, Millis)))
-    implicit val timeout = Timeout(5 seconds)
+    f.dataStreamProcessingControllerReal ! Start
+    Thread.sleep(100)
+    f.dataStreamProcessingControllerReal ! Stop
 
-    val messageProcessor = new HistoricalMessageProcessor()
-    val consumer = HistoricalRecorder(messageProcessor, testMessagingConfig)
-
-    val dataStreamProcessingController = DataStreamProcessingController(testMessagingConfig)
-    dataStreamProcessingController ! Start
-    Thread.sleep(500)
-    dataStreamProcessingController ! Stop
-
-    eventually {
-      val result = Await.result(dataStreamProcessingController ? GetNumberProcessed, timeout.duration).asInstanceOf[Long]
-       result shouldBe consumer.messagesReceived
-      messageProcessor.lastProcessedMessage.isDefined shouldBe true
+    eventually(timeout(40 seconds)) {
+    val result = (f.dataStreamProcessingControllerReal ? GetNumberLinesProcessed)(20 seconds).futureValue.asInstanceOf[Long]
+       result shouldBe f.consumer.getNumberReceived.futureValue
+      result shouldBe f.messageProcessor.getNumberProcessed
+      f.messageProcessor.lastProcessedMessage.isDefined shouldBe true
     }
   }
 
-  test("Messages should be placed on messaging queue and fetched by consumer") {
+  test("Messages should be placed on messaging queue and fetched by consumer") { f =>
 
-    implicit val patienceConfig = PatienceConfig(timeout = scaled(Span(30, Seconds)), interval = scaled(Span(500, Millis)))
+    val testDataSource = new TestDataSource(f.testDataSourceConfig)
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)
 
-    val messageProcessor = new HistoricalMessageProcessor()
-    val consumer = HistoricalRecorder(messageProcessor, testMessagingConfig)
-
-    val testDataSource = new TestDataSource(testDataSourceConfig)
-    val dataStreamProcessingController = DataStreamProcessingController(testDataSource, testMessagingConfig)
-
-    dataStreamProcessingController ! Start
+    dataStreamProcessingControllerTest ! Start
     Thread.sleep(500)
-    dataStreamProcessingController ! Stop
+    dataStreamProcessingControllerTest ! Stop
 
     eventually {
-      consumer.messagesReceived shouldBe testDataSource.numberLinesStreamed
-      messageProcessor.messagesProcessed shouldBe testDataSource.numberLinesStreamed
-      testDataSource.testLines should contain(soureLineBackToLine(messageProcessor.lastProcessedMessage.get))
+      f.consumer.getNumberReceived.futureValue shouldBe testDataSource.getNumberLinesStreamed
+      f.messageProcessor.getNumberProcessed shouldBe testDataSource.getNumberLinesStreamed
+      testDataSource.testLines should contain(soureLineBackToLine(f.messageProcessor.lastProcessedMessage.get))
     }
 
     def soureLineBackToLine(sourceLine: SourceLine): String = {
@@ -87,7 +63,7 @@ class DataStreamProcessingTest extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test("Message should be received and stored in database") {
+  test("Message should be received and stored in database") { f =>
     //TODO
   }
 

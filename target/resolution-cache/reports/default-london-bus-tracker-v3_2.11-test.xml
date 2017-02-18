@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="test"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170214224404"/>
+		date="20170218210548"/>
 	<dependencies>
 		<module organisation="org.mongodb" name="casbah_2.11">
 			<revision name="3.1.1" status="release" pubdate="20160301143343" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://github.com/mongodb/casbah" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="22">

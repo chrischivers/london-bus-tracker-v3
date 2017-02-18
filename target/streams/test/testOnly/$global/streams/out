@@ -1,0 +1,4 @@
+[0m[[0mdebug[0m] [0mRunning TaskDef(HistoricalRecorderTest, org.scalatest.tools.Framework$$anon$1@256c3b60, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(DefinitionsTest, org.scalatest.tools.Framework$$anon$1@256c3b60, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(BusDataSourceTest, org.scalatest.tools.Framework$$anon$1@256c3b60, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(DataStreamProcessingTest, org.scalatest.tools.Framework$$anon$1@256c3b60, false, [SuiteSelector])[0m
