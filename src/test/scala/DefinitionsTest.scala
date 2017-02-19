@@ -1,5 +1,6 @@
 import lbt.ConfigLoader
 import lbt.comon.{BusRoute, Outbound}
+import lbt.dataSource.Stream.Stop
 import lbt.dataSource.definitions.BusDefinitionsOps
 import lbt.database.definitions.BusDefinitionsCollection
 import org.scalatest.Matchers._
@@ -7,6 +8,7 @@ import org.scalatest.concurrent.Eventually._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfter, FunSuite, fixture}
+
 import scala.concurrent.duration._
 
 class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
@@ -21,6 +23,8 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     val fixture = new TestFixture
     try test(fixture)
     finally {
+      fixture.dataStreamProcessingControllerReal ! Stop
+      fixture.actorSystem.terminate().futureValue
       fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
     }

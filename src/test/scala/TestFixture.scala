@@ -1,3 +1,4 @@
+import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Outbound}
 import lbt.dataSource.Stream.DataStreamProcessingController
 import lbt.dataSource.definitions.BusDefinitionsOps
@@ -6,6 +7,9 @@ import lbt.database.definitions.BusDefinitionsCollection
 import lbt.historical.HistoricalMessageProcessor
 
 class TestFixture {
+
+  implicit val actorSystem = ActorSystem("TestLbtSystem")
+
   val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
     exchangeName = "test-lbt-exchange",
     historicalRecorderQueueName = "test-historical-recorder-queue-name",

@@ -1,24 +1,27 @@
 package lbt.historical
 
-import akka.actor.Props
+import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.pattern.ask
+import akka.util.Timeout
 import lbt._
 import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.dataSource.Stream.SourceLine
 import lbt.database.definitions.BusDefinitionsCollection
 import net.liftweb.json.{DefaultFormats, _}
 
+import scala.concurrent.duration._
 import scalaz.Scalaz._
 import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitionsCollection: BusDefinitionsCollection) extends MessageProcessor {
+class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitionsCollection: BusDefinitionsCollection)(implicit actorSystem: ActorSystem) extends MessageProcessor {
 
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
 
-  val vehicleActorSupervisor = system.actorOf(Props[VehicleActorSupervisor])
+  val vehicleActorSupervisor = actorSystem.actorOf(Props[VehicleActorSupervisor])
 
   type StringValidation[T] = Validation[String, T]
 
@@ -76,6 +79,11 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
       |@| notOnIgnoreList()).tupled.map {
         x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, sourceLine.vehicleID, sourceLine.arrival_TimeStamp)
       }
+  }
+
+  def getCurrentActors = {
+    implicit val timeout = Timeout(10 seconds)
+    (vehicleActorSupervisor ? GetCurrentActors).mapTo[Map[String, ActorRef]]
   }
 
   class SourceLineCache(timeToLiveSeconds: Int) {

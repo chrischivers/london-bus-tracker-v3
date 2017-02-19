@@ -39,7 +39,7 @@ object ConfigLoader {
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "cache-time-to-live-seconds")
         ),
       new DatabaseConfig(
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "database-actor-system")
+        defaultConfigFactory.getString(dataBaseParamsPrefix + "database-name")
       ),
       new DefinitionsConfig(
         defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-all-url"),

@@ -22,7 +22,7 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
     try test(fixture)
     finally {
       fixture.dataStreamProcessingControllerReal ! Stop
-      fixture.dataStreamProcessingControllerReal ! PoisonPill
+      fixture.actorSystem.terminate().futureValue
       fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
       Thread.sleep(5000)
@@ -46,7 +46,7 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
   test("Messages should be placed on messaging queue and fetched by consumer") { f =>
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig)
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
     dataStreamProcessingControllerTest ! Start
     Thread.sleep(500)
@@ -55,17 +55,14 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
     eventually {
       f.consumer.getNumberReceived.futureValue shouldBe testDataSource.getNumberLinesStreamed
       f.messageProcessor.getNumberProcessed shouldBe testDataSource.getNumberLinesStreamed
-      testDataSource.testLines should contain(soureLineBackToLine(f.messageProcessor.lastProcessedMessage.get))
+      testDataSource.testLines should contain(sourceLineBackToLine(f.messageProcessor.lastProcessedMessage.get))
     }
 
-    def soureLineBackToLine(sourceLine: SourceLine): String = {
+    def sourceLineBackToLine(sourceLine: SourceLine): String = {
       "[1,\"" + sourceLine.stopID + "\",\"" + sourceLine.route + "\"," + sourceLine.direction + ",\"" +  sourceLine.destinationText + "\",\"" +  sourceLine.vehicleID + "\"," +  sourceLine.arrival_TimeStamp + "]"
     }
   }
 
-  test("Message should be received and stored in database") { f =>
-    //TODO
-  }
 
 
 

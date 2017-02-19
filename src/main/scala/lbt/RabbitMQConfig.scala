@@ -18,14 +18,12 @@ import scala.concurrent.duration._
 case class GetNumberMessagesReceived()
 
 trait RabbitMQConfig  {
-  implicit val system = ActorSystem("lbtMessagingSystem")
   implicit val timeout: Timeout = 30 seconds
   val connFactory = new ConnectionFactory()
   connFactory.setUri("amqp://guest:guest@localhost/%2F")
 }
 
 trait MessageProcessor extends StrictLogging {
-  implicit val system = ActorSystem("lbtVehicleSystem")
   def processMessage(message: Array[Byte])
   var lastProcessedMessage: Option[SourceLine] = None
   protected var messagesProcessed: AtomicLong = new AtomicLong(0)
@@ -36,14 +34,14 @@ trait MessageProcessor extends StrictLogging {
   def getNumberValidated = messagesValidated.get()
 }
 
-class MessageConsumer(processor: MessageProcessor, val messagingConfig: MessagingConfig) extends RabbitMQConfig  {
+class MessageConsumer(processor: MessageProcessor, val messagingConfig: MessagingConfig)(implicit actorSystem: ActorSystem) extends RabbitMQConfig  {
 
-  val conn = system.actorOf(ConnectionOwner.props(connFactory, 1 second))
+  val conn = actorSystem.actorOf(ConnectionOwner.props(connFactory, 1 second))
 
-  val listener = system.actorOf(Props(classOf[ListeningActor], processor))
+  val listener = actorSystem.actorOf(Props(classOf[ListeningActor], processor))
 
   val consumer = ConnectionOwner.createChildActor(conn, Consumer.props(listener, channelParams = None, autoack = false))
-  Amqp.waitForConnection(system, consumer).await()
+  Amqp.waitForConnection(actorSystem, consumer).await()
   consumer ! DeclareExchange(ExchangeParameters(messagingConfig.exchangeName, passive = true, "direct"))
 
   // create a queue

@@ -3,6 +3,7 @@ package lbt.dataSource.Stream
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
+import akka.actor.ActorSystem
 import com.github.sstone.amqp.Amqp._
 import com.github.sstone.amqp.{ChannelOwner, ConnectionOwner}
 import lbt.{MessagingConfig, RabbitMQConfig}
@@ -11,14 +12,14 @@ import net.liftweb.json.Serialization.write
 
 import scala.concurrent.duration._
 
-class SourceLinePublisher(config: MessagingConfig) extends RabbitMQConfig  {
+class SourceLinePublisher(config: MessagingConfig)(actorSystem: ActorSystem) extends RabbitMQConfig  {
 
-  val conn = system.actorOf(ConnectionOwner.props(connFactory, 1 second))
+  val conn = actorSystem.actorOf(ConnectionOwner.props(connFactory, 1 second))
   val producer = ConnectionOwner.createChildActor(conn, ChannelOwner.props())
 
   val messagesPublished = new AtomicLong(0)
 
-  waitForConnection(system, conn, producer).await(10, TimeUnit.SECONDS)
+  waitForConnection(actorSystem, conn, producer).await(10, TimeUnit.SECONDS)
 
   producer ! DeclareExchange(ExchangeParameters(config.exchangeName, passive = true, "direct"))
 

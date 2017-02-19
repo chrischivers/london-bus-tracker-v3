@@ -3,6 +3,8 @@ package lbt.historical
 import akka.actor.{Actor, ActorRef, Props}
 import com.typesafe.scalalogging.StrictLogging
 
+case class GetCurrentActors()
+
 class VehicleActorSupervisor extends Actor with StrictLogging {
 
   def receive = active(Map.empty)
@@ -17,6 +19,7 @@ class VehicleActorSupervisor extends Actor with StrictLogging {
           context.become(active(currentActors + (vsl.vehicleID -> newVehicle)))
       }
     }
+    case GetCurrentActors => sender ! currentActors
   }
 
   def createNewActor(vehicleID: String): ActorRef = {

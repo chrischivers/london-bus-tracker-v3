@@ -23,7 +23,7 @@ case class GetNumberLinesProcessedSinceRestart()
 
 class DataStreamProcessingController(dataSource: BusDataSource, config: MessagingConfig) extends Actor with StrictLogging {
 
-  val publisher = new SourceLinePublisher(config)
+  val publisher = new SourceLinePublisher(config)(context.system)
   val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], dataSource, publisher))
 
   var numberProcessed = new AtomicLong(0)
@@ -80,14 +80,13 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
 }
 
 object DataStreamProcessingController {
-  implicit val system = ActorSystem("lbtStreamingSystem")
   val defaultMessagingConfig = ConfigLoader.defaultConfig.messagingConfig
   val defaultDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
 
-  def apply(): ActorRef = apply(defaultMessagingConfig)
+  def apply()(implicit actorSystem: ActorSystem): ActorRef = apply(defaultMessagingConfig)
 
-  def apply(config: MessagingConfig): ActorRef = apply(new BusDataSource(defaultDataSourceConfig), config)
+  def apply(config: MessagingConfig)(implicit actorSystem: ActorSystem): ActorRef = apply(new BusDataSource(defaultDataSourceConfig), config)
 
-  def apply(dataSource: BusDataSource, config: MessagingConfig) =
-    system.actorOf(Props(classOf[DataStreamProcessingController], dataSource, config))
+  def apply(dataSource: BusDataSource, config: MessagingConfig)(implicit actorSystem: ActorSystem) =
+    actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSource, config))
 }
