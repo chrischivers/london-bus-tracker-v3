@@ -80,7 +80,7 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
 }
 
 object DataStreamProcessingController {
-  implicit val system = ActorSystem("lbtSystem")
+  implicit val system = ActorSystem("lbtStreamingSystem")
   val defaultMessagingConfig = ConfigLoader.defaultConfig.messagingConfig
   val defaultDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
 

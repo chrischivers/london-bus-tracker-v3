@@ -1,22 +1,24 @@
 package lbt.historical
 
-import java.util.concurrent.atomic.AtomicLong
-
+import akka.actor.Props
 import lbt._
-import lbt.comon.{BusRoute, Commons}
+import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.dataSource.Stream.SourceLine
 import lbt.database.definitions.BusDefinitionsCollection
-import net.liftweb.json.DefaultFormats
-import net.liftweb.json._
+import net.liftweb.json.{DefaultFormats, _}
 
-import scala.util.Random
 import scalaz.Scalaz._
-import scalaz.Validation
+import scalaz._
 
+case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
 class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitionsCollection: BusDefinitionsCollection) extends MessageProcessor {
 
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
+
+  val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
+
+  val vehicleActorSupervisor = system.actorOf(Props[VehicleActorSupervisor])
 
   type StringValidation[T] = Validation[String, T]
 
@@ -28,40 +30,52 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
     val sourceLine = parse(new String(message, "UTF-8")).extract[SourceLine]
     println(s"message parsed: $sourceLine")
     lastProcessedMessage = Some(sourceLine)
-    if (validateSourceLine(sourceLine).isSuccess) {
-      lastValidatedMessage = Some(sourceLine)
-      messagesValidated.incrementAndGet()
-      cache.put(sourceLine)
+    validateSourceLine(sourceLine) match {
+      case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
+      case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
     }
+    cache.put(sourceLine)
+
   }
 
-  def validateSourceLine(sourceLine: SourceLine): StringValidation[_] = {
+  def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
+    lastValidatedMessage = Some(validatedSourceLine)
+    messagesValidated.incrementAndGet()
+    vehicleActorSupervisor ! validatedSourceLine
+  }
+
+  def validateSourceLine(sourceLine: SourceLine): StringValidation[ValidatedSourceLine] = {
 
     val busRoute = BusRoute(sourceLine.route, Commons.toDirection(sourceLine.direction))
-    val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
 
-    def validRoute(busRoute: BusRoute): StringValidation[BusRoute] = {
+    def validRouteAndStop (busRoute: BusRoute): StringValidation[BusStop] = {
       definitions.get(busRoute) match {
-        case Some(stopList) => stopList.exists(stop => stop.id == sourceLine.stopID) match {
-          case true => busRoute.success
-          case false => s"Bus Stop ${sourceLine.stopID} not defined in definitions for route ${sourceLine.route}".failure
-        }
+        case Some(stopList) => validStop(stopList)
         case None => s"Route ${sourceLine.route} not defined in definitions".failure
       }
     }
 
-      def nonDuplicateLine(sourceLine: SourceLine): StringValidation[SourceLine] = {
-        if (cache.contains(sourceLine)) "Duplicate Line Received recently".failure
-        else sourceLine.success
+    def validStop(busStopList: List[BusStop]): StringValidation[BusStop] = {
+      busStopList.find(stop => stop.id == sourceLine.stopID) match {
+        case Some(busStop) => busStop.success
+        case None => s"Bus Stop ${sourceLine.stopID} not defined in definitions for route ${sourceLine.route}".failure
       }
-
-      def notOnIgnoreList(busRoute: BusRoute): StringValidation[BusRoute] = {
-      busRoute.success
     }
 
-   (validRoute(busRoute)
-      |@| nonDuplicateLine(sourceLine)
-      |@| notOnIgnoreList(busRoute)).tupled
+    def nonDuplicateLine(): StringValidation[Unit] = {
+      if (cache.contains(sourceLine)) "Duplicate Line Received recently".failure
+      else ().success
+    }
+
+    def notOnIgnoreList(): StringValidation[Unit] = {
+      ().success
+  }
+
+      (validRouteAndStop(busRoute)
+      |@| nonDuplicateLine()
+      |@| notOnIgnoreList()).tupled.map {
+        x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, sourceLine.vehicleID, sourceLine.arrival_TimeStamp)
+      }
   }
 
   class SourceLineCache(timeToLiveSeconds: Int) {
@@ -81,7 +95,6 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
       cache = cache.filter(line => (now - line._2) < timeToLiveSeconds * 1000)
     }
   }
-
 }
 
 

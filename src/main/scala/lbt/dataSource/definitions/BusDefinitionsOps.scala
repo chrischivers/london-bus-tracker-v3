@@ -16,9 +16,7 @@ class BusDefinitionsOps(busDefinitionsCollection: BusDefinitionsCollection) exte
 
   implicit val formats = DefaultFormats
 
-  val busRouteDefinitions: BusRouteDefinitions = retrieveAllBusRouteDefinitionsFromDB
-
-  private def retrieveAllBusRouteDefinitionsFromDB = busDefinitionsCollection.getBusRouteDefinitionsFromDB
+  val busRouteDefinitions: BusRouteDefinitions = busDefinitionsCollection.getBusRouteDefinitionsFromDB
 
   private def persistBusRouteDefinitionToDB(busRoute: BusRoute, busStops: List[BusStop]) = {
     logger.info(s"Persisting bus route $busRoute to database")

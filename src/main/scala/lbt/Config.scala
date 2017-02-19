@@ -6,7 +6,7 @@ case class DataSourceConfig(sourceUrl: String, username: String, password: Strin
 
 case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, dBCollectionName: String)
 
-case class DatabaseConfig(databaseActorSystemName: String, databaseName: String)
+case class DatabaseConfig(databaseName: String)
 
 case class MessagingConfig(exchangeName: String, historicalRecorderQueueName : String, historicalRecorderRoutingKey: String, liveTrackerQueueName: String, liveTrackerRoutingKey: String)
 
@@ -39,8 +39,7 @@ object ConfigLoader {
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "cache-time-to-live-seconds")
         ),
       new DatabaseConfig(
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "database-actor-system"),
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "database-name")
+        defaultConfigFactory.getString(dataBaseParamsPrefix + "database-actor-system")
       ),
       new DefinitionsConfig(
         defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-all-url"),

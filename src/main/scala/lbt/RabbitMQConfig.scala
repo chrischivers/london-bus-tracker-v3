@@ -10,6 +10,7 @@ import com.github.sstone.amqp.{Amqp, ConnectionOwner, Consumer}
 import com.rabbitmq.client.ConnectionFactory
 import com.typesafe.scalalogging.StrictLogging
 import lbt.dataSource.Stream.SourceLine
+import lbt.historical.ValidatedSourceLine
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -17,17 +18,18 @@ import scala.concurrent.duration._
 case class GetNumberMessagesReceived()
 
 trait RabbitMQConfig  {
-  implicit val system = ActorSystem("lbtSystem")
+  implicit val system = ActorSystem("lbtMessagingSystem")
   implicit val timeout: Timeout = 30 seconds
   val connFactory = new ConnectionFactory()
   connFactory.setUri("amqp://guest:guest@localhost/%2F")
 }
 
 trait MessageProcessor extends StrictLogging {
+  implicit val system = ActorSystem("lbtVehicleSystem")
   def processMessage(message: Array[Byte])
   var lastProcessedMessage: Option[SourceLine] = None
   protected var messagesProcessed: AtomicLong = new AtomicLong(0)
-  var lastValidatedMessage: Option[SourceLine] = None
+  var lastValidatedMessage: Option[ValidatedSourceLine] = None
   protected var messagesValidated: AtomicLong = new AtomicLong(0)
 
   def getNumberProcessed = messagesProcessed.get()
