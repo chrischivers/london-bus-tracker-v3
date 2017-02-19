@@ -21,21 +21,19 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
 
-  val vehicleActorSupervisor = actorSystem.actorOf(Props[VehicleActorSupervisor])
+  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection))
 
   type StringValidation[T] = Validation[String, T]
 
   implicit val formats = DefaultFormats
 
   def processMessage(message: Array[Byte]) = {
-    logger.info(s"message received $message")
     messagesProcessed.incrementAndGet()
     val sourceLine = parse(new String(message, "UTF-8")).extract[SourceLine]
-    println(s"message parsed: $sourceLine")
     lastProcessedMessage = Some(sourceLine)
     validateSourceLine(sourceLine) match {
       case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-      case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+      case Failure(e) => //TODO turn on when ready logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
     }
     cache.put(sourceLine)
 

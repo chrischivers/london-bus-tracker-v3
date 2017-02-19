@@ -32,7 +32,7 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
   test("Data Stream Processor processes same number of messages as those queued") { f =>
 
     f.dataStreamProcessingControllerReal ! Start
-    Thread.sleep(100)
+    Thread.sleep(60000)
     f.dataStreamProcessingControllerReal ! Stop
 
     eventually(timeout(40 seconds)) {

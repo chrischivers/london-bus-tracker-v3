@@ -1,10 +1,9 @@
 import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Outbound}
 import lbt.dataSource.Stream.DataStreamProcessingController
-import lbt.dataSource.definitions.BusDefinitionsOps
-import lbt.{ConfigLoader, MessageConsumer}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.historical.HistoricalMessageProcessor
+import lbt.{ConfigLoader, MessageConsumer}
 
 class TestFixture {
 
@@ -25,7 +24,7 @@ class TestFixture {
 
   val testBusRoute = BusRoute("3", Outbound()) //TODO include more randomisation on routes
   val getOnlyList = List(testBusRoute)
-  new BusDefinitionsOps(testDefinitionsCollection).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
+  testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
   Thread.sleep(5000)
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitionsFromDB

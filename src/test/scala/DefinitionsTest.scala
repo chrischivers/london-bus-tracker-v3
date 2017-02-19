@@ -1,15 +1,10 @@
-import lbt.ConfigLoader
 import lbt.comon.{BusRoute, Outbound}
 import lbt.dataSource.Stream.Stop
-import lbt.dataSource.definitions.BusDefinitionsOps
-import lbt.database.definitions.BusDefinitionsCollection
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.fixture
 import org.scalatest.time.{Millis, Seconds, Span}
-import org.scalatest.{BeforeAndAfter, FunSuite, fixture}
-
-import scala.concurrent.duration._
 
 class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
 
@@ -35,7 +30,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     val testBusRoute = BusRoute("3", Outbound())
     val getOnlyList = List(testBusRoute)
 
-    new BusDefinitionsOps(f.testDefinitionsCollection).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
+    f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
     eventually {
       val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitionsFromDB
@@ -51,7 +46,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
   test("Sequence is kept in order when loaded from web and retrieved from db") { f =>
     val testBusRoute = BusRoute("3", Outbound())
     val getOnlyList = List(testBusRoute)
-    new BusDefinitionsOps(f.testDefinitionsCollection).refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
+    f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
     eventually {
       val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitionsFromDB
       busDefinitions.get(testBusRoute) shouldBe defined
