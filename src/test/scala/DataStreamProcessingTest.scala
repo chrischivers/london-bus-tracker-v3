@@ -1,5 +1,6 @@
 import akka.actor.PoisonPill
 import akka.pattern.ask
+import lbt.comon.{Start, Stop}
 import lbt.dataSource.Stream._
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually.eventually

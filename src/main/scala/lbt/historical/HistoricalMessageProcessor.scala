@@ -8,7 +8,9 @@ import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.dataSource.Stream.SourceLine
 import lbt.database.definitions.BusDefinitionsCollection
 import net.liftweb.json.{DefaultFormats, _}
+import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scalaz.Scalaz._
 import scalaz._
@@ -20,10 +22,11 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
+  println(definitions)
 
   val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection))
 
-  type StringValidation[T] = Validation[String, T]
+  type StringValidation[T] = ValidationNel[String, T]
 
   implicit val formats = DefaultFormats
 
@@ -31,12 +34,13 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
     messagesProcessed.incrementAndGet()
     val sourceLine = parse(new String(message, "UTF-8")).extract[SourceLine]
     lastProcessedMessage = Some(sourceLine)
-    validateSourceLine(sourceLine) match {
-      case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-      case Failure(e) => //TODO turn on when ready logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+    if (sourceLine.route == "3") { //TODO take this testing code out
+      validateSourceLine(sourceLine) match {
+        case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
+        case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+      }
+      cache.put(sourceLine)
     }
-    cache.put(sourceLine)
-
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
@@ -46,35 +50,40 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
   }
 
   def validateSourceLine(sourceLine: SourceLine): StringValidation[ValidatedSourceLine] = {
-
     val busRoute = BusRoute(sourceLine.route, Commons.toDirection(sourceLine.direction))
 
     def validRouteAndStop (busRoute: BusRoute): StringValidation[BusStop] = {
       definitions.get(busRoute) match {
         case Some(stopList) => validStop(stopList)
-        case None => s"Route ${sourceLine.route} not defined in definitions".failure
+        case None => s"Route not defined in definitions. Route ID: ${busRoute.id}. Direction: ${busRoute.direction}".failureNel
       }
     }
 
     def validStop(busStopList: List[BusStop]): StringValidation[BusStop] = {
       busStopList.find(stop => stop.id == sourceLine.stopID) match {
-        case Some(busStop) => busStop.success
-        case None => s"Bus Stop ${sourceLine.stopID} not defined in definitions for route ${sourceLine.route}".failure
+        case Some(busStop) => busStop.successNel
+        case None => s"Bus Stop ${sourceLine.stopID} not defined in definitions for route ${sourceLine.route} and direction ${sourceLine.direction}".failureNel
       }
     }
 
     def nonDuplicateLine(): StringValidation[Unit] = {
-      if (cache.contains(sourceLine)) "Duplicate Line Received recently".failure
-      else ().success
+      if (cache.contains(sourceLine)) "Duplicate Line Received recently".failureNel
+      else ().successNel
     }
 
     def notOnIgnoreList(): StringValidation[Unit] = {
-      ().success
-  }
+      ().successNel
+    }
+
+    def isInPast(): StringValidation[Unit] = {
+      if (sourceLine.arrival_TimeStamp - System.currentTimeMillis() > 0) ().successNel
+      else "Arrival time in past".failureNel
+    }
 
       (validRouteAndStop(busRoute)
       |@| nonDuplicateLine()
-      |@| notOnIgnoreList()).tupled.map {
+      |@| notOnIgnoreList()
+      |@| isInPast()).tupled.map {
         x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, sourceLine.vehicleID, sourceLine.arrival_TimeStamp)
       }
   }
@@ -82,6 +91,14 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitions
   def getCurrentActors = {
     implicit val timeout = Timeout(10 seconds)
     (vehicleActorSupervisor ? GetCurrentActors).mapTo[Map[String, ActorRef]]
+  }
+
+  def getArrivalRecords(vehicleID: String) = {
+    implicit val timeout = Timeout(10 seconds)
+    for {
+      futureResult <- (vehicleActorSupervisor ? GetArrivalRecords(vehicleID)).mapTo[Future[Map[BusStop, Long]]]
+      listResult <- futureResult
+    } yield listResult
   }
 
   class SourceLineCache(timeToLiveSeconds: Int) {

@@ -2,7 +2,7 @@ package lbt
 
 import com.typesafe.config.ConfigFactory
 
-case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int)
+case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int, timeWindowToAcceptLines: Int)
 
 case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, dBCollectionName: String)
 
@@ -36,7 +36,8 @@ object ConfigLoader {
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "connection-timeout"),
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-lines-disregarded"),
             defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "wait-time-after-close"),
-            defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "cache-time-to-live-seconds")
+            defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "cache-time-to-live-seconds"),
+            defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "time-window-to-accept-lines")
         ),
       new DatabaseConfig(
         defaultConfigFactory.getString(dataBaseParamsPrefix + "database-name")

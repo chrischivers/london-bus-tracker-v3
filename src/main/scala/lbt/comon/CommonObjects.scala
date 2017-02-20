@@ -1,5 +1,8 @@
 package lbt.comon
 
+case class Start()
+case class Stop()
+
 trait Direction
 
 case class Inbound() extends Direction {

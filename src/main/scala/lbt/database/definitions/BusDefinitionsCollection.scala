@@ -57,15 +57,14 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     logger.info(s"number of routes to process: $numberToProcess")
     busRoutes.foreach(route => {
       route._2.foreach(directionStr => {
-        // logger.info(s"Currently processing route ${route._1._1.toUpperCase} and direction $directionStr")
         try {
           val routeIDString = route._1._1.toUpperCase
           val direction = Commons.toDirection(directionStr)
           val busRoute = BusRoute(routeIDString, direction)
           if((getBusRouteDefinitionsFromDB.get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
-            // logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
+            logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
           } else {
-            // logger.info("processing route " + routeIDString + ", direction " + direction)
+            logger.info("processing route " + routeIDString + ", direction " + direction)
             val singleRouteJsonDataRaw = Source.fromURL(getSingleRouteUrl(busRoute)).mkString
             val singleRouteJsonDataParsed = parse(singleRouteJsonDataRaw)
             val busStopSequence = ((singleRouteJsonDataParsed \ "stopPointSequences").extract[List[JValue]].head \ "stopPoint").extract[List[JValue]]
@@ -78,6 +77,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
           case e: Exception => logger.error("Uncaught exception " + e.printStackTrace())
         }
         numberToProcess -= 1
+        logger.info(s"number of routes left to process: $numberToProcess")
       })
     })
 

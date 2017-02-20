@@ -7,6 +7,7 @@ import akka.actor.{Actor, ActorRef, ActorSystem, OneForOneStrategy, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
+import lbt.comon.{Start, Stop}
 import lbt.dataSource.Stream.BusDataSource.BusDataSource
 import lbt.{ConfigLoader, MessagingConfig}
 
@@ -14,8 +15,6 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, TimeoutException}
 import scala.util.Random
 
-case class Start()
-case class Stop()
 case class Next()
 case class Increment()
 case class GetNumberLinesProcessed()

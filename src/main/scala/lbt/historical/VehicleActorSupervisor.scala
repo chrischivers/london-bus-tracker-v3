@@ -1,12 +1,18 @@
 package lbt.historical
 
 import akka.actor.{Actor, ActorRef, Props}
+import akka.pattern.ask
+import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt.database.definitions.BusDefinitionsCollection
+import scala.concurrent.duration._
 
 case class GetCurrentActors()
+case class GetArrivalRecords(vehicleID: String)
 
 class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection) extends Actor with StrictLogging {
+
+  implicit val timeout = Timeout(10 seconds)
 
   def receive = active(Map.empty)
 
@@ -21,6 +27,12 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection)
       }
     }
     case GetCurrentActors => sender ! currentActors
+    case GetArrivalRecords(vehicleID) => currentActors.get(vehicleID) match {
+        case Some(actorRef) => sender ! (actorRef ? GetArrivalRecords(vehicleID))
+        case None =>
+          logger.error(s"Unable to get arrival records for $vehicleID. No such actor")
+          sender ! List.empty
+      }
   }
 
   def createNewActor(vehicleID: String): ActorRef = {

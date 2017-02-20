@@ -1,5 +1,4 @@
-import lbt.comon.{BusRoute, Outbound}
-import lbt.dataSource.Stream.Stop
+import lbt.comon.{BusRoute, Outbound, Stop}
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.concurrent.ScalaFutures
