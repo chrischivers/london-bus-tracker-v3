@@ -5,12 +5,14 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt.database.definitions.BusDefinitionsCollection
+import lbt.database.historical.HistoricalRecordsCollection
+
 import scala.concurrent.duration._
 
 case class GetCurrentActors()
 case class GetArrivalRecords(vehicleID: String)
 
-class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection) extends Actor with StrictLogging {
+class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection) extends Actor with StrictLogging {
 
   implicit val timeout = Timeout(10 seconds)
 
@@ -37,6 +39,6 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection)
 
   def createNewActor(vehicleID: String): ActorRef = {
     logger.info(s"Creating new actor for vehicle ID $vehicleID")
-    context.actorOf(Props(classOf[VehicleActor], busDefinitionsCollection), vehicleID)
+    context.actorOf(Props(classOf[VehicleActor], busDefinitionsCollection, historicalRecordsCollection), vehicleID)
   }
 }

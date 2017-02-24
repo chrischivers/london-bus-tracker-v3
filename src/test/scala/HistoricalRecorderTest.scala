@@ -1,10 +1,6 @@
-import java.io.Serializable
-
-import akka.actor.{Kill, PoisonPill}
-import akka.pattern.ask
 import lbt.comon._
 import lbt.dataSource.Stream._
-import lbt.historical.{GetArrivalRecords, ValidatedSourceLine}
+import lbt.historical.ValidatedSourceLine
 import org.scalatest.Matchers._
 import org.scalatest._
 import org.scalatest.concurrent.Eventually._
@@ -36,10 +32,9 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
 
     val routeDefFromDb = f.definitions(f.testBusRoute)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
-    val arrivalTime = System.currentTimeMillis() + 100000
 
-    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + arrivalTime + "]"
-    val invalidSourceLine = "[1,\"" + randomStop.id + "\",\"99XXXX\",2,\"Bromley North\",\"YX62DYN\"," + arrivalTime + "]"
+    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime + "]"
+    val invalidSourceLine = "[1,\"" + randomStop.id + "\",\"99XXXX\",2,\"Bromley North\",\"YX62DYN\"," + f.generateArrivalTime + "]"
     val testLines = List(validSourceline, invalidSourceLine)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
@@ -63,10 +58,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
 
     val routeDefFromDb = f.definitions(f.testBusRoute)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
-    val arrivalTime = System.currentTimeMillis() + 100000
 
-    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + arrivalTime + "]"
-    val invalidSourceLine = "[1,\"" + "XXSTOP" + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + arrivalTime + "]"
+
+    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
+    val invalidSourceLine = "[1,\"" + "XXSTOP" + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
     val testLines = List(validSourceline, invalidSourceLine)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
@@ -90,9 +85,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
 
     val routeDefFromDb = f.definitions(f.testBusRoute)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
-    val arrivalTime = System.currentTimeMillis() + 100000
 
-    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + arrivalTime + "]"
+    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime + "]"
     val testLines = List(validSourceline, validSourceline, validSourceline)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
@@ -114,7 +108,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
 
   test("Lines received with arrival time in past should be ignored"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute)
-    val arrivalTime = System.currentTimeMillis() + Random.nextInt(60000)
+    val arrivalTime = f.generateArrivalTime
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]")
@@ -143,12 +137,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
 
     val routeDefFromDb = f.definitions(f.testBusRoute)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
-    val arrivalTime = System.currentTimeMillis() + 100000
 
-    val validSourceline1 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]"
-    val validSourceline2 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V234567\"," + arrivalTime+ "]"
-    val validSourceline3 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V345678\"," + arrivalTime + "]"
-    val validSourceline4 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V345678\"," + arrivalTime+ "]"
+    val validSourceline1 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]"
+    val validSourceline2 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V234567\"," + f.generateArrivalTime + "]"
+    val validSourceline3 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V345678\"," + f.generateArrivalTime + "]"
+    val validSourceline4 = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V345678\"," + f.generateArrivalTime + "]"
 
     val testLines = List(validSourceline1, validSourceline2, validSourceline3, validSourceline4)
 
@@ -170,10 +163,9 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
 
   test("Vehicle actors should add incoming lines relating to arrival times to stop record"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute)
-    val arrivalTime = System.currentTimeMillis() + 100000
 
     val testLines = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
     val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
@@ -222,13 +214,69 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
     }
   }
 
-
-  test("Vehicle actors should not persist record if stop arrival time information is missing"){f=>
+  test("Vehicle actors should persist record if stop arrival time information is complete and passes validation"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute)
-    val arrivalTime = System.currentTimeMillis() + 100000
+    val vehicleReg = "V123456"
+
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+
+    dataStreamProcessingControllerTest ! Start
+    Thread.sleep(500)
+    dataStreamProcessingControllerTest ! Stop
+
+    eventually(timeout(30 seconds))  {
+      testDataSource.getNumberLinesStreamed shouldBe testLines.size
+      f.consumer.getNumberReceived.futureValue shouldBe testLines.size
+      f.messageProcessor.getNumberProcessed shouldBe testLines.size
+      f.messageProcessor.getNumberValidated shouldBe testLines.size
+      f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines.size
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+
+    }
+  }
+
+  test("Persisted record should be loaded with stop sequence in same order and with same values"){f=>
+    val routeDefFromDb = f.definitions(f.testBusRoute)
+    val vehicleReg = "V123456"
+
+
+    val testLines: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+
+    dataStreamProcessingControllerTest ! Start
+    Thread.sleep(500)
+    dataStreamProcessingControllerTest ! Stop
+
+    eventually(timeout(30 seconds))  {
+      testDataSource.getNumberLinesStreamed shouldBe testLines.size
+      f.consumer.getNumberReceived.futureValue shouldBe testLines.size
+      f.messageProcessor.getNumberProcessed shouldBe testLines.size
+      f.messageProcessor.getNumberValidated shouldBe testLines.size
+      f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
+      val historicalRecord = f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head
+      historicalRecord.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+    }
+  }
+
+  test("Vehicle actors should not persist record if there is a gap in the sequence"){f=>
+    val routeDefFromDb = f.definitions(f.testBusRoute)
+    val vehicleReg = "V123456"
+
+    val testLines: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val splitTestLines = testLines.splitAt(testLines.size / 2)
     val testLinesWithMissing = splitTestLines._1 ++ splitTestLines._2.tail
@@ -246,8 +294,135 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
       f.messageProcessor.getNumberProcessed shouldBe testLinesWithMissing.size
       f.messageProcessor.getNumberValidated shouldBe testLinesWithMissing.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
-      //TODO  check persist
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe false
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe false
+    }
+  }
 
+  test("Vehicle actors should persist record if there is a gap at the beginning of the sequence (bus started midway through route)"){f=>
+    val routeDefFromDb = f.definitions(f.testBusRoute)
+    val vehicleReg = "V123456"
+
+    val testLines: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val testLinesSecondHalf = testLines.splitAt(testLines.size / 2)._2
+
+    val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesSecondHalf))
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+
+    dataStreamProcessingControllerTest ! Start
+    Thread.sleep(500)
+    dataStreamProcessingControllerTest ! Stop
+
+    eventually {
+      testDataSource.getNumberLinesStreamed shouldBe testLinesSecondHalf.size
+      f.consumer.getNumberReceived.futureValue shouldBe testLinesSecondHalf.size
+      f.messageProcessor.getNumberProcessed shouldBe testLinesSecondHalf.size
+      f.messageProcessor.getNumberValidated shouldBe testLinesSecondHalf.size
+      f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+
+    }
+  }
+
+  test("Multiple records should be persisted where the same bus on the same route makes the same journey at a different time"){f=>
+    val routeDefFromDb = f.definitions(f.testBusRoute)
+    val vehicleReg = "V123456"
+
+    val testLines1: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val testLines2: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val testLines1and2 = testLines1 ++ testLines2
+
+    val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines1and2))
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+
+    dataStreamProcessingControllerTest ! Start
+    Thread.sleep(500)
+    dataStreamProcessingControllerTest ! Stop
+
+    eventually {
+      testDataSource.getNumberLinesStreamed shouldBe testLines1and2.size
+      f.consumer.getNumberReceived.futureValue shouldBe testLines1and2.size
+      f.messageProcessor.getNumberProcessed shouldBe testLines1and2.size
+      f.messageProcessor.getNumberValidated shouldBe testLines1and2.size
+      f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 2
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg)(1).stopRecords.size shouldBe testLines2.size
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg)(1).stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+    }
+  }
+
+  test("Only one record should be persisted if multiple persists are requested for the same bus making the same route at the same time"){f=>
+    val routeDefFromDb = f.definitions(f.testBusRoute)
+    val vehicleReg = "V123456"
+
+    val testLines1: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place 1\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val testLines2: List[String] = testLines1.map(line => line.replace("Any Place 1", "Any Place 2"))
+
+    val testLinesDoubled = testLines1 ++ testLines2
+
+    val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesDoubled))
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+
+    dataStreamProcessingControllerTest ! Start
+    Thread.sleep(500)
+    dataStreamProcessingControllerTest ! Stop
+
+    eventually {
+      testDataSource.getNumberLinesStreamed shouldBe testLinesDoubled.size
+      f.consumer.getNumberReceived.futureValue shouldBe testLinesDoubled.size
+      f.messageProcessor.getNumberProcessed shouldBe testLinesDoubled.size
+      f.messageProcessor.getNumberValidated shouldBe testLinesDoubled.size //TODO validation is failing these
+      f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+    }
+  }
+
+  test("Record should not be duplicated in database if an updated last line is received after initial persist"){f=>
+    val routeDefFromDb = f.definitions(f.testBusRoute)
+    val vehicleReg = "V123456"
+
+    val testLines: List[String] = routeDefFromDb.map(busStop =>
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
+
+    val lastLineArrivalTime = f.generateArrivalTime
+    val testLinesWithExtraLastLine = testLines ++ List("[1,\"" + routeDefFromDb.last.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + lastLineArrivalTime + "]")
+    val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesWithExtraLastLine))
+    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+
+    dataStreamProcessingControllerTest ! Start
+    Thread.sleep(500)
+    dataStreamProcessingControllerTest ! Stop
+
+    eventually {
+      testDataSource.getNumberLinesStreamed shouldBe testLinesWithExtraLastLine.size
+      f.consumer.getNumberReceived.futureValue shouldBe testLinesWithExtraLastLine.size
+      f.messageProcessor.getNumberProcessed shouldBe testLinesWithExtraLastLine.size
+      f.messageProcessor.getNumberValidated shouldBe testLinesWithExtraLastLine.size
+      f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 1
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines.size
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.last.stopID shouldBe lastLineArrivalTime
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
     }
   }
 

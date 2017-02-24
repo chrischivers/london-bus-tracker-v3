@@ -2,8 +2,11 @@ import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Outbound}
 import lbt.dataSource.Stream.DataStreamProcessingController
 import lbt.database.definitions.BusDefinitionsCollection
+import lbt.database.historical.HistoricalRecordsCollection
 import lbt.historical.HistoricalMessageProcessor
 import lbt.{ConfigLoader, MessageConsumer}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class TestFixture {
 
@@ -22,6 +25,8 @@ class TestFixture {
 
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
 
+  val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig)
+
   val testBusRoute = BusRoute("3", Outbound()) //TODO include more randomisation on routes
   val getOnlyList = List(testBusRoute)
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
@@ -29,8 +34,11 @@ class TestFixture {
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitionsFromDB
 
-  val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testDefinitionsCollection)
+  val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
   val consumer = new MessageConsumer(messageProcessor, testMessagingConfig)
 
   val dataStreamProcessingControllerReal  = DataStreamProcessingController(testMessagingConfig)
+
+  val arrivalTimeMultipliers = Stream.from(1).iterator
+  def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
 }

@@ -12,15 +12,14 @@ import net.liftweb.json.{DefaultFormats, JValue, parse}
 import org.bson.json.JsonParseException
 
 import scala.collection.immutable.Seq
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.io.Source
 import scala.util.{Failure, Success}
 
-class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig) extends DatabaseCollections with StrictLogging{
+class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig)(implicit ec: ExecutionContext) extends DatabaseCollections with StrictLogging{
 
   override val db: MongoDatabase = new MongoDatabase(dbConfig)
-  override val collectionName: String = defConfig.dBCollectionName
-  override val fieldsVector = Vector(BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID, BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION, BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE)
+  override val collectionName: String = dbConfig.busDefinitionsCollectionName
   override val indexKeyList = List((BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID, 1), (BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION, 1))
   override val uniqueIndex = true
 

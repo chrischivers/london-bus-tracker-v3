@@ -8,7 +8,6 @@ import lbt.{DatabaseConfig, DefinitionsConfig}
  */
 trait DatabaseCollections {
   val collectionName: String
-  val fieldsVector: Vector[String]
   val indexKeyList: List[(String, Int)]
   val uniqueIndex: Boolean
 

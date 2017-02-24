@@ -7,24 +7,24 @@ import lbt._
 import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.dataSource.Stream.SourceLine
 import lbt.database.definitions.BusDefinitionsCollection
+import lbt.database.historical.HistoricalRecordsCollection
 import net.liftweb.json.{DefaultFormats, _}
-import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 import scalaz.Scalaz._
 import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitionsCollection: BusDefinitionsCollection)(implicit actorSystem: ActorSystem) extends MessageProcessor {
+class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends MessageProcessor {
 
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
   println(definitions)
 
-  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection))
+  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsCollection))
 
   type StringValidation[T] = ValidationNel[String, T]
 
