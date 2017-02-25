@@ -1,5 +1,0 @@
-[0m[[0minfo[0m] [0m[32mDataStreamProcessingTest:[0m[0m
-[0m[[0minfo[0m] [0m[31m- Data Stream Processor processes same number of messages as those queued *** FAILED ***[0m[0m
-[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 41 times over 40.48152601699999 seconds. Last failure message: 229 was not equal to 77. (DataStreamProcessingTest.scala:38)[0m[0m
-[0m[[0minfo[0m] [0m[32m- Messages should be placed on messaging queue and fetched by consumer[0m[0m
-[0m[[0minfo[0m] [0m[32m- Message should be received and stored in database[0m[0m
