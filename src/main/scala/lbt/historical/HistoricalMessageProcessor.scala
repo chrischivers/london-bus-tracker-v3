@@ -17,14 +17,14 @@ import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, definitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends MessageProcessor {
+class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends MessageProcessor {
 
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
   println(definitions)
 
-  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsCollection))
+  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsCollection, historicalRecordsConfig))
 
   type StringValidation[T] = ValidationNel[String, T]
 

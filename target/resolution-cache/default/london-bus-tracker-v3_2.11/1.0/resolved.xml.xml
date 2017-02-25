@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170218210548"
+		publication="20170225130928"
 	>
 		<description>
 		london-bus-tracker-v3
@@ -16,6 +16,8 @@
 		<conf name="test" visibility="public" description="" extends="runtime"/>
 		<conf name="provided" visibility="public" description=""/>
 		<conf name="optional" visibility="public" description=""/>
+		<conf name="container" visibility="private" description=""/>
+		<conf name="jetty" visibility="private" description=""/>
 		<conf name="compile-internal" visibility="private" description="" extends="compile,optional,provided"/>
 		<conf name="runtime-internal" visibility="private" description="" extends="runtime,optional"/>
 		<conf name="test-internal" visibility="private" description="" extends="test,optional,provided"/>
@@ -24,8 +26,10 @@
 		<conf name="docs" visibility="public" description=""/>
 		<conf name="pom" visibility="public" description=""/>
 		<conf name="scala-tool" visibility="private" description=""/>
+		<conf name="scalate" visibility="private" description=""/>
 	</configurations>
 	<publications>
+		<artifact name="london-bus-tracker-v3_2.11" type="war" ext="war" conf="compile,runtime,test,provided,optional,sources,docs,pom"/>
 		<artifact name="london-bus-tracker-v3_2.11" type="pom" ext="pom" conf="pom"/>
 		<artifact name="london-bus-tracker-v3_2.11" type="jar" ext="jar" conf="compile"/>
 		<artifact name="london-bus-tracker-v3_2.11" type="src" ext="jar" conf="sources" e:classifier="sources"/>
@@ -34,6 +38,8 @@
 	<dependencies>
 		<dependency org="org.scala-lang" name="scala-compiler" rev="2.11.7" conf="scala-tool->default,optional(default)"/>
 		<dependency org="org.scala-lang" name="scala-library" rev="2.11.7" conf="scala-tool->default,optional(default);compile->default(compile)"/>
+		<dependency org="org.eclipse.jetty" name="jetty-runner" rev="9.2.1.v20140609" transitive="false" conf="jetty->default(compile)"/>
+		<dependency org="org.scalatra.scalate" name="scalate-precompiler_2.11" rev="1.8.0.1" conf="scalate->default(compile)"/>
 		<dependency org="ch.qos.logback" name="logback-classic" rev="1.1.9" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.scala-logging" name="scala-logging_2.11" rev="3.5.0" conf="compile->default(compile)"/>
 		<dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.2" conf="compile->default(compile)"/>
@@ -45,5 +51,11 @@
 		<dependency org="com.typesafe.akka" name="akka-actor_2.11" rev="2.4.16" conf="compile->default(compile)"/>
 		<dependency org="net.liftweb" name="lift-json_2.11" rev="3.0.1" conf="compile->default(compile)"/>
 		<dependency org="org.mongodb" name="casbah_2.11" rev="3.1.1" conf="compile->default(compile)"/>
+		<dependency org="org.scalatra" name="scalatra_2.11" rev="2.5.0" conf="compile->default(compile)"/>
+		<dependency org="org.scalatra" name="scalatra-scalatest_2.11" rev="2.5.0" conf="test->default(compile)"/>
+		<dependency org="org.scalatra" name="scalatra-specs2_2.11" rev="2.5.0" conf="test->default(compile)"/>
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.1.5" conf="runtime->default(compile)"/>
+		<dependency org="org.eclipse.jetty" name="jetty-webapp" rev="9.2.15.v20160210" conf="container->default(compile)"/>
+		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" conf="provided->default(compile)"/>
 	</dependencies>
 </ivy-module>

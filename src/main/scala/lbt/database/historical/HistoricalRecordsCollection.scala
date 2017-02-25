@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.DatabaseConfig
 import lbt.comon.BusRoute
 import lbt.database._
-import lbt.historical.VehicleRecordedDataToPersist
+import lbt.historical.RecordedVehicleDataToPersist
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
@@ -18,7 +18,7 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig)(implicit ec: Executi
 
   var numberToProcess:Long = 0
 
-  def insertHistoricalRecordIntoDB(vehicleRecordedData: VehicleRecordedDataToPersist) = {
+  def insertHistoricalRecordIntoDB(vehicleRecordedData: RecordedVehicleDataToPersist) = {
     incrementLogRequest(IncrementNumberInsertsRequested(1))
     HistoricalRecordsDBController.insertHistoricalRecordIntoDB(dBCollection, vehicleRecordedData).onComplete {
       case Success(ack) =>  if (ack) incrementLogRequest(IncrementNumberInsertsCompleted(1))

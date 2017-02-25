@@ -3,19 +3,19 @@ import lbt.dataSource.Stream._
 import lbt.historical.ValidatedSourceLine
 import org.scalatest.Matchers._
 import org.scalatest._
-import org.scalatest.concurrent.Eventually._
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
 
 import scala.concurrent.duration._
 import scala.util.Random
 
-class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
+class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eventually {
 
   type FixtureParam = TestFixture
 
-  override implicit val patienceConfig =
-    PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(500, Millis)))
+  override implicit val patienceConfig = PatienceConfig(
+    timeout = scaled(30 seconds),
+    interval = scaled(1 second)
+  )
 
   override def withFixture(test: OneArgTest) = {
     val fixture = new TestFixture
@@ -44,7 +44,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
     Thread.sleep(500)
     dataStreamProcessingControllerTest ! Stop
 
-    eventually(timeout(30 seconds)) {
+    eventually {
       testDataSource.getNumberLinesStreamed shouldBe 2
       f.consumer.getNumberReceived.futureValue shouldBe 2
       f.messageProcessor.getNumberProcessed shouldBe 2
@@ -184,7 +184,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
     }
   }
 
-  //TODO test missing records
 
   test("Vehicle actors should update record when closer arrival time is received"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute)
@@ -218,7 +217,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
     val routeDefFromDb = f.definitions(f.testBusRoute)
     val vehicleReg = "V123456"
 
-
     val testLines: List[String] = routeDefFromDb.map(busStop =>
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
@@ -229,12 +227,13 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
     Thread.sleep(500)
     dataStreamProcessingControllerTest ! Stop
 
-    eventually(timeout(30 seconds))  {
+    eventually {
       testDataSource.getNumberLinesStreamed shouldBe testLines.size
       f.consumer.getNumberReceived.futureValue shouldBe testLines.size
       f.messageProcessor.getNumberProcessed shouldBe testLines.size
       f.messageProcessor.getNumberValidated shouldBe testLines.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines.size
@@ -258,12 +257,13 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
     Thread.sleep(500)
     dataStreamProcessingControllerTest ! Stop
 
-    eventually(timeout(30 seconds))  {
+    eventually {
       testDataSource.getNumberLinesStreamed shouldBe testLines.size
       f.consumer.getNumberReceived.futureValue shouldBe testLines.size
       f.messageProcessor.getNumberProcessed shouldBe testLines.size
       f.messageProcessor.getNumberValidated shouldBe testLines.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
       val historicalRecord = f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head
@@ -294,6 +294,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
       f.messageProcessor.getNumberProcessed shouldBe testLinesWithMissing.size
       f.messageProcessor.getNumberValidated shouldBe testLinesWithMissing.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 0
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe false
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe false
     }
@@ -321,12 +322,13 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
       f.messageProcessor.getNumberProcessed shouldBe testLinesSecondHalf.size
       f.messageProcessor.getNumberValidated shouldBe testLinesSecondHalf.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
-      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
-
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id).splitAt(routeDefFromDb.size / 2)._2
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.id == record.stopID)) shouldEqual f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.seqNo)
     }
   }
 
@@ -355,6 +357,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
       f.messageProcessor.getNumberProcessed shouldBe testLines1and2.size
       f.messageProcessor.getNumberValidated shouldBe testLines1and2.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
@@ -386,8 +389,9 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
       testDataSource.getNumberLinesStreamed shouldBe testLinesDoubled.size
       f.consumer.getNumberReceived.futureValue shouldBe testLinesDoubled.size
       f.messageProcessor.getNumberProcessed shouldBe testLinesDoubled.size
-      f.messageProcessor.getNumberValidated shouldBe testLinesDoubled.size //TODO validation is failing these
+      f.messageProcessor.getNumberValidated shouldBe testLinesDoubled.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
@@ -417,12 +421,60 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures {
       f.messageProcessor.getNumberProcessed shouldBe testLinesWithExtraLastLine.size
       f.messageProcessor.getNumberValidated shouldBe testLinesWithExtraLastLine.size
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).exists(result => result.busRoute == f.testBusRoute) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).count(result => result.busRoute == f.testBusRoute) shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines.size
-      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.last.stopID shouldBe lastLineArrivalTime
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.last.arrivalTime shouldBe lastLineArrivalTime
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
+    }
+  }
+
+  test("Vehicles should persist and be shut down after specified period of inactivity"){f =>
+    f.dataStreamProcessingControllerReal ! Stop
+    f.actorSystem.terminate().futureValue
+    f.consumer.unbindAndDelete
+    f.testDefinitionsCollection.db.dropDatabase
+
+    val tempFixture = new TestFixture(5000)
+
+    try {
+      val routeDefFromDb = tempFixture.definitions(tempFixture.testBusRoute)
+      val vehicleReg = "V123456"
+
+      val testLines: List[String] = routeDefFromDb.map(busStop =>
+        "[1,\"" + busStop.id + "\",\"" + tempFixture.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + tempFixture.generateArrivalTime + "]")
+
+      val testLinesFirstHalf = testLines.splitAt(testLines.size / 2)._1
+
+      val testDataSource = new TestDataSource(tempFixture.testDataSourceConfig, Some(testLinesFirstHalf))
+      val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, tempFixture.testMessagingConfig)(tempFixture.actorSystem)
+
+      dataStreamProcessingControllerTest ! Start
+      Thread.sleep(500)
+      dataStreamProcessingControllerTest ! Stop
+      Thread.sleep(7000) //Period of inactivity
+      val mockValidatedSourceLine = ValidatedSourceLine(tempFixture.testBusRoute, routeDefFromDb.head, "direction", "V98765", System.currentTimeMillis())
+      tempFixture.messageProcessor.vehicleActorSupervisor ! mockValidatedSourceLine //A new line is needed to prompt the vehicle actor to clean up
+
+      eventually {
+        testDataSource.getNumberLinesStreamed shouldBe testLinesFirstHalf.size
+        tempFixture.consumer.getNumberReceived.futureValue shouldBe testLinesFirstHalf.size
+        tempFixture.messageProcessor.getNumberProcessed shouldBe testLinesFirstHalf.size
+        tempFixture.messageProcessor.getNumberValidated shouldBe testLinesFirstHalf.size
+        tempFixture.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
+        tempFixture.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
+        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute).exists(result => result.vehicleID == vehicleReg) shouldBe true
+        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute).exists(result => result.busRoute == tempFixture.testBusRoute) shouldBe true
+        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute).count(result => result.busRoute == tempFixture.testBusRoute) shouldBe 1
+        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesFirstHalf.size
+      }
+    } finally {
+      tempFixture.dataStreamProcessingControllerReal ! Stop
+      tempFixture.actorSystem.terminate().futureValue
+      tempFixture.consumer.unbindAndDelete
+      tempFixture.testDefinitionsCollection.db.dropDatabase
     }
   }
 

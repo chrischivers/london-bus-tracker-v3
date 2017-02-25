@@ -4,11 +4,12 @@ import lbt.dataSource.Stream.DataStreamProcessingController
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 import lbt.historical.HistoricalMessageProcessor
-import lbt.{ConfigLoader, MessageConsumer}
+import lbt.servlet.LbtServlet
+import lbt.{ConfigLoader, MessageConsumer, ServletBootstrap}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class TestFixture {
+class TestFixture(vehicleInactivityTimeout: Long = 720000) {
 
   implicit val actorSystem = ActorSystem("TestLbtSystem")
 
@@ -23,6 +24,8 @@ class TestFixture {
 
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
 
+  val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeout, numberOfLinesToCleanupAfter = 1)
+
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
 
   val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig)
@@ -34,11 +37,12 @@ class TestFixture {
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitionsFromDB
 
-  val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+  val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
   val consumer = new MessageConsumer(messageProcessor, testMessagingConfig)
 
   val dataStreamProcessingControllerReal  = DataStreamProcessingController(testMessagingConfig)
 
   val arrivalTimeMultipliers = Stream.from(1).iterator
   def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
+
 }

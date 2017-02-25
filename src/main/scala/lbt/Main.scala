@@ -17,6 +17,7 @@ object Main extends App {
   val dataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
   val dBConfig = ConfigLoader.defaultConfig.databaseConfig
   val definitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
+  val historicalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig
 
   val definitionsCollection = new BusDefinitionsCollection(definitionsConfig, dBConfig)
 
@@ -27,7 +28,7 @@ object Main extends App {
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
 
-  val messageProcessor = new HistoricalMessageProcessor(dataSourceConfig, definitionsCollection, historicalRecordsCollection)
+  val messageProcessor = new HistoricalMessageProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)
 
   val consumer = new MessageConsumer(messageProcessor, messagingConfig)
 

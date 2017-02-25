@@ -6,7 +6,7 @@ import com.mongodb.casbah.commons.{Imports, MongoDBObject}
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.database.historical.HISTORICAL_RECORDS_DOCUMENT.HISTORICAL_VEHICLE_RECORD_DOCUMENT
-import lbt.historical.VehicleRecordedDataToPersist
+import lbt.historical.RecordedVehicleDataToPersist
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -17,30 +17,29 @@ case class HistoricalRecordFromDb(busRoute: BusRoute, vehicleID: String, stopRec
 
 object HistoricalRecordsDBController extends StrictLogging {
 
-  def insertHistoricalRecordIntoDB(col: MongoCollection, vehicleRecordedData: VehicleRecordedDataToPersist): Future[Boolean] = {
+  def insertHistoricalRecordIntoDB(col: MongoCollection, vehicleRecordedData: RecordedVehicleDataToPersist): Future[Boolean] = {
 
     Future {
       val newRecord = MongoDBObject(
         HISTORICAL_RECORDS_DOCUMENT.ROUTE_ID -> vehicleRecordedData.busRoute.id,
         HISTORICAL_RECORDS_DOCUMENT.DIRECTION -> vehicleRecordedData.busRoute.direction.toString,
-        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._2,
+        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._3,
         HISTORICAL_RECORDS_DOCUMENT.VEHICLE_ID -> vehicleRecordedData.vehicleID,
         HISTORICAL_RECORDS_DOCUMENT.VEHICLE_RECORD ->
 
           vehicleRecordedData.stopArrivalRecords
-            .zipWithIndex
-            .map { case (stopRec, index) =>
+            .map {case(seqNo, busStop, arrivalTime) =>
               MongoDBObject(
-                HISTORICAL_VEHICLE_RECORD_DOCUMENT.SEQ_NO -> index,
-                HISTORICAL_VEHICLE_RECORD_DOCUMENT.STOP_ID -> stopRec._1.id,
-                HISTORICAL_VEHICLE_RECORD_DOCUMENT.ARRIVAL_TIME -> stopRec._2
+                HISTORICAL_VEHICLE_RECORD_DOCUMENT.SEQ_NO -> seqNo,
+                HISTORICAL_VEHICLE_RECORD_DOCUMENT.STOP_ID -> busStop.id,
+                HISTORICAL_VEHICLE_RECORD_DOCUMENT.ARRIVAL_TIME -> arrivalTime
               )
             }
       )
       val query = MongoDBObject(
         HISTORICAL_RECORDS_DOCUMENT.ROUTE_ID -> vehicleRecordedData.busRoute.id,
         HISTORICAL_RECORDS_DOCUMENT.DIRECTION -> vehicleRecordedData.busRoute.direction.toString,
-        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._2,
+        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._3,
         HISTORICAL_RECORDS_DOCUMENT.VEHICLE_ID -> vehicleRecordedData.vehicleID
       )
 
@@ -53,7 +52,7 @@ object HistoricalRecordsDBController extends StrictLogging {
     val query = MongoDBObject(
       HISTORICAL_RECORDS_DOCUMENT.ROUTE_ID -> busRoute.id,
       HISTORICAL_RECORDS_DOCUMENT.DIRECTION -> busRoute.direction.toString
-    //  HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._2,
+    //  HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._3,
      // HISTORICAL_RECORDS_DOCUMENT.VEHICLE_ID -> vehicleRecordedData.vehicleID
     )
     val cursor = col.find(query)
