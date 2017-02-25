@@ -60,7 +60,7 @@ object HistoricalRecordsDBController extends StrictLogging {
       HistoricalRecordFromDb(
           BusRoute(
             route.getAs[String](HISTORICAL_RECORDS_DOCUMENT.ROUTE_ID).get,
-            Commons.toDirection(route.getAs[String](HISTORICAL_RECORDS_DOCUMENT.DIRECTION).get)
+            route.getAs[String](HISTORICAL_RECORDS_DOCUMENT.DIRECTION).get
           ),
         route.getAs[String](HISTORICAL_RECORDS_DOCUMENT.VEHICLE_ID).get,
         route.getAs[List[DBObject]](HISTORICAL_RECORDS_DOCUMENT.VEHICLE_RECORD).get

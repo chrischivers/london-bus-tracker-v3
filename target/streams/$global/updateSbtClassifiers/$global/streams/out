@@ -738,9 +738,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-agent;0.13.8!test-agent.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar
-[debug] :: resolution report :: resolve 1047ms :: artifacts dl 27ms
+[debug] :: resolution report :: resolve 991ms :: artifacts dl 30ms
 [debug] 	report for default#london-bus-tracker-v3$sbt_2.11;1.0 default produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sbt_2.11-default.xml
-[debug] 	resolve done (1047ms resolve - 27ms download)
+[debug] 	resolve done (991ms resolve - 30ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#london-bus-tracker-v3$sources_2.11;1.0
 [debug] 	confs: [default]
@@ -1131,6 +1131,6 @@
 [debug] 	[NOT REQUIRED] org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1!sbt-scalate-precompiler.jar(src)
 [debug] 	[NOT REQUIRED] org.scalatra.sbt#scalatra-sbt;0.5.1!scalatra-sbt.jar(src)
 [debug] 	[NOT REQUIRED] com.earldouglas#xsbt-web-plugin;2.1.0!xsbt-web-plugin.jar(src)
-[debug] :: resolution report :: resolve 85ms :: artifacts dl 18ms
+[debug] :: resolution report :: resolve 95ms :: artifacts dl 26ms
 [debug] 	report for default#london-bus-tracker-v3$sources_2.11;1.0 default produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3$sources_2.11-default.xml
-[debug] 	resolve done (85ms resolve - 18ms download)
+[debug] 	resolve done (95ms resolve - 26ms download)

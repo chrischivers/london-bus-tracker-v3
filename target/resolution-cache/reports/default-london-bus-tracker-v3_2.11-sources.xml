@@ -6,8 +6,8 @@
 		module="london-bus-tracker-v3_2.11"
 		revision="1.0"
 		conf="sources"
-		confs="compile, runtime, test, provided, optional, container, jetty, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool, scalate"
-		date="20170225130928"/>
+		confs="compile, runtime, test, provided, optional, container, jetty, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20170225153201"/>
 	<dependencies>
 	</dependencies>
 </ivy-report>

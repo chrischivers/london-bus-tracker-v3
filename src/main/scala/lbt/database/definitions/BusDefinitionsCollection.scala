@@ -34,7 +34,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     }
   }
 
-  def getBusRouteDefinitionsFromDB = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection) //TODO implement ttl caching
+  def getBusRouteDefinitionsFromDB: BusRouteDefinitions = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection) //TODO implement ttl caching
 
   def refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly: Boolean = false, getOnly: Option[List[BusRoute]] = None): Unit = {
     implicit val formats = DefaultFormats
@@ -55,10 +55,9 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     numberToProcess = busRoutes.foldLeft(0)((acc, x) => acc + x._2.size)
     logger.info(s"number of routes to process: $numberToProcess")
     busRoutes.foreach(route => {
-      route._2.foreach(directionStr => {
+      route._2.foreach(direction => {
         try {
           val routeIDString = route._1._1.toUpperCase
-          val direction = Commons.toDirection(directionStr)
           val busRoute = BusRoute(routeIDString, direction)
           if((getBusRouteDefinitionsFromDB.get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
             logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
@@ -71,8 +70,8 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
             insertBusRouteDefinitionIntoDB(busRoute, busStopList)
           }
         } catch {
-          case e: NoSuchElementException => logger.info("No Such Element Exception for route: " + route._1._1.toUpperCase + ", and direction: " + directionStr)
-          case e: JsonParseException => logger.info("JSON parse exception for route: " + route._1._1.toUpperCase + ", and direction: " + directionStr + ". " + e.printStackTrace())
+          case e: NoSuchElementException => logger.info("No Such Element Exception for route: " + route._1._1.toUpperCase + ", and direction: " + direction)
+          case e: JsonParseException => logger.info("JSON parse exception for route: " + route._1._1.toUpperCase + ", and direction: " + direction + ". " + e.printStackTrace())
           case e: Exception => logger.error("Uncaught exception " + e.printStackTrace())
         }
         numberToProcess -= 1

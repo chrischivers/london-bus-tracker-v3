@@ -1,4 +1,5 @@
-import lbt.comon.{BusRoute, Outbound, Stop}
+import historical.HistoricalTestFixture
+import lbt.comon.{BusRoute, Stop}
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.concurrent.ScalaFutures
@@ -8,13 +9,13 @@ import org.scalatest.time.{Millis, Seconds, Span}
 class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
 
 
-  type FixtureParam = TestFixture
+  type FixtureParam = HistoricalTestFixture
 
   override implicit val patienceConfig =
     PatienceConfig(timeout = scaled(Span(10, Seconds)), interval = scaled(Span(500, Millis)))
 
   override def withFixture(test: OneArgTest) = {
-    val fixture = new TestFixture
+    val fixture = new HistoricalTestFixture
     try test(fixture)
     finally {
       fixture.dataStreamProcessingControllerReal ! Stop
@@ -26,7 +27,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
 
   test("Route definitions for bus number 3 can be loaded from web into DB") { f =>
 
-    val testBusRoute = BusRoute("3", Outbound())
+    val testBusRoute = BusRoute("3", "outbound")
     val getOnlyList = List(testBusRoute)
 
     f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
@@ -43,7 +44,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
   }
 
   test("Sequence is kept in order when loaded from web and retrieved from db") { f =>
-    val testBusRoute = BusRoute("3", Outbound())
+    val testBusRoute = BusRoute("3", "outbound")
     val getOnlyList = List(testBusRoute)
     f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
     eventually {

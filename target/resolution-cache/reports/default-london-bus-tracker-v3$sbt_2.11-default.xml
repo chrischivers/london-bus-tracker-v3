@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="default"
 		confs="default"
-		date="20170225130927"/>
+		date="20170225153200"/>
 	<dependencies>
 		<module organisation="org.scalatra.sbt" name="scalatra-sbt">
 			<revision name="0.5.1" status="release" pubdate="20160207013054" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/scalatra/scalatra-sbt/" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="54">

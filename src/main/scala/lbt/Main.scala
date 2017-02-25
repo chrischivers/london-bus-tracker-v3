@@ -1,10 +1,10 @@
 package lbt
 
 import akka.actor.ActorSystem
-import lbt.comon.{BusRoute, Inbound, Outbound, Start}
-import lbt.dataSource.Stream.DataStreamProcessingController
+import lbt.comon.{BusRoute, Start}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
+import lbt.datasource.streaming.DataStreamProcessingController
 import lbt.historical.HistoricalMessageProcessor
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,7 +23,7 @@ object Main extends App {
 
   val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig)
 
-  val getOnlyList = List(BusRoute("3", Outbound()), BusRoute("3", Inbound()))
+  val getOnlyList = List(BusRoute("3", "outbound"), BusRoute("3", "inbound"))
   definitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
   val definitions = definitionsCollection.getBusRouteDefinitionsFromDB

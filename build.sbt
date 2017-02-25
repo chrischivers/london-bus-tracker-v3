@@ -4,8 +4,6 @@ val ScalatraVersion = "2.5.0"
 
 ScalatraPlugin.scalatraSettings
 
-scalateSettings
-
 name := "london-bus-tracker-v3"
 
 version := "1.0"

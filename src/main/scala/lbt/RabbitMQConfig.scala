@@ -9,7 +9,7 @@ import com.github.sstone.amqp.Amqp.{Ack, Delivery, QueueUnbind, _}
 import com.github.sstone.amqp.{Amqp, ConnectionOwner, Consumer}
 import com.rabbitmq.client.ConnectionFactory
 import com.typesafe.scalalogging.StrictLogging
-import lbt.dataSource.Stream.SourceLine
+import lbt.datasource.SourceLine
 import lbt.historical.ValidatedSourceLine
 
 import scala.concurrent.Future
