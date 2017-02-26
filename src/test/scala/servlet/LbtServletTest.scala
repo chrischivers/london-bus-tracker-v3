@@ -28,7 +28,7 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
   }
 
   test("should produce a 404 for unspecified route or direction") {
-    get("/unknownRoute/unknownDirection/" + definitions(testBusRoutes.head).head.id + "/" + definitions(testBusRoutes.head)(2).id ) {
+    get("/unknownRoute/unknownDirection/" + definitions(testBusRoutes.head).head.id + "/" + definitions(testBusRoutes.head)(2).id) {
       status should equal(404)
     }
   }
@@ -214,7 +214,7 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
 
   test("should produce a list of vehicles and their arrival times for a given window of time (no stop IDs specified)") {
     testBusRoutes.foreach(route => {
-      val fromTime  = System.currentTimeMillis() + (60000 * 3)
+      val fromTime = System.currentTimeMillis() + (60000 * 3)
       val toTime = System.currentTimeMillis() + (60000 * 7)
       get("/" + route.id + "/" + route.direction + "?fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
@@ -226,13 +226,13 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
 
   test("should produce an empty list where no data is available (i.e. a time window out of bounds)") {
     testBusRoutes.foreach(route => {
-      val fromTime  = System.currentTimeMillis() - 100000000
+      val fromTime = System.currentTimeMillis() - 100000000
       val toTime = System.currentTimeMillis() - 10000000
       get("/" + route.id + "/" + route.direction + "?fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
         parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalRecordsCollection.getHistoricalRecordFromDB(route, None, None, Some(fromTime), Some(toTime)))
         parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 0
-        parse(body).extract[List[HistoricalRecordFromDb]] shouldBe List()
+        parse(body).extract[List[HistoricalRecordFromDb]] shouldBe List.empty
       }
     })
   }
@@ -249,8 +249,17 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
     }
   }
 
+  test("should produce a list of arrival information for a given vehicle") {
+    testBusRoutes.foreach(route => {
+      val vehicleReg = messageProcessor.lastValidatedMessage.map(_.vehicleID).get
+      get("/" + route.id + "/" + route.direction + "?vehicleID=" + vehicleReg) {
+        status should equal(200)
+        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalRecordsCollection.getHistoricalRecordFromDB(route, None, None, None, None, Some(vehicleReg)))
+      }
+    })
+  }
+
   protected override def afterAll(): Unit = {
-    println("in after all")
     actorSystem.terminate().futureValue
     testDefinitionsCollection.db.dropDatabase
     testHistoricalRecordsCollection.db.dropDatabase

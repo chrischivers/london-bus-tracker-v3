@@ -34,10 +34,11 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     val toStopID = params.get("toStopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
+    val vehicleReg = params.get("vehicleID")
     if (validateBusRoute(busRoute)) {
       if (validateFromToStops(busRoute, fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
-          compactRender(historicalRecordsCollection.getHistoricalRecordFromDB(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong)).map { rec =>
+          compactRender(historicalRecordsCollection.getHistoricalRecordFromDB(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), vehicleReg).map { rec =>
             ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~ ("stopID" -> stopRec.stopID) ~ ("arrivalTime" -> stopRec.arrivalTime)))

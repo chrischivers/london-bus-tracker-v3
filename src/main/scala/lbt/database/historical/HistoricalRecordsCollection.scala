@@ -28,8 +28,7 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
     }
   }
 
-
-  def getHistoricalRecordFromDB(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDB(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
     HistoricalRecordsDBController.loadHistoricalRecordsFromDB(dBCollection, busRoute)
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
           .filter(stopRec =>
@@ -37,7 +36,9 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
               (toStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) <= rec.stopRecords.indexWhere(x => x.stopID == toStopID.get)) &&
               (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
               (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
-      .filter(rec => rec.stopRecords.nonEmpty)
+      .filter(rec =>
+        (vehicleReg.isEmpty || rec.vehicleID == vehicleReg.get) &&
+          rec.stopRecords.nonEmpty)
   }
 }
 
