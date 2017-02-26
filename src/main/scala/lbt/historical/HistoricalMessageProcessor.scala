@@ -21,7 +21,7 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
 
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
-  val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
+  val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
   println(definitions)
 
   val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsCollection, historicalRecordsConfig))

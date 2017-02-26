@@ -13,7 +13,7 @@ import net.liftweb.json._
 
 import scala.concurrent.duration._
 
-class SourceLinePublisher(config: MessagingConfig)(actorSystem: ActorSystem) extends RabbitMQConfig  {
+class SourceLinePublisher(config: MessagingConfig)(implicit actorSystem: ActorSystem) extends RabbitMQConfig  {
 
   val conn = actorSystem.actorOf(ConnectionOwner.props(connFactory, 1 second))
   val producer = ConnectionOwner.createChildActor(conn, ChannelOwner.props())

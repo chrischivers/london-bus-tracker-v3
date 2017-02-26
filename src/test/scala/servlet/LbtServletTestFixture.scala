@@ -1,12 +1,18 @@
 package servlet
 
 import akka.actor.ActorSystem
-import lbt.comon.BusRoute
+import lbt.comon.{BusRoute, Commons}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
+import lbt.datasource.SourceLine
+import lbt.datasource.streaming.SourceLineValidator
+import lbt.historical.HistoricalMessageProcessor
 import lbt.{ConfigLoader, MessageConsumer}
+import net.liftweb.json.DefaultFormats
+import net.liftweb.json.Serialization.write
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.Random
 
 trait LbtServletTestFixture {
 
@@ -23,14 +29,36 @@ trait LbtServletTestFixture {
 
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
 
+  val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig
+
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
 
-  val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig)
+  val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig, testDefinitionsCollection)
 
   val testBusRoutes = List(BusRoute("3", "outbound"), BusRoute("3", "inbound")) //TODO include more randomisation on routes
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes))
 
-  val definitions = testDefinitionsCollection.getBusRouteDefinitionsFromDB
+  Thread.sleep(1000)
 
+  val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
+  val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+
+  testBusRoutes.foreach { route =>
+    val vehicleReg = "V" + Random.nextInt(99999)
+    val arrivalTimeMultipliers = Stream.from(1).iterator
+    def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
+    implicit val formats = DefaultFormats
+
+    println("definitions: " + definitions)
+    definitions(route).foreach(busStop => {
+      val message = write(SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]")).getBytes
+      messageProcessor.processMessage(message)
+    })
+  }
+
+  def directionToInt(direction: String): Int = direction match {
+    case "outbound" => 1
+    case "inbound" => 2
+  }
 }

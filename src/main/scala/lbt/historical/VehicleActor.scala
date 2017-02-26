@@ -26,7 +26,7 @@ class VehicleActor(busDefinitionsCollection: BusDefinitionsCollection, historica
       assert(vsl.vehicleID == name)
 
       if (route.isEmpty) {
-        val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitionsFromDB(vsl.busRoute)
+        val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitions().apply(vsl.busRoute)
         context.become(active(Some(vsl.busRoute), stopArrivalRecords + (vsl.busStop -> vsl.arrival_TimeStamp), stopDefinitionList))
       }
       else if (route.get != vsl.busRoute) {
@@ -35,7 +35,7 @@ class VehicleActor(busDefinitionsCollection: BusDefinitionsCollection, historica
           case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(name, route.get, completeList))
           case Failure(e) => logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records $stopArrivalRecords.")
         }
-        val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitionsFromDB(vsl.busRoute)
+        val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitions().apply(vsl.busRoute)
         context.become(active(Some(vsl.busRoute), Map(vsl.busStop -> vsl.arrival_TimeStamp), stopDefinitionList))
       }
       else {

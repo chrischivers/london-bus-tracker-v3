@@ -1,0 +1,4 @@
+[0m[[0minfo[0m] [0m[32mDefinitionsTest:[0m[0m
+[0m[[0minfo[0m] [0m[32m- Route definitions for bus number 3 can be loaded from web into DB[0m[0m
+[0m[[0minfo[0m] [0m[32m- Bus Route already in DB is not reloaded from web when flag set[0m[0m
+[0m[[0minfo[0m] [0m[32m- Sequence is kept in order when loaded from web and retrieved from db[0m[0m

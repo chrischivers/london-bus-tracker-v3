@@ -13,7 +13,7 @@ object Commons {
 
   type BusRouteDefinitions = Map[BusRoute, List[BusStop]]
 
-  def toDirection(directionInt: Int) = {
+  def toDirection(directionInt: Int): String = {
     directionInt match {
       case 1 => "outbound"
       case 2 => "inbound"

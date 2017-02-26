@@ -23,7 +23,9 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
   override val indexKeyList = List((BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID, 1), (BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION, 1))
   override val uniqueIndex = true
 
-  var numberToProcess:Long = 0
+  private var numberToProcess:Long = 0
+  private var definitionsLastRefreshedFromDB: Long = 0
+  private var definitionsCache: BusRouteDefinitions = Map.empty
 
   def insertBusRouteDefinitionIntoDB(busRoute: BusRoute, busStops: List[BusStop]) = {
     incrementLogRequest(IncrementNumberInsertsRequested(1))
@@ -34,7 +36,16 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     }
   }
 
-  def getBusRouteDefinitionsFromDB: BusRouteDefinitions = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection) //TODO implement ttl caching
+  def getBusRouteDefinitions(forceDBRefresh: Boolean = false): BusRouteDefinitions = {
+    if (System.currentTimeMillis() - definitionsLastRefreshedFromDB > defConfig.definitionsCachedTime || definitionsCache.isEmpty || forceDBRefresh) {
+      logger.info("Updating definitions from DB")
+      definitionsCache = getBusRouteDefinitionsFromDB
+      definitionsLastRefreshedFromDB = System.currentTimeMillis()
+      definitionsCache
+    } else definitionsCache
+  }
+
+  private def getBusRouteDefinitionsFromDB: BusRouteDefinitions = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection)
 
   def refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly: Boolean = false, getOnly: Option[List[BusRoute]] = None): Unit = {
     implicit val formats = DefaultFormats
@@ -59,7 +70,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
         try {
           val routeIDString = route._1._1.toUpperCase
           val busRoute = BusRoute(routeIDString, direction)
-          if((getBusRouteDefinitionsFromDB.get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
+          if((getBusRouteDefinitions().get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
             logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
           } else {
             logger.info("processing route " + routeIDString + ", direction " + direction)

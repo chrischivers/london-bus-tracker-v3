@@ -1,0 +1,5 @@
+[0m[[0minfo[0m] [0m[32mDataStreamProcessingTest:[0m[0m
+[0m[[0minfo[0m] [0m[31m- Data Stream Processor processes same number of messages as those queued *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 41 times over 40.384884621 seconds. Last failure message: 96335 was not equal to 46276. (DataStreamProcessingTest.scala:42)[0m[0m
+[0m[[0minfo[0m] [0m[31m- Messages should be placed on messaging queue and fetched by consumer *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 1 times over 505.370993 milliseconds. Last failure message: 2 was not equal to 5. (DataStreamProcessingTest.scala:59)[0m[0m

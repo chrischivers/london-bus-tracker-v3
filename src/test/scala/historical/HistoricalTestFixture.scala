@@ -28,13 +28,13 @@ class HistoricalTestFixture(vehicleInactivityTimeout: Long = 720000) {
 
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
 
-  val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig)
+  val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig, testDefinitionsCollection)
 
   val testBusRoute = BusRoute("3", "outbound") //TODO include more randomisation on routes
   val getOnlyList = List(testBusRoute)
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
-  val definitions = testDefinitionsCollection.getBusRouteDefinitionsFromDB
+  val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
   val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
   val consumer = new MessageConsumer(messageProcessor, testMessagingConfig)

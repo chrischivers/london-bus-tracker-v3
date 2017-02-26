@@ -21,12 +21,12 @@ object Main extends App {
 
   val definitionsCollection = new BusDefinitionsCollection(definitionsConfig, dBConfig)
 
-  val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig)
+  val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig, definitionsCollection)
 
   val getOnlyList = List(BusRoute("3", "outbound"), BusRoute("3", "inbound"))
   definitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
-  val definitions = definitionsCollection.getBusRouteDefinitionsFromDB
+  val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
   val messageProcessor = new HistoricalMessageProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)
 

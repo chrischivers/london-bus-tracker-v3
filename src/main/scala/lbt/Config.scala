@@ -4,7 +4,7 @@ import com.typesafe.config.ConfigFactory
 
 case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int, timeWindowToAcceptLines: Int)
 
-case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String)
+case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, definitionsCachedTime: Int)
 
 case class DatabaseConfig(databaseName: String, busDefinitionsCollectionName: String, historicalRecordsCollectionName: String)
 
@@ -50,7 +50,8 @@ object ConfigLoader {
       ),
       DefinitionsConfig(
         defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-all-url"),
-        defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-single-url")
+        defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-single-url"),
+        defaultConfigFactory.getInt(definitionsParamsPrefix + "definitions-cached-time")
       ),
       MessagingConfig(
         defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),

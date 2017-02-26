@@ -29,6 +29,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       fixture.actorSystem.terminate().futureValue
       fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
+      fixture.testHistoricalRecordsCollection.db.dropDatabase
     }
   }
 
@@ -249,7 +250,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
   test("Persisted record should be loaded with stop sequence in same order and with same values"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute)
     val vehicleReg = "V123456"
-
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")

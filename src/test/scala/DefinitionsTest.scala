@@ -33,7 +33,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
     eventually {
-      val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitionsFromDB
+      val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitions()
       busDefinitions.get(testBusRoute) shouldBe defined
       busDefinitions(testBusRoute).count(stop => stop.name.contains("Brixton")) should be > 1
     }
@@ -48,7 +48,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     val getOnlyList = List(testBusRoute)
     f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
     eventually {
-      val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitionsFromDB
+      val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitions()
       busDefinitions.get(testBusRoute) shouldBe defined
       busDefinitions(testBusRoute).head.name should include ("Conduit Street")
       busDefinitions(testBusRoute).last.name should include ("Crystal Palace")

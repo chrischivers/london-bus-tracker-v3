@@ -1,0 +1,15 @@
+[0m[[0minfo[0m] [0m[32mLbtServletTest:[0m[0m
+[0m[[0minfo[0m] [0m[32m- Should produce 404 for undefined paths[0m[0m
+[0m[[0minfo[0m] [0m[32m- Should produce a list of routes in the DB[0m[0m
+[0m[[0minfo[0m] [0m[32m- Should produce a list of stops (in order) for a given route[0m[0m
+[0m[[0minfo[0m] [0m[32m- Should produce a 404 for unspecified route or direction[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a list of vehicles and their arrival times for a given route[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a list of vehicles and their arrival times for two given stop IDs on a given route[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a list of vehicles and their arrival times for two given stop IDs on a given route (beginning of route)[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a list of vehicles and their arrival times for two given stop IDs on a given route (end of route)[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a 404 for unspecified route or direction[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a 404 for invalid from and to stop ID[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a 404 where from stop ID does not precede to stop ID[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a list of vehicles and their arrival times for two given stop IDs on a given route, in a given window of time[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a 404 where fromTime does not precede toTime[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a 404 where time is not a valid Long[0m[0m
