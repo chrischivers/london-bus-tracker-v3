@@ -29,7 +29,6 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
   }
 
   get("/:route/:direction") {
-    println("Got here")
     val busRoute = BusRoute(params("route"), params("direction"))
     val fromStopID = params.get("fromStopID")
     val toStopID = params.get("toStopID")

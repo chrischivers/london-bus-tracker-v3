@@ -205,7 +205,9 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
       get("/" + route.id + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID + "&fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
         parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalRecordsCollection.getHistoricalRecordFromDB(route, Some(fromStopID), Some(toStopID), Some(fromTime), Some(toTime)))
-        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
+        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record =>
+          record.stopRecords.count(x => x.arrivalTime < fromTime && x.arrivalTime > toTime) shouldBe 0
+        )
       }
     })
   }

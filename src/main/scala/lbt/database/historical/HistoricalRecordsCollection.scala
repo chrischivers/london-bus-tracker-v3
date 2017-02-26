@@ -37,6 +37,7 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
               (toStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) <= rec.stopRecords.indexWhere(x => x.stopID == toStopID.get)) &&
               (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
               (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
+      .filter(rec => rec.stopRecords.nonEmpty)
   }
 }
 
