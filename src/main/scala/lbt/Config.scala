@@ -10,7 +10,7 @@ case class DatabaseConfig(databaseName: String, busDefinitionsCollectionName: St
 
 case class MessagingConfig(exchangeName: String, historicalRecorderQueueName : String, historicalRecorderRoutingKey: String, liveTrackerQueueName: String, liveTrackerRoutingKey: String)
 
-case class HistoricalRecordsConfig(vehicleInactivityTimeout: Long, numberOfLinesToCleanupAfter: Int)
+case class HistoricalRecordsConfig(vehicleInactivityTimeBeforePersist: Long, numberOfLinesToCleanupAfter: Int, minimumNumberOfStopsToPersist: Int)
 
 case class LBTConfig(
                    dataSourceConfig: DataSourceConfig,
@@ -61,8 +61,9 @@ object ConfigLoader {
         defaultConfigFactory.getString(messagingParamsPrefix + "live-tracker-routing-key")
       ),
       HistoricalRecordsConfig(
-        defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "vehicle-inactivity-timeout"),
-        defaultConfigFactory.getInt(historicalRecordsParamsPrefix + "lines-to-cleanup-after")
+        defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "vehicle-inactivity-time-before-persist"),
+        defaultConfigFactory.getInt(historicalRecordsParamsPrefix + "lines-to-cleanup-after"),
+        defaultConfigFactory.getInt(historicalRecordsParamsPrefix + "minimum-number-of-stops-for-persist")
       )
     )
 

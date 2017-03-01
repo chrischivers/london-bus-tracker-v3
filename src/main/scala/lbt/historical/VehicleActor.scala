@@ -2,6 +2,7 @@ package lbt.historical
 
 import akka.actor.Actor
 import com.typesafe.scalalogging.StrictLogging
+import lbt.HistoricalRecordsConfig
 import lbt.comon.{BusRoute, BusStop}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
@@ -11,7 +12,7 @@ import scalaz._
 
 case class RecordedVehicleDataToPersist(vehicleID: String, busRoute: BusRoute, stopArrivalRecords: List[(Int, BusStop, Long)])
 
-class VehicleActor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection) extends Actor with StrictLogging {
+class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection) extends Actor with StrictLogging {
   val name: String = self.path.name
   type StringValidation[T] = ValidationNel[String, T]
 
@@ -23,38 +24,21 @@ class VehicleActor(busDefinitionsCollection: BusDefinitionsCollection, historica
 
     case vsl: ValidatedSourceLine =>
       logger.info(s"actor $name received sourceLine: $vsl")
-      assert(vsl.vehicleID == name)
+      assert(vsl.vehicleID + "-" + vsl.busRoute.id + "-" + vsl.busRoute.direction == name)
 
       if (route.isEmpty) {
         val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitions().apply(vsl.busRoute)
         context.become(active(Some(vsl.busRoute), stopArrivalRecords + (vsl.busStop -> vsl.arrival_TimeStamp), stopDefinitionList))
-      }
-      else if (route.get != vsl.busRoute) {
-        logger.info("Change of route. Attempting to persist...")
-        validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList) match {
-          case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(name, route.get, completeList))
-          case Failure(e) => logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records $stopArrivalRecords.")
-        }
-        val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitions().apply(vsl.busRoute)
-        context.become(active(Some(vsl.busRoute), Map(vsl.busStop -> vsl.arrival_TimeStamp), stopDefinitionList))
-      }
-      else {
+      } else {
         val stopArrivalRecordsWithLastStop = stopArrivalRecords + (vsl.busStop -> vsl.arrival_TimeStamp)
         context.become(active(Some(vsl.busRoute), stopArrivalRecordsWithLastStop, busStopDefinitionList))
-        if (vsl.busStop == busStopDefinitionList.last) {
-          logger.info("End of route reached. Attempting to persist...")
-          validateBeforePersist(route.get, stopArrivalRecordsWithLastStop, busStopDefinitionList) match {
-            case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(name, route.get, completeList))
-            case Failure(e) => logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
-          }
-        }
       }
     case GetArrivalRecords(_) => sender ! stopArrivalRecords
 
     case PersistToDB =>
       logger.info("Persist to DB command received. Attempting to persist...")
       validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList) match {
-        case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(name, route.get, completeList))
+        case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
         case Failure(e) => logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
       }
   }
@@ -62,6 +46,12 @@ class VehicleActor(busDefinitionsCollection: BusDefinitionsCollection, historica
   def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop]): StringValidation[List[(Int, BusStop, Long)]] = {
 
     val orderedStopsList: List[(Int, BusStop, Option[Long])] = busStopDefinitionList.zipWithIndex.map{case(stop, index) => (index, stop, stopArrivalRecords.get(stop))}
+
+    def minimumNumberOfRecordsReceived: StringValidation[Unit] = {
+      val numberOfRecordsWithData = orderedStopsList.count(rec => rec._3.isDefined)
+      if(numberOfRecordsWithData >= historicalRecordsConfig.minimumNumberOfStopsToPersist) ().successNel
+      else s"Not enough stops to persist. Number of stops: $numberOfRecordsWithData. Minimum ${historicalRecordsConfig.minimumNumberOfStopsToPersist}".failureNel
+    }
 
     def noGapsInSequence: StringValidation[Unit] = {
       val orderedExisting = orderedStopsList.filter(elem => elem._3.isDefined)
@@ -84,7 +74,8 @@ class VehicleActor(busDefinitionsCollection: BusDefinitionsCollection, historica
       helper(0)
     }
 
-    (noGapsInSequence
+    (minimumNumberOfRecordsReceived
+      |@| noGapsInSequence
       |@| stopArrivalTimesAreIncremental).tupled
       .map(_ => orderedStopsList
         .filter(elem => elem._3.isDefined)

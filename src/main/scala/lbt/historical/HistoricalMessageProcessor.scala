@@ -93,10 +93,10 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
     (vehicleActorSupervisor ? GetCurrentActors).mapTo[Map[String, ActorRef]]
   }
 
-  def getArrivalRecords(vehicleID: String) = {
+  def getArrivalRecords(vehicleReg: String, busRoute: BusRoute) = {
     implicit val timeout = Timeout(10 seconds)
     for {
-      futureResult <- (vehicleActorSupervisor ? GetArrivalRecords(vehicleID)).mapTo[Future[Map[BusStop, Long]]]
+      futureResult <- (vehicleActorSupervisor ? GetArrivalRecords(VehicleID(vehicleReg, busRoute))).mapTo[Future[Map[BusStop, Long]]]
       listResult <- futureResult
     } yield listResult
   }

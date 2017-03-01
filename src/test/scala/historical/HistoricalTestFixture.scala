@@ -9,7 +9,7 @@ import lbt.historical.HistoricalMessageProcessor
 import lbt.{ConfigLoader, MessageConsumer}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class HistoricalTestFixture(vehicleInactivityTimeout: Long = 720000) {
+class HistoricalTestFixture(vehicleInactivityTimeout: Long = 5000) {
 
   implicit val actorSystem = ActorSystem("TestLbtSystem")
 
@@ -24,14 +24,15 @@ class HistoricalTestFixture(vehicleInactivityTimeout: Long = 720000) {
 
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
 
-  val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeout, numberOfLinesToCleanupAfter = 1)
+  val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeout, numberOfLinesToCleanupAfter = 0)
 
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
 
   val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig, testDefinitionsCollection)
 
-  val testBusRoute = BusRoute("3", "outbound") //TODO include more randomisation on routes
-  val getOnlyList = List(testBusRoute)
+  val testBusRoute1 = BusRoute("3", "outbound") //TODO include more randomisation on routes
+  val testBusRoute2 = BusRoute("3", "inbound")
+  val getOnlyList = List(testBusRoute1, testBusRoute2)
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)

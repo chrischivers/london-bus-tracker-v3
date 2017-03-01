@@ -6,7 +6,7 @@ import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 import lbt.datasource.SourceLine
 import lbt.datasource.streaming.SourceLineValidator
-import lbt.historical.HistoricalMessageProcessor
+import lbt.historical.{HistoricalMessageProcessor, PersistAndRemoveInactiveVehicles}
 import lbt.{ConfigLoader, MessageConsumer}
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
@@ -29,7 +29,7 @@ trait LbtServletTestFixture {
 
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
 
-  val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig
+  val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 1000, numberOfLinesToCleanupAfter = 0)
 
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
 
@@ -56,6 +56,9 @@ trait LbtServletTestFixture {
       messageProcessor.processMessage(message)
     })
   }
+  Thread.sleep(1500)
+  messageProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+  Thread.sleep(500)
 
   def directionToInt(direction: String): Int = direction match {
     case "outbound" => 1

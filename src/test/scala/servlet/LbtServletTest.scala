@@ -1,3 +1,5 @@
+package servlet
+
 import datasource.TestDataSource
 import lbt.comon.{BusRoute, BusStop}
 import lbt.database.historical.{HistoricalRecordFromDb, HistoricalRecordsCollection}
