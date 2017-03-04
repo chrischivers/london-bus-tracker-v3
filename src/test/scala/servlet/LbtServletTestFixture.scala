@@ -4,8 +4,9 @@ import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Commons}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
+import lbt.datasource.BusDataSource.BusDataSource
 import lbt.datasource.SourceLine
-import lbt.datasource.streaming.SourceLineValidator
+import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
 import lbt.historical.{HistoricalMessageProcessor, PersistAndRemoveInactiveVehicles}
 import lbt.{ConfigLoader, MessageConsumer}
 import net.liftweb.json.DefaultFormats
@@ -22,13 +23,9 @@ trait LbtServletTestFixture {
     exchangeName = "test-lbt-exchange",
     historicalRecorderQueueName = "test-historical-recorder-queue-name",
     historicalRecorderRoutingKey = "test-historical-recorder-routing-key")
-
   val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
-
   val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(databaseName = "TestDB")
-
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
-
   val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 1000, numberOfLinesToCleanupAfter = 0)
 
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
@@ -43,6 +40,10 @@ trait LbtServletTestFixture {
   val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
   val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+
+  val testDataSource = new BusDataSource(testDataSourceConfig)
+  val dataStreamProcessor = new DataStreamProcessor(testDataSource, testMessagingConfig)
+
 
   testBusRoutes.foreach { route =>
     val vehicleReg = "V" + Random.nextInt(99999)

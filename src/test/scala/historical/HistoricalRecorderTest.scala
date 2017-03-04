@@ -3,7 +3,7 @@ package historical
 import datasource.TestDataSource
 import lbt.comon._
 import lbt.datasource.SourceLine
-import lbt.datasource.streaming.DataStreamProcessingController
+import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.{PersistAndRemoveInactiveVehicles, PersistToDB, ValidatedSourceLine, VehicleID}
 import org.scalatest.Matchers._
 import org.scalatest._
@@ -25,7 +25,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val fixture = new HistoricalTestFixture
     try test(fixture)
     finally {
-      fixture.dataStreamProcessingControllerReal ! Stop
+      fixture.dataStreamProcessingControllerReal.stop
       fixture.actorSystem.terminate().futureValue
       fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
@@ -43,11 +43,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLines = List(validSourceline, invalidSourceLine)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe 2
@@ -70,11 +70,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLines = List(validSourceline, invalidSourceLine)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe 2
@@ -95,11 +95,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLines = List(validSourceline, validSourceline, validSourceline)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe 3
@@ -123,11 +123,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val joinedLines = splitLines._1 ++ pastLine ++ splitLines._2.tail
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(joinedLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe joinedLines.size
@@ -153,11 +153,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLines = List(validSourceline1, validSourceline2, validSourceline3, validSourceline4)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe 4
@@ -175,11 +175,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe testLines.size
@@ -204,11 +204,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLinesWithUpdated = testLines ++ List(newRecord)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesWithUpdated))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       testDataSource.getNumberLinesStreamed shouldBe testLinesWithUpdated.size
@@ -228,11 +228,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -262,11 +262,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLines))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -298,11 +298,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLinesWithMissing = splitTestLines._1 ++ splitTestLines._2.tail
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesWithMissing))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -330,11 +330,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLinesLast4 = testLines.takeRight(4)
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesLast4))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -362,11 +362,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLinesSecondHalf = testLines.splitAt(testLines.size / 2)._2
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesSecondHalf))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -397,11 +397,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testDataSource1 = new TestDataSource(f.testDataSourceConfig, Some(testLines1))
-    val dataStreamProcessingControllerTest1 = DataStreamProcessingController(testDataSource1, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest1 = new DataStreamProcessor(testDataSource1, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest1 ! Start
+    dataStreamProcessorTest1.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest1 ! Stop
+    dataStreamProcessorTest1.stop
     Thread.sleep(7000)
 
     f.messageProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
@@ -410,11 +410,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testDataSource2 = new TestDataSource(f.testDataSourceConfig, Some(testLines2))
-    val dataStreamProcessingControllerTest2 = DataStreamProcessingController(testDataSource2, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest2 = new DataStreamProcessor(testDataSource2, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest2 ! Start
+    dataStreamProcessorTest2.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest2 ! Stop
+    dataStreamProcessorTest2.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -447,11 +447,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val testLinesDoubled = testLines1 ++ testLines2
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig, Some(testLinesDoubled))
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.messageProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -473,7 +473,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
   }
 
   test("Vehicles should persist and be shut down after specified period of inactivity"){f =>
-    f.dataStreamProcessingControllerReal ! Stop
+    f.dataStreamProcessingControllerReal.stop
     f.actorSystem.terminate().futureValue
     f.consumer.unbindAndDelete
     f.testDefinitionsCollection.db.dropDatabase
@@ -490,11 +490,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       val testLinesFirstHalf = testLines.splitAt(testLines.size / 2)._1
 
       val testDataSource = new TestDataSource(tempFixture.testDataSourceConfig, Some(testLinesFirstHalf))
-      val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, tempFixture.testMessagingConfig)(tempFixture.actorSystem)
+      val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-      dataStreamProcessingControllerTest ! Start
+      dataStreamProcessorTest.start
       Thread.sleep(500)
-      dataStreamProcessingControllerTest ! Stop
+      dataStreamProcessorTest.stop
       Thread.sleep(7000) //Period of inactivity
       val mockValidatedSourceLine = ValidatedSourceLine(tempFixture.testBusRoute1, routeDefFromDb.head, "direction", "V98765", System.currentTimeMillis())
       tempFixture.messageProcessor.vehicleActorSupervisor ! mockValidatedSourceLine //A new line is needed to prompt the vehicle actor to clean up
@@ -512,7 +512,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
         tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesFirstHalf.size
       }
     } finally {
-      tempFixture.dataStreamProcessingControllerReal ! Stop
+      tempFixture.dataStreamProcessingControllerReal.stop
       tempFixture.actorSystem.terminate().futureValue
       tempFixture.consumer.unbindAndDelete
       tempFixture.testDefinitionsCollection.db.dropDatabase

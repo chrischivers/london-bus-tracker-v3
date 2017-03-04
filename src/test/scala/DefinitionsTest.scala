@@ -18,7 +18,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     val fixture = new HistoricalTestFixture
     try test(fixture)
     finally {
-      fixture.dataStreamProcessingControllerReal ! Stop
+      fixture.dataStreamProcessingControllerReal.stop
       fixture.actorSystem.terminate().futureValue
       fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase

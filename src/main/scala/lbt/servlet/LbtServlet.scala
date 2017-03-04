@@ -1,18 +1,34 @@
 package lbt.servlet
 
+import lbt.Main
 import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.{HistoricalRecordFromDb, HistoricalRecordsCollection}
+import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.servlet.DefaultServlet
+import org.eclipse.jetty.webapp.WebAppContext
+import org.scalatra.servlet.ScalatraListener
 
 import scala.util.Try
 
 
-class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection) extends ScalatraServlet {
+class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, dataStreamProcessor: DataStreamProcessor) extends ScalatraServlet {
 
   implicit val formats = DefaultFormats
+
+  get("/streamstart") {
+    dataStreamProcessor.start
+    Ok("Started data stream processor")
+  }
+
+  get("/streamsstop") {
+    dataStreamProcessor.stop
+    Ok("Stopped data stream processor")
+  }
 
   get("/routelist") {
     compactRender(busDefinitionsCollection.getBusRouteDefinitions().keys.toList.map(key =>
@@ -71,5 +87,22 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
         fromTime.get < toTime.get
       } else false
     } else true
+  }
+}
+
+object LbtServlet {
+
+  def setUpServlet: Unit = {
+    val port = if (System.getenv("PORT") != null) System.getenv("PORT").toInt else 8080
+
+    val server = new Server(port)
+    val context = new WebAppContext()
+    context setContextPath "/historical/"
+    context.setResourceBase("src/main/webapp")
+    context.addEventListener(new ScalatraListener)
+    context.addServlet(classOf[DefaultServlet], "/")
+    server.setHandler(context)
+    server.start
+    server.join
   }
 }

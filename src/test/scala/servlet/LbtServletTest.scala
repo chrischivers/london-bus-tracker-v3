@@ -1,24 +1,20 @@
 package servlet
 
-import datasource.TestDataSource
 import lbt.comon.{BusRoute, BusStop}
-import lbt.database.historical.{HistoricalRecordFromDb, HistoricalRecordsCollection}
-import lbt.datasource.streaming.DataStreamProcessingController
+import lbt.database.historical.HistoricalRecordFromDb
 import lbt.servlet.LbtServlet
+import net.liftweb.json._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 import org.scalatra.test.scalatest.ScalatraSuite
-import servlet.LbtServletTestFixture
-import net.liftweb.json._
-import net.liftweb.json.JsonDSL._
-import org.scalactic.source.Position
-import org.scalatest.concurrent.ScalaFutures
 
 
 class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with Matchers with BeforeAndAfterAll with LbtServletTestFixture {
 
   implicit val formats = DefaultFormats
 
-  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection), "/*")
+  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessor), "/*")
+
 
   test("Should produce 404 for undefined paths") {
     get("/") {
@@ -26,6 +22,22 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
     }
     get("/test") {
       status should equal(404)
+    }
+  }
+
+  test("should start the servlet") {
+    get("/streamstart") {
+      status should equal(200)
+      dataStreamProcessor.numberLinesProcessed.futureValue shouldBe >(0)
+    }
+  }
+
+  test("should stop the servlet") {
+    get("/streamstop") {
+      status should equal(200)
+      val numberProcessed  = dataStreamProcessor.numberLinesProcessed.futureValue
+      Thread.sleep(1000)
+      numberProcessed shouldEqual dataStreamProcessor.numberLinesProcessed.futureValue
     }
   }
 

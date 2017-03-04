@@ -6,14 +6,10 @@ import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Start}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
-import lbt.datasource.streaming.DataStreamProcessingController
+import lbt.datasource.BusDataSource.BusDataSource
+import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.HistoricalMessageProcessor
 import lbt.servlet.LbtServlet
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.servlet.DefaultServlet
-import org.eclipse.jetty.webapp.WebAppContext
-import org.scalatra.Handler
-import org.scalatra.servlet.{RichServletContext, ScalatraListener}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -37,25 +33,12 @@ object Main extends App {
 
   val consumer = new MessageConsumer(messageProcessor, messagingConfig)
 
-  val dataStreamProcessingController  = DataStreamProcessingController(messagingConfig)
+  val dataSource = new BusDataSource(dataSourceConfig)
 
-  //dataStreamProcessingController ! Start
+  val dataStreamProcessor  = new DataStreamProcessor(dataSource, messagingConfig)
 
-  setUpWebServlet
+  LbtServlet.setUpServlet
 
-  def setUpWebServlet {
-    val port = if (System.getenv("PORT") != null) System.getenv("PORT").toInt else 8080
-
-    val server = new Server(port)
-    val context = new WebAppContext()
-    context setContextPath "/historical/"
-    context.setResourceBase("src/main/webapp")
-    context.addEventListener(new ScalatraListener)
-    //context.addServlet(classOf[DefaultServlet], "/")
-    server.setHandler(context)
-    server.start
-    server.join
-  }
 }
 
 

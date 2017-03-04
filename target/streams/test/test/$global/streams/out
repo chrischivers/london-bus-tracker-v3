@@ -1,21 +1,5 @@
-[0m[[0mdebug[0m] [0mRunning TaskDef(DefinitionsTest, org.scalatest.tools.Framework$$anon$1@1e61dd36, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(LbtServletTest, org.scalatest.tools.Framework$$anon$1@1e61dd36, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(historical.HistoricalRecorderTest, org.scalatest.tools.Framework$$anon$1@1e61dd36, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(datasource.BusDataSourceTest, org.scalatest.tools.Framework$$anon$1@1e61dd36, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(datasource.DataStreamProcessingTest, org.scalatest.tools.Framework$$anon$1@1e61dd36, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mSummary for specs2 not available.[0m
-[0m[[0minfo[0m] [0mScalaTest[0m
-[0m[[0minfo[0m] [0m[36mRun completed in 6 minutes, 10 seconds.[0m[0m
-[0m[[0minfo[0m] [0m[36mTotal number of tests run: 36[0m[0m
-[0m[[0minfo[0m] [0m[36mSuites: completed 5, aborted 0[0m[0m
-[0m[[0minfo[0m] [0m[36mTests: succeeded 19, failed 17, canceled 0, ignored 0, pending 0[0m[0m
-[0m[[0minfo[0m] [0m[31m*** 17 TESTS FAILED ***[0m[0m
-[0m[[31merror[0m] [0mFailed: Total 36, Failed 17, Errors 0, Passed 19[0m
-[0m[[0mdebug[0m] [0mPassed tests:[0m
-[0m[[0mdebug[0m] [0m	LbtServletTest[0m
-[0m[[0mdebug[0m] [0m	DefinitionsTest[0m
-[0m[[0mdebug[0m] [0m	datasource.BusDataSourceTest[0m
-[0m[[31merror[0m] [0mFailed tests:[0m
-[0m[[31merror[0m] [0m	datasource.DataStreamProcessingTest[0m
-[0m[[31merror[0m] [0m	historical.HistoricalRecorderTest[0m
-[0m[[31merror[0m] [0m(test:[31mtest[0m) sbt.TestsFailedException: Tests unsuccessful[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(datasource.DataStreamProcessingTest, org.scalatest.tools.Framework$$anon$1@6e3eefd0, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(DefinitionsTest, org.scalatest.tools.Framework$$anon$1@6e3eefd0, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(servlet.LbtServletTest, org.scalatest.tools.Framework$$anon$1@6e3eefd0, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(datasource.BusDataSourceTest, org.scalatest.tools.Framework$$anon$1@6e3eefd0, false, [SuiteSelector])[0m
+[0m[[0mdebug[0m] [0mRunning TaskDef(historical.HistoricalRecorderTest, org.scalatest.tools.Framework$$anon$1@6e3eefd0, false, [SuiteSelector])[0m

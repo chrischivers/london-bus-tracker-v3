@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, container, jetty, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170227213102"/>
+		date="20170304112154"/>
 	<dependencies>
 		<module organisation="org.eclipse.jetty" name="jetty-webapp">
 			<revision name="9.2.15.v20160210" status="release" pubdate="20160210215542" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.eclipse.org/jetty" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="38">

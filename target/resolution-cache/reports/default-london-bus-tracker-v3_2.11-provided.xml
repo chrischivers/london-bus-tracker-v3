@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="provided"
 		confs="compile, runtime, test, provided, optional, container, jetty, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170227213102"/>
+		date="20170304112154"/>
 	<dependencies>
 		<module organisation="javax.servlet" name="javax.servlet-api">
 			<revision name="3.1.0" status="release" pubdate="20130426005239" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://servlet-spec.java.net" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">

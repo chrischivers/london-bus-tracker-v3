@@ -34,13 +34,11 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
     messagesProcessed.incrementAndGet()
     val sourceLine = parse(new String(message, "UTF-8")).extract[SourceLine]
     lastProcessedMessage = Some(sourceLine)
-    if (sourceLine.route == "3") { //TODO take this testing code out
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
         case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
       cache.put(sourceLine)
-    }
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {

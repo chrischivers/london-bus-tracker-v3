@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicLong
 import akka.actor.SupervisorStrategy.{Escalate, Restart}
 import akka.actor.{Actor, ActorRef, ActorSystem, OneForOneStrategy, Props}
 import akka.util.Timeout
+import akka.pattern.ask
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
@@ -77,14 +78,15 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
 
 }
 
-object DataStreamProcessingController {
-  val defaultMessagingConfig = ConfigLoader.defaultConfig.messagingConfig
-  val defaultDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
+class DataStreamProcessor(dataSource: BusDataSource, config: MessagingConfig)(implicit actorSystem: ActorSystem)  {
+  implicit val timeout:Timeout = 20 seconds
+  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSource, config))
 
-  def apply()(implicit actorSystem: ActorSystem): ActorRef = apply(defaultMessagingConfig)
+  def start = processorControllerActor ! Start
 
-  def apply(config: MessagingConfig)(implicit actorSystem: ActorSystem): ActorRef = apply(new BusDataSource(defaultDataSourceConfig), config)
+  def stop = processorControllerActor ! Stop
 
-  def apply(dataSource: BusDataSource, config: MessagingConfig)(implicit actorSystem: ActorSystem) =
-    actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSource, config))
+  def numberLinesProcessed = {
+    (processorControllerActor ? GetNumberLinesProcessed).mapTo[Long]
+  }
 }

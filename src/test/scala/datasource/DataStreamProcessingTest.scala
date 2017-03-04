@@ -3,7 +3,7 @@ package datasource
 import historical.HistoricalTestFixture
 import lbt.comon.{Start, Stop}
 import lbt.datasource.SourceLine
-import lbt.datasource.streaming.{DataStreamProcessingController, GetNumberLinesProcessed}
+import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor, GetNumberLinesProcessed}
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.concurrent.ScalaFutures
@@ -25,7 +25,7 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
     val fixture = new HistoricalTestFixture
     try test(fixture)
     finally {
-      fixture.dataStreamProcessingControllerReal ! Stop
+      fixture.dataStreamProcessingControllerReal.stop
       fixture.actorSystem.terminate().futureValue
       fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
@@ -35,12 +35,12 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
 
   test("Data Stream Processor processes same number of messages as those queued") { f =>
 
-    f.dataStreamProcessingControllerReal ! Start
+    f.dataStreamProcessingControllerReal.start
     Thread.sleep(60000)
-    f.dataStreamProcessingControllerReal ! Stop
+    f.dataStreamProcessingControllerReal.stop
 
     eventually(timeout(40 seconds)) {
-    val result = (f.dataStreamProcessingControllerReal ? GetNumberLinesProcessed)(20 seconds).futureValue.asInstanceOf[Long]
+    val result = f.dataStreamProcessingControllerReal.numberLinesProcessed.futureValue
        result shouldBe f.consumer.getNumberReceived.futureValue
       result shouldBe f.messageProcessor.getNumberProcessed
       f.messageProcessor.lastProcessedMessage.isDefined shouldBe true
@@ -50,11 +50,11 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
   test("Messages should be placed on messaging queue and fetched by consumer") { f =>
 
     val testDataSource = new TestDataSource(f.testDataSourceConfig)
-    val dataStreamProcessingControllerTest = DataStreamProcessingController(testDataSource, f.testMessagingConfig)(f.actorSystem)
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSource, f.testMessagingConfig)(f.actorSystem)
 
-    dataStreamProcessingControllerTest ! Start
+    dataStreamProcessorTest.start
     Thread.sleep(500)
-    dataStreamProcessingControllerTest ! Stop
+    dataStreamProcessorTest.stop
 
     eventually {
       f.consumer.getNumberReceived.futureValue shouldBe testDataSource.getNumberLinesStreamed
