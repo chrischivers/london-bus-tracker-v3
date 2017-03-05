@@ -44,7 +44,10 @@ object BusDataSource {
 
     override def next() = {
       numberLinesStreamed.incrementAndGet()
-      SourceLineValidator(dataSourceIterator.next())
+      SourceLineValidator(dataSourceIterator.next()) match {
+        case Some(sourceLine) => sourceLine
+        case None => next()
+      }
     }
 
     def closeClient() = {

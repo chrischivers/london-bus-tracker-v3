@@ -21,6 +21,7 @@ trait RabbitMQConfig  {
   implicit val timeout: Timeout = 30 seconds
   val connFactory = new ConnectionFactory()
   connFactory.setUri("amqp://guest:guest@localhost/%2F")
+  //TODO put in config
 }
 
 trait MessageProcessor extends StrictLogging {

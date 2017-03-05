@@ -44,3 +44,5 @@ libraryDependencies ++= Seq(
 )
 
 enablePlugins(JettyPlugin)
+
+test in assembly := {}

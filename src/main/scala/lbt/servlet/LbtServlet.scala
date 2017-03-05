@@ -25,7 +25,7 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     Ok("Started data stream processor")
   }
 
-  get("/streamsstop") {
+  get("/streamstop") {
     dataStreamProcessor.stop
     Ok("Stopped data stream processor")
   }

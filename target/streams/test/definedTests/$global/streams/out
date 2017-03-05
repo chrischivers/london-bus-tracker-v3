@@ -1,2 +1,2 @@
-[0m[[0mdebug[0m] [0mSubclass fingerprints: List((org.specs2.specification.core.SpecificationStructure,true,specs2 Specification fingerprint), (org.specs2.specification.core.SpecificationStructure,false,specs2 Specification fingerprint), (org.scalatest.Suite,false,org.scalatest.tools.Framework$$anon$1@40754e84))[0m
-[0m[[0mdebug[0m] [0mAnnotation fingerprints: List((org.scalatest.WrapWith,false,org.scalatest.tools.Framework$$anon$2@913b8b7))[0m
+[0m[[0mdebug[0m] [0mSubclass fingerprints: List((org.specs2.specification.core.SpecificationStructure,true,specs2 Specification fingerprint), (org.specs2.specification.core.SpecificationStructure,false,specs2 Specification fingerprint), (org.scalatest.Suite,false,org.scalatest.tools.Framework$$anon$1@4edf3087))[0m
+[0m[[0mdebug[0m] [0mAnnotation fingerprints: List((org.scalatest.WrapWith,false,org.scalatest.tools.Framework$$anon$2@17ea7c2b))[0m

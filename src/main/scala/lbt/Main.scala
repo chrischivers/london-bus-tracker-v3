@@ -24,9 +24,10 @@ object Main extends App {
   val historicalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig
 
   val definitionsCollection = new BusDefinitionsCollection(definitionsConfig, dBConfig)
-  val getOnlyList = List(BusRoute("3", "outbound"), BusRoute("3", "inbound"))
-   definitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
-  //definitionsCollection.refreshBusRouteDefinitionFromWeb()
+  //TODO have this accessible through user interface
+ // val getOnlyList = List(BusRoute("3", "outbound"), BusRoute("3", "inbound"))
+  // definitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
+  definitionsCollection.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
   val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig, definitionsCollection)
 
   val messageProcessor = new HistoricalMessageProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)

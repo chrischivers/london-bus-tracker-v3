@@ -10,7 +10,7 @@
     <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
         <url>https://search-lbtlogging-naudrn2iukfabmswngnpmnj7hu.us-west-2.es.amazonaws.com/_bulk</url>
         <index>logstash-%date{yyyy-MM-dd}</index>
-        <type>tester</type>
+        <type>lbt</type>
         <properties>
             <property>
                 <name>host</name>
@@ -44,13 +44,9 @@
 
     <root level="info">
         <appender-ref ref="STDOUT" />
-        <!--<appender-ref ref="ELASTIC" />-->
+        <appender-ref ref="ELASTIC" />
     </root>
 
-    <root level="debug">
-        <appender-ref ref="STDOUT" />
-        <!--<appender-ref ref="ELASTIC" />-->
-    </root>
 
     <logger name="es-error-logger" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />

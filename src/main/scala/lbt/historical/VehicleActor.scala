@@ -23,7 +23,6 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
              busStopDefinitionList: List[BusStop]): Receive = {
 
     case vsl: ValidatedSourceLine =>
-      logger.info(s"actor $name received sourceLine: $vsl")
       assert(vsl.vehicleID + "-" + vsl.busRoute.id + "-" + vsl.busRoute.direction == name)
 
       if (route.isEmpty) {

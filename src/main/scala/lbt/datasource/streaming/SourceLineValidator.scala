@@ -5,10 +5,10 @@ import lbt.datasource.SourceLine
 
 object SourceLineValidator extends StrictLogging {
 
-  def apply(sourceLineString: String): SourceLine = {
+  def apply(sourceLineString: String): Option[SourceLine] = {
     val split = splitLine(sourceLineString)
-    checkArrayCorrectLength(split)
-    SourceLine(split(1).toUpperCase, split(2).toInt, split(0), split(3), split(4), split(5).toLong)
+    if (arrayCorrectLength(split)) Some(SourceLine(split(1).toUpperCase, split(2).toInt, split(0), split(3), split(4), split(5).toLong))
+    else None
   }
 
 
@@ -19,9 +19,11 @@ object SourceLineValidator extends StrictLogging {
     .map(_.trim) // remove trailing or leading white space
      .tail // discards the first element (always '1')
 
-  def checkArrayCorrectLength(array: Array[String]) = {
-    if (array.length != 6) {
-      throw new IllegalArgumentException(s"Source array has incorrect number of elements (${array.length}. 6 expected. Or invalid web page retrieved \n " + array)
+  def arrayCorrectLength(array: Array[String]): Boolean = {
+    if (array.length != 6)  true
+    else {
+      logger.info(s"Source array has incorrect number of elements (${array.length}. 6 expected. Or invalid web page retrieved \n " + array)
+      false
     }
   }
 }

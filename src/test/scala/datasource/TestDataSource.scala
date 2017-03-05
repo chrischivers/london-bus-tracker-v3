@@ -19,6 +19,9 @@ class TestDataSource(config: DataSourceConfig, lineList: Option[List[String]] = 
 
   override def next() = {
     numberLinesStreamed.incrementAndGet()
-    SourceLineValidator(testLineIterator.next())
+    SourceLineValidator(testLineIterator.next()) match {
+      case Some(sourceLine) => sourceLine
+      case None => next()
+    }
   }
 }

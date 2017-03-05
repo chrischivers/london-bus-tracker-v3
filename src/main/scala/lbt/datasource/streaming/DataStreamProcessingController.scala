@@ -34,7 +34,6 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
     case  Start=>
       logger.info("Supervisor starting the iterating actor")
       iteratingActor ! Start
-      iteratingActor ! Next
     case Stop =>
       logger.info("Supervisor stopping the iterating actor")
       iteratingActor ! Stop

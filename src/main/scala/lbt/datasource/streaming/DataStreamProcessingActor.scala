@@ -18,6 +18,7 @@ class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLine
     case Start =>
       logger.info("DataStreamProcessingActor Actor becoming active")
       context.become(active)
+      self ! Next
   }
 
   def active: Receive = { // This is the behavior when it's active
@@ -25,18 +26,17 @@ class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLine
       context.become(inactive)
       logger.info("DataStreamProcessingActor becoming inactive")
     case Next =>
-     if(dataSource.hasNext){
+     //if(dataSource.hasNext){
        publisher.publish(dataSource.next())
        context.parent ! Increment
        self ! Next
-     } else logger.info("Data source iterator is empty. No line to process.")
+     //} else logger.info("Data source iterator is empty. No line to process.")
 
   }
 
   override def postRestart(reason: Throwable): Unit = {
     logger.debug("DataStreamProcessingActor Restarting")
     self ! Start
-    self ! Next
   }
 
 

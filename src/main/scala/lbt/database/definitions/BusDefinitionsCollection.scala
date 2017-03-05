@@ -61,7 +61,6 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     val directions = routeSection.map(x => (x \ "direction")).map(y => y.extractOpt[List[String]].getOrElse(List(y.extract[String])).toSet)
 
     val allRoutes: Seq[((String, String), Set[String])] = routeIDs zip modeNames zip directions
-    println(allRoutes)
     val busRoutes: Seq[((String, String), Set[String])] = allRoutes.filter(x => x._1._2 == "bus") //.filter(x => x._1._1.as[String] == "3")
     numberToProcess = busRoutes.foldLeft(0)((acc, x) => acc + x._2.size)
     logger.info(s"number of routes to process: $numberToProcess")
@@ -71,7 +70,8 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
           val routeIDString = route._1._1.toUpperCase
           val busRoute = BusRoute(routeIDString, direction)
           if((getBusRouteDefinitions().get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
-            logger.info("skipping route " + routeIDString + "and direction " + direction + " as already in DB")
+            //TODO What if it is in DB but incomplete?
+            logger.info("skipping route " + routeIDString + " and direction " + direction + " as already in DB")
           } else {
             logger.info("processing route " + routeIDString + ", direction " + direction)
             val singleRouteJsonDataRaw = Source.fromURL(getSingleRouteUrl(busRoute)).mkString

@@ -22,7 +22,6 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
   val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
-  println(definitions)
 
   val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsCollection, historicalRecordsConfig))
 
@@ -36,7 +35,7 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
     lastProcessedMessage = Some(sourceLine)
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-        case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+        case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
       cache.put(sourceLine)
   }
