@@ -38,7 +38,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
       logger.info("Persist to DB command received. Attempting to persist...")
       validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList) match {
         case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
-        case Failure(e) => logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
+        case Failure(e) => //logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
       }
   }
 

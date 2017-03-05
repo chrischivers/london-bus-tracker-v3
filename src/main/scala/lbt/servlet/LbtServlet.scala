@@ -5,6 +5,7 @@ import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.{HistoricalRecordFromDb, HistoricalRecordsCollection}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
+import lbt.historical.HistoricalMessageProcessor
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
@@ -13,12 +14,44 @@ import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.webapp.WebAppContext
 import org.scalatra.servlet.ScalatraListener
 
-import scala.util.Try
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext}
+import scala.util.{Failure, Success, Try}
 
 
-class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, dataStreamProcessor: DataStreamProcessor) extends ScalatraServlet {
+class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalMessageProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet {
 
   implicit val formats = DefaultFormats
+
+  get("/status") {
+    <html>
+      <body>
+        <h1>Lbt Status</h1>
+        <h2>Bus Definitions Collection</h2>
+        Number Inserts Requested = {busDefinitionsCollection.numberInsertsRequested}<br />
+        Number Inserts Completed = {busDefinitionsCollection.numberInsertsCompleted}<br />
+        Number Get Requests= {busDefinitionsCollection.numberGetRequests}<br />
+        Number Delete Requests = {busDefinitionsCollection.numberDeleteRequests}<br />
+      <br />
+      <h2>Historical Records Collection</h2>
+        Number Inserts Requested = {historicalRecordsCollection.numberInsertsRequested}<br />
+      Number Inserts Completed = {historicalRecordsCollection.numberInsertsCompleted}<br />
+      Number Get Requests= {historicalRecordsCollection.numberGetRequests}<br />
+      Number Delete Requests = {historicalRecordsCollection.numberDeleteRequests}<br />
+      <br></br>
+        <h2>Data Stream Processor</h2>
+        Number Lines Processed = {Await.result(dataStreamProcessor.numberLinesProcessed, 5 seconds)}<br />
+        Number Lines Processed Since Restart = {Await.result(dataStreamProcessor.numberLinesProcessedSinceRestart, 5 seconds)}<br />
+        <br></br>
+        <h2>Historical Message Processorr</h2>
+        Number Lines Processed = {historicalMessageProcessor.getNumberProcessed}<br />
+        Number Lines Validated= {historicalMessageProcessor.getNumberValidated}<br />
+        Number of Vehicle Actors = {Await.result(historicalMessageProcessor.getCurrentActors, 5 seconds).size}<br />
+        Cache Size = {historicalMessageProcessor.getCacheSize}
+        <br />
+      </body>
+    </html>
+  }
 
   get("/streamstart") {
     dataStreamProcessor.start
@@ -62,6 +95,10 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
       } else NotFound(s"No records found for bus route $busRoute, from stop: $fromStopID and to stop: $toStopID")
     } else NotFound(s"No records found for bus route $busRoute")
+  }
+
+  notFound {
+    resourceNotFound()
   }
 
     private def validateBusRoute(busRoute: BusRoute): Boolean = {

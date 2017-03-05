@@ -24,7 +24,7 @@ case class VehicleID(vehicleReg: String, busRoute: BusRoute) {
 }
 
 class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, historicalRecordsConfig: HistoricalRecordsConfig) extends Actor with StrictLogging {
-
+  logger.info("Vehicle Actor Supervisor Actor Created")
   implicit val timeout = Timeout(10 seconds)
 
   def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter)
@@ -66,7 +66,7 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
   }
 
   def createNewActor(vehicleID: VehicleID): ActorRef = {
-    logger.info(s"Creating new actor for vehicle ID $vehicleID")
+   // logger.info(s"Creating new actor for vehicle ID $vehicleID")
     context.actorOf(Props(classOf[VehicleActor], vehicleID.vehicleReg, historicalRecordsConfig, busDefinitionsCollection, historicalRecordsCollection), vehicleID.toString)
   }
 }

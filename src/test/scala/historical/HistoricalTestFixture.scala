@@ -4,7 +4,6 @@ import akka.actor.ActorSystem
 import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
-import lbt.datasource.BusDataSource.BusDataSource
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.HistoricalMessageProcessor
 import lbt.{ConfigLoader, MessageConsumer}
@@ -42,9 +41,7 @@ class HistoricalTestFixture(vehicleInactivityTimeout: Long = 5000) {
   val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
   val consumer = new MessageConsumer(messageProcessor, testMessagingConfig)
 
-  val realDataSource = new BusDataSource(testDataSourceConfig)
-
-  val dataStreamProcessingControllerReal  = new DataStreamProcessor(realDataSource, testMessagingConfig)
+  val dataStreamProcessingControllerReal  = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig)
 
   val arrivalTimeMultipliers = Stream.from(1).iterator
   def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())

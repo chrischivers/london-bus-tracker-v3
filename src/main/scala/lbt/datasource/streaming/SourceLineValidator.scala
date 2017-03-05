@@ -20,9 +20,9 @@ object SourceLineValidator extends StrictLogging {
      .tail // discards the first element (always '1')
 
   def arrayCorrectLength(array: Array[String]): Boolean = {
-    if (array.length != 6)  true
+    if (array.length == 6)  true
     else {
-      logger.info(s"Source array has incorrect number of elements (${array.length}. 6 expected. Or invalid web page retrieved \n " + array)
+      logger.info(s"Source array has incorrect number of elements (${array.length}. 6 expected. Or invalid web page retrieved \n " + array.mkString(","))
       false
     }
   }

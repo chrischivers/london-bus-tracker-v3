@@ -2,67 +2,114 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a216408e-2c98-42b6-a75f-7b91f1969db9" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-reports/datasource.BusDataSourceTest.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/input_dsp" afterPath="$PROJECT_DIR$/project/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/input_dsp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/output_dsp" afterPath="$PROJECT_DIR$/project/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/output_dsp" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSource.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient$$anonfun$getStream$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient$$anonfun$getStream$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest$$anonfun$1$$anonfun$apply$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest$$anonfun$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest$$anonfun$2$$anonfun$apply$3$$anonfun$apply$1$$anonfun$apply$mcV$sp$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest$$anonfun$2$$anonfun$apply$3$$anonfun$apply$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest$$anonfun$2$$anonfun$apply$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest$$anonfun$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/DataStreamProcessingTest$$anonfun$1$$anonfun$apply$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/DataStreamProcessingTest$$anonfun$2$$anonfun$apply$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/TestDataSource$$anonfun$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/TestDataSource$.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/TestDataSource.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/out" afterPath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/update_cache_2.10/inputs" afterPath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/update_cache_2.10/inputs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/update_cache_2.10/output" afterPath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/update_cache_2.10/output" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/ListeningActor$$anonfun$receive$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/ListeningActor$$anonfun$receive$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/ListeningActor.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/ListeningActor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/ConfigLoader$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/ConfigLoader$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/DataSourceConfig$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/DataSourceConfig$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/DataSourceConfig.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/DataSourceConfig.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/Main$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/Main$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/Main$delayedInit$body.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/Main$delayedInit$body.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/Main.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/MessageConsumer.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/MessageConsumer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/MessageProcessor$class.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/MessageProcessor$class.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$refreshBusRouteDefinitionFromWeb$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$refreshBusRouteDefinitionFromWeb$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$refreshBusRouteDefinitionFromWeb$2$$anonfun$apply$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$refreshBusRouteDefinitionFromWeb$2$$anonfun$apply$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$refreshBusRouteDefinitionFromWeb$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection$$anonfun$refreshBusRouteDefinitionFromWeb$2.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/database/definitions/BusDefinitionsCollection.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSource.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSource.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient$$anonfun$getStream$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient$$anonfun$getStream$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient$$anonfun$getStream$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient$$anonfun$getStream$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource$BusDataSourceHttpClient.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/BusDataSource.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingActor$$anonfun$active$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingActor$$anonfun$active$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingActor$$anonfun$inactive$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingActor$$anonfun$inactive$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingActor.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingActor.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController$$anonfun$1$$anonfun$applyOrElse$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController$$anonfun$1$$anonfun$applyOrElse$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController$$anonfun$receive$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController$$anonfun$receive$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/DataStreamProcessingController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessed$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessed$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessed.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessed.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessedSinceRestart$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessedSinceRestart$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessedSinceRestart.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/GetNumberLinesProcessedSinceRestart.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Increment$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Increment$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Increment.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Increment.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Next$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Next$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Next.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/Next.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/SourceLineValidator$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/SourceLineValidator$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/SourceLineValidator.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/datasource/streaming/SourceLineValidator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$getArrivalRecords$1$$anonfun$apply$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$getArrivalRecords$1$$anonfun$apply$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$getArrivalRecords$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$getArrivalRecords$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$validateSourceLine$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$$anonfun$validateSourceLine$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$SourceLineCache$$anonfun$cleanupCache$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$SourceLineCache$$anonfun$cleanupCache$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$SourceLineCache.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor$SourceLineCache.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/HistoricalMessageProcessor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$2.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$active$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$active$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$stopArrivalTimesAreIncremental$1$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$stopArrivalTimesAreIncremental$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$stopArrivalTimesAreIncremental$1$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$stopArrivalTimesAreIncremental$1$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$stopArrivalTimesAreIncremental$1$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$stopArrivalTimesAreIncremental$1$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$validateBeforePersist$1$$anonfun$apply$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$validateBeforePersist$1$$anonfun$apply$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$validateBeforePersist$1$$anonfun$apply$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$validateBeforePersist$1$$anonfun$apply$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$validateBeforePersist$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor$$anonfun$validateBeforePersist$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActorSupervisor.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/historical/VehicleActorSupervisor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$4.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$4.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$5.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$5.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$6.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToStops$6.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToTime$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToTime$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToTime$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet$$anonfun$lbt$servlet$LbtServlet$$validateFromToTime$2.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/lbt/servlet/LbtServlet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/TestDataSource.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/TestDataSource.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/BusDataSourceTest.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/DataStreamProcessingTest$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/DataStreamProcessingTest$$anonfun$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/DataStreamProcessingTest$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/datasource/DataStreamProcessingTest$$anonfun$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$1$$anonfun$apply$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$1$$anonfun$apply$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$11$$anonfun$12.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$11$$anonfun$12.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$11$$anonfun$apply$8.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$11$$anonfun$apply$8.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$11.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$11.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$13$$anonfun$14.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$13$$anonfun$14.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$13.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$13.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$16$$anonfun$17.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$16$$anonfun$17.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$16.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$16.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$18$$anonfun$19.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$18$$anonfun$19.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$18.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$18.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$2$$anonfun$apply$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$2$$anonfun$apply$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$20$$anonfun$21.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$20$$anonfun$21.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$20.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$20.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$28$$anonfun$29.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$28$$anonfun$29.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$28.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$28.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$3$$anonfun$apply$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$3$$anonfun$apply$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$4$$anonfun$5.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$4$$anonfun$5.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$4$$anonfun$apply$4.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$4$$anonfun$apply$4.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$4.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$4.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$6$$anonfun$apply$5.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$6$$anonfun$apply$5.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$6.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$6.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$7$$anonfun$8.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$7$$anonfun$8.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$7$$anonfun$apply$6.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$7$$anonfun$apply$6.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$7.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$7.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$9$$anonfun$10.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$9$$anonfun$10.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$9$$anonfun$apply$7.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$9$$anonfun$apply$7.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$9.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest$$anonfun$9.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalRecorderTest.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalTestFixture$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalTestFixture$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalTestFixture.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/historical/HistoricalTestFixture.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture$$anonfun$1$$anonfun$apply$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture$$anonfun$1$$anonfun$apply$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture$$anonfun$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture$class.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture$class.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/servlet/LbtServletTestFixture.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.11/output_dsp" afterPath="$PROJECT_DIR$/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.11/output_dsp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/compile/copyResources/$global/streams/copy-resources" afterPath="$PROJECT_DIR$/target/streams/compile/copyResources/$global/streams/copy-resources" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/test/isModule=false name=DefinitionsTest/test/out" afterPath="$PROJECT_DIR$/target/streams/test/test/isModule=false name=DefinitionsTest/test/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/test/isModule=false name=datasource.DataStreamProcessingTest/test/out" afterPath="$PROJECT_DIR$/target/streams/test/test/isModule=false name=datasource.DataStreamProcessingTest/test/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/test/isModule=false name=historical.HistoricalRecorderTest/test/out" afterPath="$PROJECT_DIR$/target/streams/test/test/isModule=false name=historical.HistoricalRecorderTest/test/out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/london-bus-tracker-v3-build.iml" afterPath="$PROJECT_DIR$/.idea/modules/london-bus-tracker-v3-build.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/london-bus-tracker-v3.iml" afterPath="$PROJECT_DIR$/.idea/modules/london-bus-tracker-v3.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/scala_compiler.xml" afterPath="$PROJECT_DIR$/.idea/scala_compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.sbt" afterPath="$PROJECT_DIR$/build.sbt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/plugins.sbt" afterPath="$PROJECT_DIR$/project/plugins.sbt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/resolution-cache/default/london-bus-tracker-v3-build/scala_2.10/sbt_0.13/0.1-SNAPSHOT/resolved.xml.properties" afterPath="$PROJECT_DIR$/project/target/resolution-cache/default/london-bus-tracker-v3-build/scala_2.10/sbt_0.13/0.1-SNAPSHOT/resolved.xml.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/resolution-cache/default/london-bus-tracker-v3-build/scala_2.10/sbt_0.13/0.1-SNAPSHOT/resolved.xml.xml" afterPath="$PROJECT_DIR$/project/target/resolution-cache/default/london-bus-tracker-v3-build/scala_2.10/sbt_0.13/0.1-SNAPSHOT/resolved.xml.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile-internal.xml" afterPath="$PROJECT_DIR$/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile-internal.xml" />
@@ -79,7 +126,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test-internal.xml" afterPath="$PROJECT_DIR$/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test-internal.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test.xml" afterPath="$PROJECT_DIR$/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/ivyConfiguration/$global/streams/out" afterPath="$PROJECT_DIR$/project/target/streams/$global/ivyConfiguration/$global/streams/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/out" afterPath="$PROJECT_DIR$/project/target/streams/$global/update/$global/streams/out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/compile/dependencyClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/project/target/streams/compile/dependencyClasspath/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/compile/exportedProducts/$global/streams/export" afterPath="$PROJECT_DIR$/project/target/streams/compile/exportedProducts/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/project/target/streams/compile/externalDependencyClasspath/$global/streams/export" />
@@ -90,18 +136,25 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/runtime/fullClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/project/target/streams/runtime/fullClasspath/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/runtime/internalDependencyClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/project/target/streams/runtime/internalDependencyClasspath/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/target/streams/runtime/managedClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/project/target/streams/runtime/managedClasspath/$global/streams/export" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/application.conf" afterPath="$PROJECT_DIR$/src/main/resources/application.conf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala" afterPath="$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/Config.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/Config.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/Main.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/Main.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsCollection.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsCollection.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala" afterPath="$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" afterPath="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala" afterPath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/london-bus-tracker-v3_2.11/1.0/resolved.xml.properties" afterPath="$PROJECT_DIR$/target/resolution-cache/default/london-bus-tracker-v3_2.11/1.0/resolved.xml.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/london-bus-tracker-v3_2.11/1.0/resolved.xml.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/default/london-bus-tracker-v3_2.11/1.0/resolved.xml.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile-internal.xml" />
@@ -119,8 +172,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-sources.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-sources.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test-internal.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/logback.xml" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/logback.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/$global/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/$global/$global/streams/out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/application.conf" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/application.conf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/$global/streams/out" />
@@ -131,17 +184,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/compile/incCompileSetup/$global/streams/inc_compile_2.11" afterPath="$PROJECT_DIR$/target/streams/compile/incCompileSetup/$global/streams/inc_compile_2.11" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/compile/managedClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/compile/managedClasspath/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/runtime/exportedProducts/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/runtime/exportedProducts/$global/streams/export" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/compileIncremental/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/compileIncremental/$global/streams/export" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/compileIncremental/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/test/compileIncremental/$global/streams/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/definedTests/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/test/definedTests/$global/streams/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/dependencyClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/dependencyClasspath/$global/streams/export" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/exportedProducts/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/exportedProducts/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/externalDependencyClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/externalDependencyClasspath/$global/streams/export" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/fullClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/fullClasspath/$global/streams/export" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/incCompileSetup/$global/streams/inc_compile_2.11" afterPath="$PROJECT_DIR$/target/streams/test/incCompileSetup/$global/streams/inc_compile_2.11" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/internalDependencyClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/internalDependencyClasspath/$global/streams/export" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/managedClasspath/$global/streams/export" afterPath="$PROJECT_DIR$/target/streams/test/managedClasspath/$global/streams/export" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/test/test/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/test/test/$global/streams/out" />
     </list>
     <ignored path="london-bus-tracker-v3.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -195,11 +239,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="LbtServlet.scala" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala">
+      <file leaf-file-name="Config.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/Config.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+            <state relative-caret-position="72">
+              <caret line="4" column="246" lean-forward="false" selection-start-line="4" selection-start-column="246" selection-end-line="4" selection-end-column="246" />
               <folding />
             </state>
           </provider>
@@ -208,9 +252,24 @@
       <file leaf-file-name="DataStreamProcessingController.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="25" column="75" lean-forward="false" selection-start-line="25" selection-start-column="75" selection-end-line="25" selection-end-column="75" />
-              <folding />
+            <state relative-caret-position="255">
+              <caret line="77" column="25" lean-forward="false" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
+              <folding>
+                <element signature="e#34#79#0" expanded="true" />
+                <marker date="1488752998713" expanded="true" signature="1275:1363" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.scala" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/Main.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="344">
+              <caret line="33" column="35" lean-forward="false" selection-start-line="33" selection-start-column="35" selection-end-line="33" selection-end-column="35" />
+              <folding>
+                <element signature="e#13#48#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -218,63 +277,47 @@
       <file leaf-file-name="DataStreamProcessingActor.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="32" column="7" lean-forward="false" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SourceLineValidator.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="5" column="7" lean-forward="false" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BusDataSource.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="49" column="7" lean-forward="false" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="7" />
+            <state relative-caret-position="198">
+              <caret line="11" column="52" lean-forward="false" selection-start-line="11" selection-start-column="52" selection-end-line="11" selection-end-column="52" />
               <folding>
-                <element signature="e#24#74#0" expanded="true" />
+                <element signature="e#34#57#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestDataSource.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala">
+      <file leaf-file-name="HistoricalRecorderTest.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" column="41" lean-forward="true" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
+            <state relative-caret-position="36">
+              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding>
-                <element signature="e#20#47#0" expanded="true" />
+                <element signature="e#20#38#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistoricalMessageProcessor.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala">
+      <file leaf-file-name="BusDataSourceTest.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="35" column="44" lean-forward="false" selection-start-line="35" selection-start-column="44" selection-end-line="35" selection-end-column="44" />
-              <folding />
+            <state relative-caret-position="262">
+              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="2" selection-end-line="38" selection-end-column="5" />
+              <folding>
+                <element signature="e#20#43#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BusDefinitionsCollection.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsCollection.scala">
+      <file leaf-file-name="LbtServletTestFixture.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="62" column="95" lean-forward="false" selection-start-line="62" selection-start-column="95" selection-end-line="62" selection-end-column="95" />
-              <folding />
+            <state relative-caret-position="324">
+              <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
+              <folding>
+                <element signature="e#17#46#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -282,18 +325,30 @@
       <file leaf-file-name="LbtServletTest.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="80" column="8" lean-forward="false" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="8" />
+            <state relative-caret-position="-468">
+              <caret line="30" column="36" lean-forward="true" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
+              <folding>
+                <element signature="e#17#53#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HistoricalTestFixture.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-290">
+              <caret line="5" column="58" lean-forward="false" selection-start-line="5" selection-start-column="58" selection-end-line="5" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RabbitMQConfig.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala">
+      <file leaf-file-name="DataStreamProcessingTest.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="50" />
+            <state relative-caret-position="388">
+              <caret line="61" column="12" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -310,10 +365,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>here we</find>
-      <find>duplic</find>
-      <find>490011293S</find>
-      <find>implicits.glob</find>
       <find>fieldsvector</find>
       <find>fields</find>
       <find>timeout</find>
@@ -340,6 +391,10 @@
       <find>println</find>
       <find>no such</find>
       <find>source array has</find>
+      <find>invalid web page</find>
+      <find>busd</find>
+      <find>logger.debug</find>
+      <find>busda</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -380,7 +435,6 @@
         <option value="$PROJECT_DIR$/src/test/scala/HistoricalTestFixture.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/dataSource/streaming/SourceLineValidator.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/dataSsource/streaming/SourceLineValidator.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/servlet/ServletTestFixture.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/ServletBootstrap.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsDBController.scala" />
@@ -391,30 +445,31 @@
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/historical/HistoricalRecordsCollection.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/servlet/JettyLauncher.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/servlet/ServletBootstrap.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" />
-        <option value="$PROJECT_DIR$/src/main/resources/application.conf" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/Config.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/DefinitionsTest.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" />
         <option value="$PROJECT_DIR$/project/plugins.sbt" />
         <option value="$PROJECT_DIR$/build.sbt" />
-        <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/Main.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsCollection.scala" />
+        <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" />
+        <option value="$PROJECT_DIR$/src/main/resources/application.conf" />
+        <option value="$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/Config.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/Main.scala" />
       </list>
     </option>
   </component>
@@ -423,8 +478,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1440" />
-    <option name="height" value="900" />
+    <option name="x" value="65" />
+    <option name="y" value="24" />
+    <option name="width" value="1855" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -443,6 +500,8 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -549,6 +608,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="servlet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="historical" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -567,6 +652,126 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datasource" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WEB-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WEB-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="webapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WEB-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layouts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -591,36 +796,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="scala" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="london-bus-tracker-v3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="london-bus-tracker-v3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scala" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lbt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="RabbitMQConfig.scala" />
-              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -712,6 +887,10 @@
               <option name="myItemId" value="historical" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="VehicleActorSupervisor.scala" />
+              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -743,7 +922,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="HistoricalMessageProcessor.scala" />
+              <option name="myItemId" value="VehicleActor.scala" />
               <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -773,12 +952,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="datasource" />
+              <option name="myItemId" value="historical" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BusDataSource.scala" />
-              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -837,8 +1012,50 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="database" />
+              <option name="myItemId" value="datasource" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streaming" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="london-bus-tracker-v3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lbt" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datasource" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streaming" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataStreamProcessingController.scala" />
+              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -869,14 +1086,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="definitions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BusDefinitionsDBController.scala" />
-              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -951,8 +1160,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1370,7 +1577,7 @@
     </configuration>
   </component>
   <component name="SbtLocalSettings">
-    <option name="lastUpdateTimestamp" value="1488709784589" />
+    <option name="lastUpdateTimestamp" value="1488739750722" />
     <option name="availableProjects">
       <map>
         <entry>
@@ -1412,7 +1619,7 @@
         <entry key="$PROJECT_DIR$/../Play/shop" value="1450042433868" />
         <entry key="$PROJECT_DIR$/../PlayFramework/activator-1.3.5-minimal/play-scala-intro" value="1436910001372" />
         <entry key="$PROJECT_DIR$/../PlayFramework/play-2.3-comet-clock-master" value="1430960658000" />
-        <entry key="$PROJECT_DIR$" value="1488709769000" />
+        <entry key="$PROJECT_DIR$" value="1488739588762" />
       </map>
     </option>
     <option name="externalProjectsViewState">
@@ -1489,33 +1696,33 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329602" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31716418" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28914404" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19527897" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3544776" sideWeight="0.50572246" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29645094" sideWeight="0.49427754" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29726368" sideWeight="0.49427754" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28482586" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28496867" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26251787" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26741293" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26533997" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2672234" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32462686" sideWeight="0.49713877" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="FindBugs-IDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1553,11 +1760,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-servlet/srcs/jetty-servlet-9.2.15.v20160210-sources.jar!/org/eclipse/jetty/servlet/ServletContextHandler.java" />
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalatra/scalatra_2.11/srcs/scalatra_2.11-2.5.0-sources.jar!/org/scalatra/servlet/RichServletContext.scala" />
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-webapp/srcs/jetty-webapp-9.2.15.v20160210-sources.jar!/org/eclipse/jetty/webapp/WebAppContext.java" />
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-server/srcs/jetty-server-9.2.15.v20160210-sources.jar!/org/eclipse/jetty/server/Server.java" />
-    <entry file="jar://$USER_HOME$/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/srcs/xsbt-web-plugin-2.1.0-sources.jar!/com/earldouglas/xwp/JettyPlugin.scala" />
     <entry file="jar://$USER_HOME$/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/srcs/xsbt-web-plugin-2.1.0-sources.jar!/com/earldouglas/xwp/TomcatPlugin.scala" />
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalatra/scalatra_2.11/srcs/scalatra_2.11-2.5.0-sources.jar!/org/scalatra/servlet/ScalatraListener.scala" />
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalatra/scalatra_2.11/srcs/scalatra_2.11-2.5.0-sources.jar!/org/scalatra/LifeCycle.scala" />
@@ -1568,32 +1770,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/layouts/default.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/views/hello-scalate.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/Config.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1604,23 +1784,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1002">
           <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="617">
-          <caret line="46" column="53" lean-forward="false" selection-start-line="46" selection-start-column="53" selection-end-line="46" selection-end-column="53" />
-          <folding>
-            <element signature="e#20#49#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="56" column="32" lean-forward="false" selection-start-line="56" selection-start-column="32" selection-end-line="56" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -1641,20 +1804,6 @@
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-servlet/srcs/jetty-servlet-9.2.15.v20160210-sources.jar!/org/eclipse/jetty/servlet/DefaultServlet.java" />
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalatra/scalatra-test_2.11/srcs/scalatra-test_2.11-2.5.0-sources.jar!/org/scalatra/test/JettyContainer.scala" />
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.eclipse.jetty/jetty-server/srcs/jetty-server-9.2.19.v20160908-sources.jar!/org/eclipse/jetty/server/handler/ContextHandler.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="16" column="125" lean-forward="false" selection-start-line="16" selection-start-column="125" selection-end-line="16" selection-end-column="125" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/DefinitionsTest.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -1663,27 +1812,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="34" column="82" lean-forward="false" selection-start-line="34" selection-start-column="82" selection-end-line="34" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="21" column="3" lean-forward="false" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
-          <folding>
-            <element signature="e#20#52#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1703,27 +1835,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="84" column="1" lean-forward="false" selection-start-line="84" selection-start-column="1" selection-end-line="84" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="373">
-          <caret line="68" column="4" lean-forward="false" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/project/build.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1731,7 +1846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="54" lean-forward="false" selection-start-line="2" selection-start-column="54" selection-end-line="2" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1739,22 +1853,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="433">
           <caret line="47" column="22" lean-forward="false" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="52" column="11" lean-forward="true" selection-start-line="52" selection-start-column="11" selection-end-line="52" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="34" column="10" lean-forward="false" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="10" />
           <folding />
         </state>
       </provider>
@@ -1767,95 +1865,256 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/Main.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="29" column="45" lean-forward="true" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="80" column="8" lean-forward="false" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsCollection.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
+        <state relative-caret-position="864">
           <caret line="62" column="95" lean-forward="false" selection-start-line="62" selection-start-column="95" selection-end-line="62" selection-end-column="95" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="35" column="44" lean-forward="false" selection-start-line="35" selection-start-column="44" selection-end-line="35" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
+        <state relative-caret-position="162">
           <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="25" column="75" lean-forward="false" selection-start-line="25" selection-start-column="75" selection-end-line="25" selection-end-column="75" />
+        <state relative-caret-position="72">
+          <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.conf">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="32" column="7" lean-forward="false" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
+        <state relative-caret-position="396">
+          <caret line="22" column="31" lean-forward="false" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="40" column="29" lean-forward="false" selection-start-line="40" selection-start-column="29" selection-end-line="40" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/layouts/default.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalatra/scalatra_2.11/srcs/scalatra_2.11-2.5.0-sources.jar!/org/scalatra/ScalatraServlet.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="109" column="17" lean-forward="false" selection-start-line="109" selection-start-column="17" selection-end-line="109" selection-end-column="17" />
+          <folding>
+            <element signature="e#22#44#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalatra/scalatra_2.11/srcs/scalatra_2.11-2.5.0-sources.jar!/org/scalatra/ScalatraBase.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="787" column="6" lean-forward="false" selection-start-line="787" selection-start-column="6" selection-end-line="787" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="16" column="153" lean-forward="false" selection-start-line="16" selection-start-column="153" selection-end-line="16" selection-end-column="153" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="100" column="18" lean-forward="false" selection-start-line="100" selection-start-column="6" selection-end-line="100" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="40" column="15" lean-forward="true" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="15" />
+          <folding>
+            <element signature="e#21#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="26" column="15" lean-forward="false" selection-start-line="26" selection-start-column="15" selection-end-line="26" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-144">
+          <caret line="10" column="93" lean-forward="false" selection-start-line="10" selection-start-column="93" selection-end-line="10" selection-end-column="93" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/srcs/akka-actor_2.11-2.4.16-sources.jar!/akka/actor/FaultHandling.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-52">
+          <caret line="463" column="11" lean-forward="false" selection-start-line="463" selection-start-column="11" selection-end-line="463" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="14" column="36" lean-forward="true" selection-start-line="14" selection-start-column="36" selection-end-line="14" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/srcs/akka-actor_2.11-2.4.16-sources.jar!/akka/actor/Actor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="561" column="6" lean-forward="false" selection-start-line="561" selection-start-column="6" selection-end-line="561" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="49" column="7" lean-forward="false" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="7" />
+        <state relative-caret-position="298">
+          <caret line="24" column="60" lean-forward="false" selection-start-line="24" selection-start-column="60" selection-end-line="24" selection-end-column="60" />
           <folding>
             <element signature="e#24#74#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="7" lean-forward="false" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
+        <state relative-caret-position="198">
+          <caret line="11" column="52" lean-forward="false" selection-start-line="11" selection-start-column="52" selection-end-line="11" selection-end-column="52" />
+          <folding>
+            <element signature="e#34#57#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="388">
+          <caret line="61" column="12" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/Config.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="246" lean-forward="false" selection-start-line="4" selection-start-column="246" selection-end-line="4" selection-end-column="246" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-290">
+          <caret line="5" column="58" lean-forward="false" selection-start-line="5" selection-start-column="58" selection-end-line="5" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="41" lean-forward="true" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
+        <state relative-caret-position="54">
+          <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="2" selection-end-line="38" selection-end-column="5" />
           <folding>
-            <element signature="e#20#47#0" expanded="true" />
+            <element signature="e#20#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="255">
+          <caret line="77" column="25" lean-forward="false" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
+          <folding>
+            <element signature="e#34#79#0" expanded="true" />
+            <marker date="1488752998713" expanded="true" signature="1275:1363" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
+          <folding>
+            <element signature="e#17#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-468">
+          <caret line="30" column="36" lean-forward="true" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
+          <folding>
+            <element signature="e#17#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding>
+            <element signature="e#20#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/Main.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="33" column="35" lean-forward="false" selection-start-line="33" selection-start-column="35" selection-end-line="33" selection-end-column="35" />
+          <folding>
+            <element signature="e#13#48#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

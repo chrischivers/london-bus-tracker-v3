@@ -2,13 +2,16 @@ package lbt.datasource.streaming
 
 import akka.actor.Actor
 import com.typesafe.scalalogging.StrictLogging
+import lbt.DataSourceConfig
 import lbt.comon.{Start, Stop}
-import lbt.datasource.BusDataSource.BusDataSource
+import lbt.datasource.BusDataSource
 
 /**
  * Actor that iterates over live stream sending lines to be processed. On crash, the supervisor strategy restarts it
  */
 class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLinePublisher) extends Actor with StrictLogging {
+
+  logger.info("Data stream Processing Actor Created")
 
   // Iterating pattern for this actor based on code snippet posted on StackOverflow
   //http://stackoverflow.com/questions/5626285/pattern-for-interruptible-loops-using-actors
@@ -26,16 +29,25 @@ class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLine
       context.become(inactive)
       logger.info("DataStreamProcessingActor becoming inactive")
     case Next =>
-     //if(dataSource.hasNext){
+     if(dataSource.hasNext){
        publisher.publish(dataSource.next())
        context.parent ! Increment
        self ! Next
-     //} else logger.info("Data source iterator is empty. No line to process.")
+     } else {
+       logger.info("Data source iterator is empty. No line to process. Waiting 500 ms")
+       Thread.sleep(500)
+       self ! Next
+     }
 
   }
 
+  override def preRestart(reason: Throwable, message: Option[Any]): Unit = {
+    dataSource.closeClient()
+    super.preRestart(reason, message)
+  }
+
   override def postRestart(reason: Throwable): Unit = {
-    logger.debug("DataStreamProcessingActor Restarting")
+    logger.error("DataStreamProcessingActor Restarting")
     self ! Start
   }
 

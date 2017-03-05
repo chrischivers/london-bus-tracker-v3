@@ -8,12 +8,15 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 import org.scalatra.test.scalatest.ScalatraSuite
 
+import scala.concurrent.ExecutionContext
+
 
 class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with Matchers with BeforeAndAfterAll with LbtServletTestFixture {
 
   implicit val formats = DefaultFormats
+  implicit val ec = ExecutionContext.Implicits.global
 
-  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessor), "/*")
+  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessor, historicalMessageProcessor), "/*")
 
 
   test("Should produce 404 for undefined paths") {
@@ -265,7 +268,7 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
 
   test("should produce a list of arrival information for a given vehicle") {
     testBusRoutes.foreach(route => {
-      val vehicleReg = messageProcessor.lastValidatedMessage.map(_.vehicleID).get
+      val vehicleReg = historicalMessageProcessor.lastValidatedMessage.map(_.vehicleID).get
       get("/" + route.id + "/" + route.direction + "?vehicleID=" + vehicleReg) {
         status should equal(200)
         parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalRecordsCollection.getHistoricalRecordFromDB(route, None, None, None, None, Some(vehicleReg)))

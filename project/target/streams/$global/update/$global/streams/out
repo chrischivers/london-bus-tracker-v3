@@ -1,14 +1,9 @@
-[0m[[0minfo[0m] [0mUpdating {file:/Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/}london-bus-tracker-v3-build...[0m
-[0m[[0mdebug[0m] [0m:: resolving dependencies :: default#london-bus-tracker-v3-build;0.1-SNAPSHOT[0m
+[0m[[0minfo[0m] [0mUpdating {file:/home/chrischivers/Code/london-bus-tracker-v3/project/}london-bus-trac[debug] :: resolving[0m[[0mdebug[0m] [0m:: resolving dependencies :: default#london-bus-tracker-v3-build;0.1-SNAPSHOT[0m
 [0m[[0mdebug[0m] [0m	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool][0m
 [0m[[0mdebug[0m] [0m	validate = true[0m
 [0m[[0mdebug[0m] [0m	refresh = false[0m
 [0m[[0mdebug[0m] [0mresolving dependencies for configuration 'compile'[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-sbt#global-plugins;0.0 [compile->default(compile)][0m
-[0m[[0minfo[0m] [0mResolving org.scala-sbt#global-plugins;0.0 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.scala-sbt#global-plugins;0.0 {compile=[default(compile)]}[0m
-[0m[[0mdebug[0m] [0m	found org.scala-sbt#global-plugins;0.0 in inter-project[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->default(compile)][0m
 [0m[[0minfo[0m] [0mResolving org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 ...[0m
 [0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 {compile=[default(compile)]}[0m
@@ -420,7 +415,6 @@
 [0m[[0mdebug[0m] [0mresolving dependencies for configuration 'runtime'[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-sbt#global-plugins;0.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->compile][0m
@@ -723,7 +717,6 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [test][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-sbt#global-plugins;0.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->compile][0m
@@ -1709,7 +1702,6 @@
 [0m[[0mdebug[0m] [0mresolving dependencies for configuration 'compile-internal'[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile-internal][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-sbt#global-plugins;0.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->compile][0m
@@ -2476,7 +2468,6 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [runtime-internal][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-sbt#global-plugins;0.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->compile][0m
@@ -2781,7 +2772,6 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [test][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3-build;0.1-SNAPSHOT [compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scala-sbt#global-plugins;0.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3-build;0.1-SNAPSHOT->org.scalatra.scalate#sbt-scalate-precompiler;1.8.0.1 [compile->compile][0m
@@ -3673,19 +3663,101 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#jline;2.10.4!jline.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 602ms :: artifacts dl 25ms[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT provided produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-provided.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT optional produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-optional.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT plugin produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-plugin.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT sources produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-sources.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT docs produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-docs.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT pom produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-pom.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT scala-tool produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (602ms resolve - 25ms download)[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 3127ms :: artifacts dl 108ms[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT provided produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-provided.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT optional produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-optional.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT plugin produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-plugin.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT sources produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-sources.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT docs produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-docs.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT pom produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-pom.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT scala-tool produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-scala-tool.xml[0m
+[0m[[0mdebug[0m] [0m	resolve done (3127ms resolve - 108ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m
+2/plexus-classworlds-2.5.2.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-classworlds/2.5.2/plexus-classworlds-2.5.2.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-classworlds/2.5.2/plexus-classworlds-2.5.2.jar
+[info] 	[SUCCESSFUL ] org.codehaus.plexus#plexus-classworlds;2.5.2!plexus-classworlds.jar(bundle) (149ms)
+[debug] 	[NOT REQUIRED] javax.annotation#jsr250-api;1.0!jsr250-api.jar
+[debug] 	[NOT REQUIRED] javax.inject#javax.inject;1!javax.inject.jar
+[debug] 		tried https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.2/asm-tree-5.2.jar
+[info] downloading https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.2/asm-tree-5.2.jar ...
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.2/asm-tree-5.2.jar
+[debug] 	public: downloading https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.2/asm-tree-5.2.jar.sha1
+[debug] sha1 OK for https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/5.2/asm-tree-5.2.jar
+[info] 	[SUCCESSFUL ] org.ow2.asm#asm-tree;5.2!asm-tree.jar (157ms)
+[debug] 	[NOT REQUIRED] org.scala-sbt#sbt;0.13.8!sbt.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#main;0.13.8!main.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#compiler-interface;0.13.8!compiler-interface-src.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#compiler-interface;0.13.8!compiler-interface-bin.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_8_2;0.13.8!compiler-interface-bin.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_2;0.13.8!compiler-interface-bin.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_3;0.13.8!compiler-interface-bin.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#actions;0.13.8!actions.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#main-settings;0.13.8!main-settings.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#interface;0.13.8!interface.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#io;0.13.8!io.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#ivy;0.13.8!ivy.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#launcher-interface;0.13.8!launcher-interface.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#logging;0.13.8!logging.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#logic;0.13.8!logic.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#process;0.13.8!process.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#run;0.13.8!run.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#command;0.13.8!command.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#classpath;0.13.8!classpath.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#completion;0.13.8!completion.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#api;0.13.8!api.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#compiler-integration;0.13.8!compiler-integration.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#compiler-ivy-integration;0.13.8!compiler-ivy-integration.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#relation;0.13.8!relation.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#task-system;0.13.8!task-system.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#tasks;0.13.8!tasks.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#tracking;0.13.8!tracking.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#testing;0.13.8!testing.jar
+[debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.10.4!scala-compiler.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#control;0.13.8!control.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#collections;0.13.8!collections.jar
+[debug] 	[NOT REQUIRED] jline#jline;2.11!jline.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#incremental-compiler;0.13.8!incremental-compiler.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#compile;0.13.8!compile.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#persist;0.13.8!persist.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#classfile;0.13.8!classfile.jar
+[debug] 	[NOT REQUIRED] org.scala-tools.sbinary#sbinary_2.10;0.4.2!sbinary_2.10.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#cross;0.13.8!cross.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt.ivy#ivy;2.3.0-sbt-fccfbd44c9f64523b61398a0155784dcbaeae28f!ivy.jar
+[debug] 	[NOT REQUIRED] com.jcraft#jsch;0.1.46!jsch.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#serialization_2.10;0.1.1!serialization_2.10.jar
+[debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-pickling_2.10;0.10.0!scala-pickling_2.10.jar
+[debug] 	[NOT REQUIRED] org.json4s#json4s-core_2.10;3.2.10!json4s-core_2.10.jar
+[debug] 	[NOT REQUIRED] org.spire-math#jawn-parser_2.10;0.6.0!jawn-parser_2.10.jar
+[debug] 	[NOT REQUIRED] org.spire-math#json4s-support_2.10;0.6.0!json4s-support_2.10.jar
+[debug] 	[NOT REQUIRED] org.scalamacros#quasiquotes_2.10;2.0.1!quasiquotes_2.10.jar
+[debug] 	[NOT REQUIRED] org.json4s#json4s-ast_2.10;3.2.10!json4s-ast_2.10.jar
+[debug] 	[NOT REQUIRED] com.thoughtworks.paranamer#paranamer;2.6!paranamer.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#cache;0.13.8!cache.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#test-agent;0.13.8!test-agent.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
+[debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.8!apply-macro.jar
+[debug] 	[NOT REQUIRED] org.scala-lang#jline;2.10.4!jline.jar
+[debug] 	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar
+[debug] :: resolution report :: resolve 60664ms :: artifacts dl 6420ms
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT provided produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-provided.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT optional produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-optional.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT compile-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-compile-internal.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT runtime-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-runtime-internal.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT test-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-test-internal.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT plugin produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-plugin.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT sources produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-sources.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT docs produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-docs.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT pom produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-pom.xml
+[debug] 	report for default#london-bus-tracker-v3-build;0.1-SNAPSHOT scala-tool produced in /home/chrischivers/Code/london-bus-tracker-v3/project/target/resolution-cache/reports/default-london-bus-tracker-v3-build-scala-tool.xml
+[debug] 	resolve done (60664ms resolve - 6420ms download)
+[info] Done updating.

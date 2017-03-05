@@ -98,6 +98,8 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
     } yield listResult
   }
 
+  def getCacheSize: Int = cache.size
+
   class SourceLineCache(timeToLiveSeconds: Int) {
     private var cache: Map[SourceLine, Long] = Map()
 
@@ -108,6 +110,10 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
 
     def contains(sourceLine: SourceLine): Boolean = {
       cache.get(sourceLine).isDefined
+    }
+
+    def size: Int = {
+      cache.size
     }
 
     private def cleanupCache = {

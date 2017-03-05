@@ -4,7 +4,6 @@ import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Commons}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
-import lbt.datasource.BusDataSource.BusDataSource
 import lbt.datasource.SourceLine
 import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
 import lbt.historical.{HistoricalMessageProcessor, PersistAndRemoveInactiveVehicles}
@@ -39,10 +38,9 @@ trait LbtServletTestFixture {
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val messageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+  val historicalMessageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
 
-  val testDataSource = new BusDataSource(testDataSourceConfig)
-  val dataStreamProcessor = new DataStreamProcessor(testDataSource, testMessagingConfig)
+  val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig)(actorSystem)
 
 
   testBusRoutes.foreach { route =>
@@ -54,11 +52,11 @@ trait LbtServletTestFixture {
     println("definitions: " + definitions)
     definitions(route).foreach(busStop => {
       val message = write(SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]")).getBytes
-      messageProcessor.processMessage(message)
+      historicalMessageProcessor.processMessage(message)
     })
   }
   Thread.sleep(1500)
-  messageProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+  historicalMessageProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
   Thread.sleep(500)
 
   def directionToInt(direction: String): Int = direction match {

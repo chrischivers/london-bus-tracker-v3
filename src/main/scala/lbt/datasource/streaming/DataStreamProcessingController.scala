@@ -9,8 +9,7 @@ import akka.pattern.ask
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
-import lbt.datasource.BusDataSource.BusDataSource
-import lbt.{ConfigLoader, MessagingConfig}
+import lbt.{ConfigLoader, DataSourceConfig, MessagingConfig}
 
 import scala.concurrent.TimeoutException
 import scala.concurrent.duration._
@@ -20,10 +19,11 @@ case class Increment()
 case class GetNumberLinesProcessed()
 case class GetNumberLinesProcessedSinceRestart()
 
-class DataStreamProcessingController(dataSource: BusDataSource, config: MessagingConfig) extends Actor with StrictLogging {
+class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagingConfig: MessagingConfig) extends Actor with StrictLogging {
+  logger.info("Data stream Processing Controller Actor Created")
 
-  val publisher = new SourceLinePublisher(config)(context.system)
-  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], dataSource, publisher))
+  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
+  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], new BusDataSource(dataSourceConfig), publisher))
 
   var numberProcessed = new AtomicLong(0)
   var numberProcessedSinceRestart = new AtomicLong(0)
@@ -47,12 +47,10 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
     numberProcessedSinceRestart.incrementAndGet()
   }
 
-  @scala.throws[Exception](classOf[Exception])
-  override def postStop(): Unit = {
-    logger.info("Post restart method of actor")
-    context.stop(iteratingActor)
-    dataSource.closeClient()
-    super.postStop()
+
+  override def postRestart(reason: Throwable): Unit = {
+    logger.info("In post restart of Data Stream processing Controller")
+    super.postRestart(reason)
   }
 
   /**
@@ -61,12 +59,12 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
   override val supervisorStrategy =
     OneForOneStrategy(loggingEnabled = false) {
       case e: TimeoutException =>
-        logger.debug("Incoming Stream TimeOut Exception. Restarting...")
+        logger.error("Incoming Stream TimeOut Exception. Restarting...")
         Thread.sleep(5000)
        numberProcessedSinceRestart.set(0)
         Restart
       case e: Exception =>
-        logger.debug("Exception. Incoming Stream Exception. Restarting...")
+        logger.error("Exception. Incoming Stream Exception. Restarting...")
         e.printStackTrace()
         Thread.sleep(5000)
         numberProcessedSinceRestart.set(0)
@@ -77,9 +75,9 @@ class DataStreamProcessingController(dataSource: BusDataSource, config: Messagin
 
 }
 
-class DataStreamProcessor(dataSource: BusDataSource, config: MessagingConfig)(implicit actorSystem: ActorSystem)  {
+class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig)(implicit actorSystem: ActorSystem)  {
   implicit val timeout:Timeout = 20 seconds
-  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSource, config))
+  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig))
 
   def start = processorControllerActor ! Start
 
@@ -87,5 +85,9 @@ class DataStreamProcessor(dataSource: BusDataSource, config: MessagingConfig)(im
 
   def numberLinesProcessed = {
     (processorControllerActor ? GetNumberLinesProcessed).mapTo[Long]
+  }
+
+  def numberLinesProcessedSinceRestart = {
+    (processorControllerActor ? GetNumberLinesProcessedSinceRestart).mapTo[Long]
   }
 }

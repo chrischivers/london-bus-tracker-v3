@@ -6,7 +6,6 @@ import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, Start}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
-import lbt.datasource.BusDataSource.BusDataSource
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.HistoricalMessageProcessor
 import lbt.servlet.LbtServlet
@@ -25,18 +24,16 @@ object Main extends App {
 
   val definitionsCollection = new BusDefinitionsCollection(definitionsConfig, dBConfig)
   //TODO have this accessible through user interface
- // val getOnlyList = List(BusRoute("3", "outbound"), BusRoute("3", "inbound"))
-  // definitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
+//  val getOnlyList = List(BusRoute("3", "outbound"), BusRoute("3", "inbound"))
+//   definitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
   definitionsCollection.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
   val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig, definitionsCollection)
 
-  val messageProcessor = new HistoricalMessageProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)
+  val historicalMessageProcessor = new HistoricalMessageProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)
 
-  val consumer = new MessageConsumer(messageProcessor, messagingConfig)
+  val consumer = new MessageConsumer(historicalMessageProcessor, messagingConfig)
 
-  val dataSource = new BusDataSource(dataSourceConfig)
-
-  val dataStreamProcessor  = new DataStreamProcessor(dataSource, messagingConfig)
+  val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, messagingConfig)
 
   LbtServlet.setUpServlet
 
