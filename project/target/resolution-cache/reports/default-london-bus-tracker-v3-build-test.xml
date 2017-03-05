@@ -9,49 +9,41 @@
 		extra-sbtVersion="0.13"
 		conf="test"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170304112153"/>
+		date="20170304195036"/>
 	<dependencies>
 		<module organisation="org.scalatra.sbt" name="scalatra-sbt">
-			<revision name="0.5.1" status="release" pubdate="20160207013054" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/scalatra/scalatra-sbt/" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="2">
+			<revision name="0.5.1" status="release" pubdate="20160207013054" resolver="public" artresolver="public" homepage="https://github.com/scalatra/scalatra-sbt/" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="1">
 				<license name="BSD License" url="https://github.com/scalatra/scalatra-sbt/blob/master/LICENSE"/>
-				<metadata-artifact status="no" details="" size="3450" time="0" location="/Users/chrichiv/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.sbt/scalatra-sbt/ivy-0.5.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalatra/sbt/scalatra-sbt_2.10_0.13/0.5.1/scalatra-sbt-0.5.1.pom"/>
+				<metadata-artifact status="successful" details="" size="2403" time="195" location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.sbt/scalatra-sbt/ivy-0.5.1.xml" searched="true" original-local-location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.sbt/scalatra-sbt/ivy-0.5.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalatra/sbt/scalatra-sbt_2.10_0.13/0.5.1/scalatra-sbt-0.5.1.pom"/>
 				<caller organisation="default" name="london-bus-tracker-v3-build" conf="test, compile, runtime" rev="0.5.1" rev-constraint-default="0.5.1" rev-constraint-dynamic="0.5.1" callerrev="0.1-SNAPSHOT" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
 				<artifacts>
-					<artifact name="scalatra-sbt" type="jar" ext="jar" status="no" details="" size="64295" time="0" location="/Users/chrichiv/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.sbt/scalatra-sbt/jars/scalatra-sbt-0.5.1.jar">
+					<artifact name="scalatra-sbt" type="jar" ext="jar" status="successful" details="" size="64295" time="141" location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.sbt/scalatra-sbt/jars/scalatra-sbt-0.5.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalatra/sbt/scalatra-sbt_2.10_0.13/0.5.1/scalatra-sbt-0.5.1.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="com.earldouglas" name="xsbt-web-plugin">
-			<revision name="2.1.0" status="release" pubdate="20151115184442" resolver="sbt-chain" artresolver="sbt-chain" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*)" position="3">
+			<revision name="2.1.0" status="release" pubdate="20151115184442" resolver="sbt-plugin-releases" artresolver="sbt-plugin-releases" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="true" searched="true" default="false" conf="compile, runtime(*), master(compile), runtime, compile(*)" position="2">
 				<license name="BSD New" url="http://opensource.org/licenses/BSD-3-Clause"/>
-				<metadata-artifact status="no" details="" size="1793" time="0" location="/Users/chrichiv/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/ivy-2.1.0.xml" searched="false" origin-is-local="false" origin-location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.earldouglas/xsbt-web-plugin/scala_2.10/sbt_0.13/2.1.0/ivys/ivy.xml"/>
+				<metadata-artifact status="successful" details="" size="1793" time="1857" location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/ivy-2.1.0.xml" searched="true" original-local-location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/ivy-2.1.0.xml.original" origin-is-local="false" origin-location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.earldouglas/xsbt-web-plugin/scala_2.10/sbt_0.13/2.1.0/ivys/ivy.xml"/>
 				<caller organisation="org.scalatra.sbt" name="scalatra-sbt" conf="default, compile, runtime, master" rev="2.1.0" rev-constraint-default="2.1.0" rev-constraint-dynamic="2.1.0" callerrev="0.5.1" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
 				<artifacts>
-					<artifact name="xsbt-web-plugin" type="jar" ext="jar" status="no" details="" size="103695" time="0" location="/Users/chrichiv/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/jars/xsbt-web-plugin-2.1.0.jar">
+					<artifact name="xsbt-web-plugin" type="jar" ext="jar" status="successful" details="" size="103695" time="2368" location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/com.earldouglas/xsbt-web-plugin/jars/xsbt-web-plugin-2.1.0.jar">
 						<origin-location is-local="false" location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.earldouglas/xsbt-web-plugin/scala_2.10/sbt_0.13/2.1.0/jars/xsbt-web-plugin.jar"/>
 					</artifact>
 				</artifacts>
 			</revision>
 		</module>
 		<module organisation="org.scalatra.scalate" name="sbt-scalate-precompiler">
-			<revision name="1.8.0.1" status="release" pubdate="20161230081648" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/scalate/sbt-scalate-precompiler" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+			<revision name="1.8.0.1" status="release" pubdate="20161230081648" resolver="public" artresolver="public" homepage="https://github.com/scalate/sbt-scalate-precompiler" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="0">
 				<license name="MIT License" url="http://www.opensource.org/licenses/mit-license.php"/>
-				<metadata-artifact status="no" details="" size="3029" time="0" location="/Users/chrichiv/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.scalate/sbt-scalate-precompiler/ivy-1.8.0.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalatra/scalate/sbt-scalate-precompiler_2.10_0.13/1.8.0.1/sbt-scalate-precompiler-1.8.0.1.pom"/>
+				<metadata-artifact status="successful" details="" size="2340" time="108" location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.scalate/sbt-scalate-precompiler/ivy-1.8.0.1.xml" searched="true" original-local-location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.scalate/sbt-scalate-precompiler/ivy-1.8.0.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalatra/scalate/sbt-scalate-precompiler_2.10_0.13/1.8.0.1/sbt-scalate-precompiler-1.8.0.1.pom"/>
 				<caller organisation="default" name="london-bus-tracker-v3-build" conf="test, compile, runtime" rev="1.8.0.1" rev-constraint-default="1.8.0.1" rev-constraint-dynamic="1.8.0.1" callerrev="0.1-SNAPSHOT" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
 				<artifacts>
-					<artifact name="sbt-scalate-precompiler" type="jar" ext="jar" status="no" details="" size="43068" time="0" location="/Users/chrichiv/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.scalate/sbt-scalate-precompiler/jars/sbt-scalate-precompiler-1.8.0.1.jar">
+					<artifact name="sbt-scalate-precompiler" type="jar" ext="jar" status="successful" details="" size="43068" time="236" location="/home/chrischivers/.ivy2/cache/scala_2.10/sbt_0.13/org.scalatra.scalate/sbt-scalate-precompiler/jars/sbt-scalate-precompiler-1.8.0.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalatra/scalate/sbt-scalate-precompiler_2.10_0.13/1.8.0.1/sbt-scalate-precompiler-1.8.0.1.jar"/>
 					</artifact>
-				</artifacts>
-			</revision>
-		</module>
-		<module organisation="org.scala-sbt" name="global-plugins">
-			<revision name="0.0" status="integration" pubdate="20170304112152" resolver="inter-project" artresolver="inter-project" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="compile, default(compile)" position="0">
-				<metadata-artifact status="failed" details="" size="0" time="0" searched="false"/>
-				<caller organisation="default" name="london-bus-tracker-v3-build" conf="test, compile, runtime" rev="0.0" rev-constraint-default="0.0" rev-constraint-dynamic="0.0" callerrev="0.1-SNAPSHOT" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
-				<artifacts>
 				</artifacts>
 			</revision>
 		</module>

@@ -1,0 +1,31 @@
+[0m[[0minfo[0m] [0m[32mHistoricalRecorderTest:[0m[0m
+[0m[[0minfo[0m] [0m[31m- Line should be accepted if route is in definitions or disregarded if not in definitions *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 4 times over 36.272935778 seconds. Last failure message: 27791 was not equal to 2. (HistoricalRecorderTest.scala:52)[0m[0m
+[0m[[0minfo[0m] [0m[31m- Line should be accepted if bus stop is in definitions and rejected if not *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 16 times over 30.007350767 seconds. Last failure message: 4840 was not equal to 2. (HistoricalRecorderTest.scala:79)[0m[0m
+[0m[[0minfo[0m] [0m[31m- Duplicate lines received within x seconds should not be processed *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  The code passed to eventually never returned normally. Attempted 14 times over 34.007132393 seconds. Last failure message: 20990 was not equal to 3. (HistoricalRecorderTest.scala:104)[0m[0m
+[0m[[0minfo[0m] [0m[32m- Lines received with arrival time in past should be ignored[0m[0m
+[0m[[0minfo[0m] [0m[32m- An actor should be created for each new vehicle received with a new route[0m[0m
+[0m[[0minfo[0m] [0m[32m- Vehicle actors should add incoming lines relating to arrival times to stop record[0m[0m
+[0m[[0minfo[0m] [0m[32m- Vehicle actors should update record when closer arrival time is received[0m[0m
+[0m[[0minfo[0m] [0m[32m- Vehicle actors should persist record if stop arrival time information is complete and passes validation[0m[0m
+[0m[[0minfo[0m] [0m[32m- Persisted record should be loaded with stop sequence in same order and with same values[0m[0m
+[0m[[0minfo[0m] [0m[32m- Vehicle actors should not persist record if there is a gap in the sequence[0m[0m
+[0m[[0minfo[0m] [0m[32m- Vehicle actors should not persist record if the number of stops received falls below the minimum required[0m[0m
+[0m[[0minfo[0m] [0m[32m- Vehicle actors should persist record if there is a gap at the beginning of the sequence (bus started midway through route)[0m[0m
+[0m[[0minfo[0m] [0m[32m- Multiple records should be persisted where the same bus on the same route makes the same journey after period of inactivity[0m[0m
+[0m[[0minfo[0m] [0m[32m- Only one record should be persisted if multiple persists are requested for the same bus making the same route at the same time[0m[0m
+[0m[[0minfo[0m] [0m[31m- Vehicles should persist and be shut down after specified period of inactivity *** FAILED ***[0m[0m
+[0m[[0minfo[0m] [0m[31m  java.lang.IllegalStateException: cannot create children while terminating or terminated[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.actor.dungeon.Children$class.makeChild(Children.scala:266)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.actor.dungeon.Children$class.attachChild(Children.scala:44)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.actor.ActorCell.attachChild(ActorCell.scala:374)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at akka.actor.ActorSystemImpl.actorOf(ActorSystem.scala:733)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at lbt.datasource.streaming.DataStreamProcessor.<init>(DataStreamProcessingController.scala:83)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at historical.HistoricalRecorderTest$$anonfun$28.apply(HistoricalRecorderTest.scala:493)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at historical.HistoricalRecorderTest$$anonfun$28.apply(HistoricalRecorderTest.scala:475)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.fixture.TestSuite$TestFunAndConfigMap$$anonfun$apply$1.apply(TestSuite.scala:132)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.OutcomeOf$class.outcomeOf(OutcomeOf.scala:85)[0m[0m
+[0m[[0minfo[0m] [0m[31m  at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)[0m[0m
+[0m[[0minfo[0m] [0m[31m  ...[0m[0m

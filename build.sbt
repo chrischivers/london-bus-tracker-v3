@@ -32,6 +32,8 @@ libraryDependencies += "net.liftweb" % "lift-json_2.11" % "3.0.1"
 
 libraryDependencies += "org.mongodb" %% "casbah" % "3.1.1"
 
+libraryDependencies += "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
+
 libraryDependencies ++= Seq(
   "org.scalatra" %% "scalatra" % ScalatraVersion,
   "org.scalatra" %% "scalatra-scalatest"  % ScalatraVersion %  "test",

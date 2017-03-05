@@ -1,4 +1,4 @@
-[0m[[0minfo[0m] [0mUpdating {file:/Users/chrichiv/nonwork-dev/london-bus-tracker-v3/}london-bus-tracker-v3...[0m
+[0m[[0minfo[0m] [0mUpdating {file:/home/chrischivers/Code/london-bus-tracker-v3/}london-bus-tracker-v3...[0m
 [0m[[33mwarn[0m] [0mMultiple dependencies with the same organization/name but different versions. To avoid conflict, pick one version:[0m
 [0m[[33mwarn[0m] [0m * ch.qos.logback:logback-classic:(1.1.9, 1.1.5)[0m
 [0m[[0mdebug[0m] [0m:: resolving dependencies :: default#london-bus-tracker-v3_2.11;1.0[0m
@@ -9,7 +9,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3_2.11;1.0 [compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->default(compile)][0m
 [0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.11.7 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@68edb849[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@d0a757[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7[0m
 [0m[[0mdebug[0m] [0m	found org.scala-lang#scala-library;2.11.7 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m	[2.11.7] org.scala-lang#scala-library;2.11.7[0m
@@ -98,17 +98,17 @@
 [0m[[0mdebug[0m] [0m	found org.apache.httpcomponents#httpclient;4.5.2 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)][0m
 [0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpcore;4.4.4 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.apache.httpcomponents#httpcore;4.4.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.apache.httpcomponents#httpcore;4.4.4 {compile=[compile(*), master(*)], runtime=[runtime(*)]}[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.apache.httpcomponents#httpcore;4.4.4[0m
 [0m[[0mdebug[0m] [0m	found org.apache.httpcomponents#httpcore;4.4.4 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)][0m
 [0m[[0minfo[0m] [0mResolving commons-logging#commons-logging;1.2 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: commons-logging#commons-logging;1.2 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: commons-logging#commons-logging;1.2 {compile=[compile(*), master(*)], runtime=[runtime(*)]}[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: commons-logging#commons-logging;1.2[0m
 [0m[[0mdebug[0m] [0m	found commons-logging#commons-logging;1.2 in sbt-chain[0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
@@ -117,9 +117,9 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)][0m
 [0m[[0minfo[0m] [0mResolving commons-codec#commons-codec;1.9 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: commons-codec#commons-codec;1.9 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: commons-codec#commons-codec;1.9 {compile=[compile(*), master(*)], runtime=[runtime(*)]}[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: commons-codec#commons-codec;1.9[0m
 [0m[[0mdebug[0m] [0m	found commons-codec#commons-codec;1.9 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)][0m
@@ -206,8 +206,8 @@
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.scala-lang.modules#scala-java8-compat_2.11;0.7.0[0m
 [0m[[0mdebug[0m] [0m	found org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->runtime(*)][0m
@@ -458,6 +458,24 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah_2.11;3.1.1->org.mongodb#casbah-gridfs_2.11;3.1.1 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah_2.11;3.1.1->org.mongodb#casbah-gridfs_2.11;3.1.1 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.mongodb#casbah_2.11;3.1.1 [compile->master][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->default(compile)][0m
+[0m[[0minfo[0m] [0mResolving com.internetitem#logback-elasticsearch-appender;1.4 ...[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: com.internetitem#logback-elasticsearch-appender;1.4 {compile=[default(compile)]}[0m
+[0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: com.internetitem#logback-elasticsearch-appender;1.4[0m
+[0m[[0mdebug[0m] [0m	found com.internetitem#logback-elasticsearch-appender;1.4 in sbt-chain[0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->runtime][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->master(compile)][0m
+[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-core;2.8.0 ...[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: com.fasterxml.jackson.core#jackson-core;2.8.0 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}[0m
+[0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: com.fasterxml.jackson.core#jackson-core;2.8.0[0m
+[0m[[0mdebug[0m] [0m	found com.fasterxml.jackson.core#jackson-core;2.8.0 in sbt-chain[0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->master][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->default(compile)][0m
 [0m[[0minfo[0m] [0mResolving org.scalatra#scalatra_2.11;2.5.0 ...[0m
 [0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.scalatra#scalatra_2.11;2.5.0 {compile=[default(compile)]}[0m
@@ -515,13 +533,13 @@
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: eu.medsea.mimeutil#mime-util;2.1.3[0m
 [0m[[0mdebug[0m] [0m	found eu.medsea.mimeutil#mime-util;2.1.3 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile][0m
-[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
-[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile][0m
@@ -696,13 +714,13 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile][0m
@@ -755,8 +773,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)][0m
@@ -933,6 +951,14 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.mongodb#casbah_2.11;3.1.1 [compile->master][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->default(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->runtime][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->master][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->compile][0m
@@ -957,7 +983,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)][0m
@@ -988,8 +1014,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile][0m
-[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
-[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile][0m
@@ -1097,13 +1123,13 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile][0m
@@ -1156,8 +1182,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)][0m
@@ -1334,6 +1360,14 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.mongodb#casbah_2.11;3.1.1 [compile->master][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->default(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->runtime][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->master][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->compile][0m
@@ -1358,7 +1392,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)][0m
@@ -1389,8 +1423,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile][0m
-[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
-[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile][0m
@@ -1832,13 +1866,13 @@
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.mockito#mockito-core;1.9.5[0m
 [0m[[0mdebug[0m] [0m	found org.mockito#mockito-core;1.9.5 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.mockito#mockito-core;1.9.5 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(*)][0m
 [0m[[0minfo[0m] [0mResolving org.objenesis#objenesis;1.0 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.objenesis#objenesis;1.0 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: dependency: org.objenesis#objenesis;1.0 {compile=[compile(*), master(*)], runtime=[runtime(*)]}[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.objenesis#objenesis;1.0[0m
 [0m[[0mdebug[0m] [0m	found org.objenesis#objenesis;1.0 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->compile(*)][0m
@@ -1998,7 +2032,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for default#london-bus-tracker-v3_2.11;1.0 [jetty][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.eclipse.jetty#jetty-runner;9.2.1.v20140609 [jetty->default(compile)][0m
 [0m[[0minfo[0m] [0mResolving org.eclipse.jetty#jetty-runner;9.2.1.v20140609 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@24ff9bda[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@4f6bf439[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.eclipse.jetty#jetty-runner;9.2.1.v20140609[0m
 [0m[[0mdebug[0m] [0m	found org.eclipse.jetty#jetty-runner;9.2.1.v20140609 in sbt-chain[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.eclipse.jetty#jetty-runner;9.2.1.v20140609 [jetty->runtime][0m
@@ -2049,13 +2083,13 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile][0m
@@ -2108,8 +2142,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)][0m
@@ -2286,6 +2320,14 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.mongodb#casbah_2.11;3.1.1 [compile->master][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->default(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->runtime][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->master][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->compile][0m
@@ -2310,7 +2352,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)][0m
@@ -2341,8 +2383,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile][0m
-[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
-[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile][0m
@@ -2451,13 +2493,13 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile][0m
@@ -2510,8 +2552,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)][0m
@@ -2688,6 +2730,14 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.mongodb#casbah_2.11;3.1.1 [compile->master][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->default(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->runtime][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->master][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->compile][0m
@@ -2712,7 +2762,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)][0m
@@ -2743,8 +2793,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile][0m
-[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
-[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile][0m
@@ -2854,13 +2904,13 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0mdependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}[0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile][0m
@@ -2913,8 +2963,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)][0m
@@ -3091,6 +3141,14 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mongodb#casbah-gridfs_2.11;3.1.1->org.mongodb#casbah-core_2.11;3.1.1 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.mongodb#casbah_2.11;3.1.1 [compile->master][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->default(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->runtime][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [compile->compile(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->runtime(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies com.internetitem#logback-elasticsearch-appender;1.4->com.fasterxml.jackson.core#jackson-core;2.8.0 [runtime->compile][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->com.internetitem#logback-elasticsearch-appender;1.4 [compile->master][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->default(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->runtime][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scalatra#scalatra_2.11;2.5.0 [compile->compile][0m
@@ -3115,7 +3173,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)][0m
@@ -3146,8 +3204,8 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile][0m
-[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
-[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
+[0m[[0mdebug[0m] [0mexcluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime[0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile][0m
@@ -3416,11 +3474,11 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.hamcrest#hamcrest-core;1.3 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.mockito#mockito-core;1.9.5 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.mockito#mockito-core;1.9.5 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(compile)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(*)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->compile(*)][0m
-[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(compile)][0m
+[0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->compile(*)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra-specs2_2.11;2.5.0->org.specs2#specs2-matcher-extra_2.11;3.8.6 [compile->master(compile)][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies org.scalatra#scalatra-specs2_2.11;2.5.0->org.specs2#specs2-matcher-extra_2.11;3.8.6 [compile->compile(*)][0m
@@ -3655,6 +3713,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] com.github.sstone#amqp-client_2.11;1.5!amqp-client_2.11.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] com.typesafe.akka#akka-actor_2.11;2.4.16!akka-actor_2.11.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] net.liftweb#lift-json_2.11;3.0.1!lift-json_2.11.jar[0m
+[0m[[0mdebug[0m] [0m	[NOT REQUIRED] com.internetitem#logback-elasticsearch-appender;1.4!logback-elasticsearch-appender.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scalatra#scalatra_2.11;2.5.0!scalatra_2.11.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.eclipse.jetty#jetty-webapp;9.2.15.v20160210!jetty-webapp.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] ch.qos.logback#logback-core;1.1.9!logback-core.jar[0m
@@ -3680,6 +3739,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.mongodb#mongo-java-driver;3.2.2!mongo-java-driver.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] joda-time#joda-time;2.3!joda-time.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.joda#joda-convert;1.2!joda-convert.jar[0m
+[0m[[0mdebug[0m] [0m	[NOT REQUIRED] com.fasterxml.jackson.core#jackson-core;2.8.0!jackson-core.jar(bundle)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scalatra#scalatra-common_2.11;2.5.0!scalatra-common_2.11.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.clapper#grizzled-slf4j_2.11;1.3.0!grizzled-slf4j_2.11.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] com.googlecode.juniversalchardet#juniversalchardet;1.0.3!juniversalchardet.jar[0m
@@ -3725,23 +3785,23 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.specs2#classycle;1.4.3!classycle.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.eclipse.jetty#jetty-runner;9.2.1.v20140609!jetty-runner.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] jline#jline;2.12.1!jline.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 720ms :: artifacts dl 26ms[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 compile produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 runtime produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 test produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 provided produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-provided.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 optional produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-optional.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 container produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-container.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 jetty produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-jetty.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 compile-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 runtime-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 test-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 plugin produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-plugin.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 sources produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-sources.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 docs produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-docs.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 pom produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-pom.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 scala-tool produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (720ms resolve - 26ms download)[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 2657ms :: artifacts dl 51ms[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 compile produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 runtime produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 test produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 provided produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-provided.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 optional produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-optional.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 container produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-container.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 jetty produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-jetty.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 compile-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 runtime-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 test-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 plugin produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-plugin.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 sources produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-sources.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 docs produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-docs.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 pom produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-pom.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#london-bus-tracker-v3_2.11;1.0 scala-tool produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-scala-tool.xml[0m
+[0m[[0mdebug[0m] [0m	resolve done (2657ms resolve - 51ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m
 [0m[[33mwarn[0m] [0mScala version was updated by one of library dependencies:[0m
 [0m[[33mwarn[0m] [0m	* org.scala-lang:scala-library:(2.11.7, 2.11.0, 2.11.6, 2.11.4) -> 2.11.8[0m
