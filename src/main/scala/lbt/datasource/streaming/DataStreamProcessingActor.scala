@@ -5,11 +5,12 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.DataSourceConfig
 import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
+import lbt.historical.{HistoricalSourceLineProcessor, VehicleActorSupervisor}
 
 /**
  * Actor that iterates over live stream sending lines to be processed. On crash, the supervisor strategy restarts it
  */
-class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLinePublisher) extends Actor with StrictLogging {
+class DataStreamProcessingActor(dataSource: BusDataSource, historicalMessageProcessor: HistoricalSourceLineProcessor) extends Actor with StrictLogging {
 
   logger.info("Data stream Processing Actor Created")
 
@@ -30,7 +31,7 @@ class DataStreamProcessingActor(dataSource: BusDataSource, publisher: SourceLine
       logger.info("DataStreamProcessingActor becoming inactive")
     case Next =>
      if(dataSource.hasNext){
-       publisher.publish(dataSource.next())
+       historicalMessageProcessor.processSourceLine(dataSource.next())
        context.parent ! Increment
        self ! Next
      } else {

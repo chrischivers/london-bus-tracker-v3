@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a216408e-2c98-42b6-a75f-7b91f1969db9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalSourceLineProcessor.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/Main.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/Main.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala" afterPath="$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/historical/HistoricalRecorderTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" afterPath="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" afterPath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala" afterPath="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTestFixture.scala" />
     </list>
     <ignored path="london-bus-tracker-v3.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -63,11 +69,11 @@
       <file leaf-file-name="DataStreamProcessingController.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="21" column="6" lean-forward="false" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+            <state relative-caret-position="227">
+              <caret line="25" column="71" lean-forward="false" selection-start-line="25" selection-start-column="71" selection-end-line="25" selection-end-column="71" />
               <folding>
                 <element signature="e#34#79#0" expanded="true" />
-                <marker date="1488752998713" expanded="true" signature="1275:1363" ph="..." />
+                <marker date="1488834812821" expanded="true" signature="1277:1365" ph="..." />
               </folding>
             </state>
           </provider>
@@ -86,9 +92,11 @@
       <file leaf-file-name="DataStreamProcessingActor.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="11" column="52" lean-forward="false" selection-start-line="11" selection-start-column="52" selection-end-line="11" selection-end-column="52" />
-              <folding />
+            <state relative-caret-position="126">
+              <caret line="12" column="110" lean-forward="false" selection-start-line="12" selection-start-column="110" selection-end-line="12" selection-end-column="110" />
+              <folding>
+                <element signature="e#34#57#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -97,7 +105,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="72">
-              <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
+              <caret line="15" column="19" lean-forward="false" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -108,16 +116,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
               <caret line="23" column="46" lean-forward="false" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HistoricalRecordsDBController.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/database/historical/HistoricalRecordsDBController.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="45" column="14" lean-forward="false" selection-start-line="45" selection-start-column="14" selection-end-line="45" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -136,27 +134,37 @@
       <file leaf-file-name="BusDataSource.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-506">
-              <caret line="45" column="14" lean-forward="false" selection-start-line="45" selection-start-column="14" selection-end-line="45" selection-end-column="14" />
+            <state relative-caret-position="198">
+              <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistoricalMessageProcessor.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala">
+      <file leaf-file-name="HistoricalSourceLineProcessor.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalSourceLineProcessor.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="101" column="0" lean-forward="true" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+            <state relative-caret-position="108">
+              <caret line="19" column="306" lean-forward="false" selection-start-line="19" selection-start-column="306" selection-end-line="19" selection-end-column="306" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LbtServlet.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="RabbitMQConfig.scala" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="236">
+              <caret line="30" column="29" lean-forward="false" selection-start-line="30" selection-start-column="29" selection-end-line="30" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LbtServlet.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
+            <state relative-caret-position="576">
               <caret line="48" column="116" lean-forward="false" selection-start-line="48" selection-start-column="116" selection-end-line="48" selection-end-column="116" />
               <folding />
             </state>
@@ -249,7 +257,6 @@
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsDBController.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/historical/HistoricalRecordsDBController.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/comon/CommonObjects.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/historical/HistoricalRecordsCollection.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/servlet/JettyLauncher.scala" />
@@ -257,17 +264,14 @@
         <option value="$PROJECT_DIR$/src/test/scala/DefinitionsTest.scala" />
         <option value="$PROJECT_DIR$/project/plugins.sbt" />
         <option value="$PROJECT_DIR$/build.sbt" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/database/definitions/BusDefinitionsCollection.scala" />
         <option value="$PROJECT_DIR$/src/main/resources/application.conf" />
         <option value="$PROJECT_DIR$/src/main/scala/ScalatraBootstrap.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/servlet/LbtServletTest.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLineValidator.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/datasource/DataStreamProcessingTest.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/Config.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/datasource/BusDataSourceTest.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/historical/HistoricalTestFixture.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/datasource/TestDataSource.scala" />
@@ -277,8 +281,12 @@
         <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActor.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala" />
       </list>
     </option>
   </component>
@@ -760,7 +768,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="HistoricalMessageProcessor.scala" />
+              <option name="myItemId" value="HistoricalSourceLineProcessor.scala" />
               <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1583,7 +1591,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28914404" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28914404" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19527897" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1593,7 +1601,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29645094" sideWeight="0.49427754" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329602" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28496867" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28496867" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26865673" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1724,14 +1732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="864">
           <caret line="62" column="95" lean-forward="false" selection-start-line="62" selection-start-column="95" selection-end-line="62" selection-end-column="95" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="50" />
           <folding />
         </state>
       </provider>
@@ -1893,14 +1893,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/database/historical/HistoricalRecordsCollection.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="23" column="46" lean-forward="false" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.mongodb/casbah-core_2.11/srcs/casbah-core_2.11-3.1.1-sources.jar!/MongoCollection.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14976">
@@ -1917,37 +1909,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="21" column="6" lean-forward="false" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
-          <folding>
-            <element signature="e#34#79#0" expanded="true" />
-            <marker date="1488752998713" expanded="true" signature="1275:1363" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/VehicleActorSupervisor.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
           <caret line="13" column="11" lean-forward="false" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="11" column="52" lean-forward="false" selection-start-line="11" selection-start-column="52" selection-end-line="11" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
           <folding />
         </state>
       </provider>
@@ -1960,26 +1925,71 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-506">
-          <caret line="45" column="14" lean-forward="false" selection-start-line="45" selection-start-column="14" selection-end-line="45" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalMessageProcessor.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="101" column="0" lean-forward="true" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/servlet/LbtServlet.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
+        <state relative-caret-position="576">
           <caret line="48" column="116" lean-forward="false" selection-start-line="48" selection-start-column="116" selection-end-line="48" selection-end-column="116" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/BusDataSource.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/SourceLinePublisher.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="15" column="19" lean-forward="false" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/database/historical/HistoricalRecordsCollection.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="23" column="46" lean-forward="false" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingController.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="25" column="71" lean-forward="false" selection-start-line="25" selection-start-column="71" selection-end-line="25" selection-end-column="71" />
+          <folding>
+            <element signature="e#34#79#0" expanded="true" />
+            <marker date="1488834812821" expanded="true" signature="1277:1365" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/datasource/streaming/DataStreamProcessingActor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="12" column="110" lean-forward="false" selection-start-line="12" selection-start-column="110" selection-end-line="12" selection-end-column="110" />
+          <folding>
+            <element signature="e#34#57#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/historical/HistoricalSourceLineProcessor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="19" column="306" lean-forward="false" selection-start-line="19" selection-start-column="306" selection-end-line="19" selection-end-column="306" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/lbt/RabbitMQConfig.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="30" column="29" lean-forward="false" selection-start-line="30" selection-start-column="29" selection-end-line="30" selection-end-column="29" />
           <folding />
         </state>
       </provider>

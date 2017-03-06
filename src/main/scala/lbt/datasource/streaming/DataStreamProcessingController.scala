@@ -9,6 +9,7 @@ import akka.pattern.ask
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
+import lbt.historical.HistoricalSourceLineProcessor
 import lbt.{ConfigLoader, DataSourceConfig, MessagingConfig}
 
 import scala.concurrent.TimeoutException
@@ -19,11 +20,11 @@ case class Increment()
 case class GetNumberLinesProcessed()
 case class GetNumberLinesProcessedSinceRestart()
 
-class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagingConfig: MessagingConfig) extends Actor with StrictLogging {
+class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor) extends Actor with StrictLogging {
   logger.info("Data stream Processing Controller Actor Created")
 
-  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
-  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], new BusDataSource(dataSourceConfig), publisher))
+//  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
+  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], new BusDataSource(dataSourceConfig), historicalSourceLineProcessor))
 
   var numberProcessed = new AtomicLong(0)
   var numberProcessedSinceRestart = new AtomicLong(0)
@@ -75,9 +76,9 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
 
 }
 
-class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig)(implicit actorSystem: ActorSystem)  {
+class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor)(implicit actorSystem: ActorSystem)  {
   implicit val timeout:Timeout = 20 seconds
-  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig))
+  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig, historicalSourceLineProcessor))
 
   def start = processorControllerActor ! Start
 

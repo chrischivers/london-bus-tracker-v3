@@ -17,7 +17,7 @@ import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends MessageProcessor {
+class HistoricalSourceLineProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends SourceLineProcessor {
 
 //  val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
@@ -29,10 +29,9 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
 
   implicit val formats = DefaultFormats
 
-  def processMessage(message: Array[Byte]) = {
-    messagesProcessed.incrementAndGet()
-    val sourceLine = parse(new String(message, "UTF-8")).extract[SourceLine]
-    lastProcessedMessage = Some(sourceLine)
+  override def processSourceLine(sourceLine: SourceLine) = {
+    sourceLinesProcessed.incrementAndGet()
+    lastProcessedSourceLine = Some(sourceLine)
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
         case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
@@ -41,8 +40,8 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
-    lastValidatedMessage = Some(validatedSourceLine)
-    messagesValidated.incrementAndGet()
+    lastValidatedSourceLine = Some(validatedSourceLine)
+    sourceLinesValidated.incrementAndGet()
     vehicleActorSupervisor ! validatedSourceLine
   }
 

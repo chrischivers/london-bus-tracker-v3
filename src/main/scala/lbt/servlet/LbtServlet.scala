@@ -5,7 +5,7 @@ import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.{HistoricalRecordFromDb, HistoricalRecordsCollection}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.HistoricalMessageProcessor
+import lbt.historical.HistoricalSourceLineProcessor
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
@@ -19,7 +19,7 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success, Try}
 
 
-class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalMessageProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet {
+class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet {
 
   implicit val formats = DefaultFormats
 

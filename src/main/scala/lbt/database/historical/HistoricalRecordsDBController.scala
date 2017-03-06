@@ -75,23 +75,6 @@ object HistoricalRecordsDBController extends StrictLogging {
       }
     ) toList
   }
-  /*
-   cursor.map(routeDef => {
-        BusRoute(
-          routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID).get,
-          Commons.toDirection(routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION).get)) ->
-          routeDef.getAs[List[DBObject]](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE).get
-            .sortBy(stopDef => stopDef.getAs[Int](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.SEQUENCE_NO))
-            .map(stopDef => {
-              BusStop(
-                stopDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_ID).get,
-                stopDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_NAME).get,
-                stopDef.getAs[Double](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.LATITUDE).get,
-                stopDef.getAs[Double](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.LONGITUDE).get
-              )
-            })
-      }) toMap
-   */
 }
 
 

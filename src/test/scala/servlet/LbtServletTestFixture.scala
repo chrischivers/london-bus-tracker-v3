@@ -1,17 +1,15 @@
 package servlet
 
 import akka.actor.ActorSystem
-import lbt.comon.{BusRoute, Commons}
+import lbt.ConfigLoader
+import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
-import lbt.datasource.SourceLine
 import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
-import lbt.historical.{HistoricalMessageProcessor, PersistAndRemoveInactiveVehicles}
-import lbt.{ConfigLoader, MessageConsumer}
+import lbt.historical.{HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
 import net.liftweb.json.DefaultFormats
-import net.liftweb.json.Serialization.write
-
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import scala.util.Random
 
 trait LbtServletTestFixture {
@@ -38,9 +36,9 @@ trait LbtServletTestFixture {
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val historicalMessageProcessor = new HistoricalMessageProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
 
-  val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig)(actorSystem)
+  val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem)
 
 
   testBusRoutes.foreach { route =>
@@ -51,12 +49,12 @@ trait LbtServletTestFixture {
 
     println("definitions: " + definitions)
     definitions(route).foreach(busStop => {
-      val message = write(SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]")).getBytes
-      historicalMessageProcessor.processMessage(message)
+      val message = SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
+      historicalSourceLineProcessor.processSourceLine(message)
     })
   }
   Thread.sleep(1500)
-  historicalMessageProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+  historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
   Thread.sleep(500)
 
   def directionToInt(direction: String): Int = direction match {

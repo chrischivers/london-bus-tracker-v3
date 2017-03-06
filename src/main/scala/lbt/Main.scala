@@ -7,7 +7,7 @@ import lbt.comon.{BusRoute, Start}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.HistoricalMessageProcessor
+import lbt.historical.HistoricalSourceLineProcessor
 import lbt.servlet.LbtServlet
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -29,11 +29,9 @@ object Main extends App {
   definitionsCollection.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
   val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig, definitionsCollection)
 
-  val historicalMessageProcessor = new HistoricalMessageProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalRecordsCollection)
 
-  val consumer = new MessageConsumer(historicalMessageProcessor, messagingConfig)
-
-  val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, messagingConfig)
+  val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, messagingConfig, historicalSourceLineProcessor)
 
   LbtServlet.setUpServlet
 

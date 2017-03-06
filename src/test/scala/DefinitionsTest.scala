@@ -20,7 +20,6 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     finally {
       fixture.dataStreamProcessingControllerReal.stop
       fixture.actorSystem.terminate().futureValue
-      fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
     }
   }

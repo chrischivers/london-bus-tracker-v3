@@ -27,7 +27,6 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
     finally {
       fixture.dataStreamProcessingControllerReal.stop
       fixture.actorSystem.terminate().futureValue
-      fixture.consumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
       Thread.sleep(5000)
     }
@@ -41,33 +40,8 @@ class DataStreamProcessingTest extends fixture.FunSuite with ScalaFutures{
 
     eventually(timeout(40 seconds)) {
     val result = f.dataStreamProcessingControllerReal.numberLinesProcessed.futureValue
-       result shouldBe f.consumer.getNumberReceived.futureValue
-      result shouldBe f.messageProcessor.getNumberProcessed
-      f.messageProcessor.lastProcessedMessage.isDefined shouldBe true
+      result shouldBe f.historicalSourceLineProcessor.getNumberProcessed
+      f.historicalSourceLineProcessor.lastProcessedSourceLine.isDefined shouldBe true
     }
   }
-
-  test("Messages should be placed on messaging queue and fetched by consumer") { f =>
-
-    val dataStreamProcessorTest = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig)(f.actorSystem)
-
-    dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
-
-    eventually {
-      //f.consumer.getNumberReceived.futureValue shouldBe testDataSource.getNumberLinesStreamed
-    //  f.messageProcessor.getNumberProcessed shouldBe testDataSource.getNumberLinesStreamed
-     // testDataSource.testLines should contain(sourceLineBackToLine(f.messageProcessor.lastProcessedMessage.get))
-      //TODO
-    }
-
-    def sourceLineBackToLine(sourceLine: SourceLine): String = {
-      "[1,\"" + sourceLine.stopID + "\",\"" + sourceLine.route + "\"," + sourceLine.direction + ",\"" +  sourceLine.destinationText + "\",\"" +  sourceLine.vehicleID + "\"," +  sourceLine.arrival_TimeStamp + "]"
-    }
-  }
-
-
-
-
 }
