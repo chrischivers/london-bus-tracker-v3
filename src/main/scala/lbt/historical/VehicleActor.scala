@@ -35,9 +35,10 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
     case GetArrivalRecords(_) => sender ! stopArrivalRecords
 
     case PersistToDB =>
-      logger.info("Persist to DB command received. Attempting to persist...")
       validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList) match {
-        case Success(completeList) => historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
+        case Success(completeList) =>
+          logger.info(s"Persisting data for vehicle $name to DB")
+          historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
         case Failure(e) => //logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
       }
   }
@@ -81,5 +82,5 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
         .map(elem => (elem._1, elem._2, elem._3.get)))
     }
 
-  override def postStop: Unit = logger.info(s"Vehicle $name has been stopped")
+  override def postStop: Unit = logger.info(s"Vehicle $name has been killed")
 }

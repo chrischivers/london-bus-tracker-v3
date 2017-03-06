@@ -51,7 +51,7 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
         sender ! List.empty
     }
     case PersistAndRemoveInactiveVehicles =>
-      logger.info("Cleaning up inactive vehicles")
+      logger.info("Checking for inactive vehicles, persisting and deleting...")
       val currentTime = System.currentTimeMillis()
       val currentActorsSplit = currentActors.partition {
         case (_, (_, lastActivity)) => currentTime - lastActivity > historicalRecordsConfig.vehicleInactivityTimeBeforePersist

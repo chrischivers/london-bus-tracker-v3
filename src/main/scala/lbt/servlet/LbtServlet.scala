@@ -47,7 +47,6 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
         Number Lines Processed = {historicalMessageProcessor.getNumberProcessed}<br />
         Number Lines Validated= {historicalMessageProcessor.getNumberValidated}<br />
         Number of Vehicle Actors = {Await.result(historicalMessageProcessor.getCurrentActors, 5 seconds).size}<br />
-        Cache Size = {historicalMessageProcessor.getCacheSize}
         <br />
       </body>
     </html>

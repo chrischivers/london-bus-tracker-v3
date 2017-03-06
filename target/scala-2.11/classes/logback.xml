@@ -8,7 +8,7 @@
 
 
     <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
-        <url>https://search-lbtlogging-naudrn2iukfabmswngnpmnj7hu.us-west-2.es.amazonaws.com/_bulk</url>
+        <url>####/_bulk</url>
         <index>logstash-%date{yyyy-MM-dd}</index>
         <type>lbt</type>
         <properties>

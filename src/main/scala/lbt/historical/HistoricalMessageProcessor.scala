@@ -19,7 +19,7 @@ case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destination
 
 class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends MessageProcessor {
 
-  val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
+//  val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
@@ -37,7 +37,7 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
         case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
-      cache.put(sourceLine)
+//      cache.put(sourceLine)
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
@@ -63,10 +63,10 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
       }
     }
 
-    def nonDuplicateLine(): StringValidation[Unit] = {
-      if (cache.contains(sourceLine)) "Duplicate Line Received recently".failureNel
-      else ().successNel
-    }
+//    def nonDuplicateLine(): StringValidation[Unit] = {
+//      if (cache.contains(sourceLine)) "Duplicate Line Received recently".failureNel
+//      else ().successNel
+//    }
 
     def notOnIgnoreList(): StringValidation[Unit] = {
       ().successNel
@@ -78,7 +78,7 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
     }
 
       (validRouteAndStop(busRoute)
-      |@| nonDuplicateLine()
+//      |@| nonDuplicateLine()
       |@| notOnIgnoreList()
       |@| isInPast()).tupled.map {
         x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, sourceLine.vehicleID, sourceLine.arrival_TimeStamp)
@@ -98,29 +98,29 @@ class HistoricalMessageProcessor(dataSourceConfig: DataSourceConfig, historicalR
     } yield listResult
   }
 
-  def getCacheSize: Int = cache.size
+//  def getCacheSize: Int = cache.size
 
-  class SourceLineCache(timeToLiveSeconds: Int) {
-    private var cache: Map[SourceLine, Long] = Map()
-
-    def put(sourceLine: SourceLine) = {
-      cache += (sourceLine -> System.currentTimeMillis())
-      cleanupCache
-    }
-
-    def contains(sourceLine: SourceLine): Boolean = {
-      cache.get(sourceLine).isDefined
-    }
-
-    def size: Int = {
-      cache.size
-    }
-
-    private def cleanupCache = {
-      val now = System.currentTimeMillis()
-      cache = cache.filter(line => (now - line._2) < timeToLiveSeconds * 1000)
-    }
-  }
+//  class SourceLineCache(timeToLiveSeconds: Int) {
+//    private var cache: Map[SourceLine, Long] = Map()
+//
+//    def put(sourceLine: SourceLine) = {
+//      cache += (sourceLine -> System.currentTimeMillis())
+//      cleanupCache
+//    }
+//
+//    def contains(sourceLine: SourceLine): Boolean = {
+//      cache.get(sourceLine).isDefined
+//    }
+//
+//    def size: Int = {
+//      cache.size
+//    }
+//
+//    private def cleanupCache = {
+//      val now = System.currentTimeMillis()
+//      cache = cache.filter(line => (now - line._2) < timeToLiveSeconds * 1000)
+//    }
+//  }
 }
 
 
