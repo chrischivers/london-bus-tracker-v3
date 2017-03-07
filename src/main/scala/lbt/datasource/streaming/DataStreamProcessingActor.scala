@@ -10,9 +10,10 @@ import lbt.historical.{HistoricalSourceLineProcessor, VehicleActorSupervisor}
 /**
  * Actor that iterates over live stream sending lines to be processed. On crash, the supervisor strategy restarts it
  */
-class DataStreamProcessingActor(dataSource: BusDataSource, historicalMessageProcessor: HistoricalSourceLineProcessor) extends Actor with StrictLogging {
+class DataStreamProcessingActor(historicalMessageProcessor: HistoricalSourceLineProcessor, dataSourceConfig: DataSourceConfig) extends Actor with StrictLogging {
 
   logger.info("Data stream Processing Actor Created")
+  val dataSource = new BusDataSource(dataSourceConfig)
 
   // Iterating pattern for this actor based on code snippet posted on StackOverflow
   //http://stackoverflow.com/questions/5626285/pattern-for-interruptible-loops-using-actors

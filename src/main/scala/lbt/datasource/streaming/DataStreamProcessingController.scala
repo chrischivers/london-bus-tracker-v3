@@ -24,7 +24,7 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
   logger.info("Data stream Processing Controller Actor Created")
 
 //  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
-  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], new BusDataSource(dataSourceConfig), historicalSourceLineProcessor))
+  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], historicalSourceLineProcessor, dataSourceConfig))
 
   var numberProcessed = new AtomicLong(0)
   var numberProcessedSinceRestart = new AtomicLong(0)

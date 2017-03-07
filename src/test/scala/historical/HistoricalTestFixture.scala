@@ -15,8 +15,8 @@ class HistoricalTestFixture(vehicleInactivityTimeout: Long = 5000) {
 
   val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
     exchangeName = "test-lbt-exchange",
-    historicalRecorderQueueName = "test-historical-recorder-queue-name",
-    historicalRecorderRoutingKey = "test-historical-recorder-routing-key")
+    historicalDBInsertQueueName = "test-historical-db-insert-queue-name",
+    historicalDbRoutingKey = "test-historical-db-insert-routing-key")
 
   val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
 
@@ -37,7 +37,7 @@ class HistoricalTestFixture(vehicleInactivityTimeout: Long = 5000) {
 
   val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testMessagingConfig)
 
   val dataStreamProcessingControllerReal  = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)
 

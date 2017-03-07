@@ -8,7 +8,7 @@ case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, defi
 
 case class DatabaseConfig(databaseName: String, busDefinitionsCollectionName: String, historicalRecordsCollectionName: String)
 
-case class MessagingConfig(exchangeName: String, historicalRecorderQueueName : String, historicalRecorderRoutingKey: String, liveTrackerQueueName: String, liveTrackerRoutingKey: String)
+case class MessagingConfig(rabbitUrl: String, exchangeName: String, historicalDBInsertQueueName: String, historicalDbRoutingKey: String)
 
 case class HistoricalRecordsConfig(vehicleInactivityTimeBeforePersist: Long, numberOfLinesToCleanupAfter: Int, minimumNumberOfStopsToPersist: Int)
 
@@ -54,11 +54,10 @@ object ConfigLoader {
         defaultConfigFactory.getInt(definitionsParamsPrefix + "definitions-cached-time")
       ),
       MessagingConfig(
+        defaultConfigFactory.getString(messagingParamsPrefix + "rabbitmq-url"),
         defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "historical-recorder-queue-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "historical-recorder-routing-key"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "live-tracker-queue-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "live-tracker-routing-key")
+        defaultConfigFactory.getString(messagingParamsPrefix + "historical-db-insert-queue-name"),
+        defaultConfigFactory.getString(messagingParamsPrefix + "historical-db-insert-routing-key")
       ),
       HistoricalRecordsConfig(
         defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "vehicle-inactivity-time-before-persist"),

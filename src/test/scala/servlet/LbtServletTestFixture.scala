@@ -3,13 +3,14 @@ package servlet
 import akka.actor.ActorSystem
 import lbt.ConfigLoader
 import lbt.comon.BusRoute
+import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
 import lbt.historical.{HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
 import net.liftweb.json.DefaultFormats
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 
 trait LbtServletTestFixture {
@@ -18,8 +19,8 @@ trait LbtServletTestFixture {
 
   val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
     exchangeName = "test-lbt-exchange",
-    historicalRecorderQueueName = "test-historical-recorder-queue-name",
-    historicalRecorderRoutingKey = "test-historical-recorder-routing-key")
+    historicalDBInsertQueueName = "test-historical-db-insert-queue-name",
+    historicalDbRoutingKey = "test-historical-db-insert-routing-key")
   val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
   val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(databaseName = "TestDB")
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
@@ -34,9 +35,9 @@ trait LbtServletTestFixture {
 
   Thread.sleep(1000)
 
-  val definitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
+  val definitions: BusRouteDefinitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalRecordsCollection)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testMessagingConfig)
 
   val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem)
 

@@ -12,7 +12,7 @@ import scalaz._
 
 case class RecordedVehicleDataToPersist(vehicleID: String, busRoute: BusRoute, stopArrivalRecords: List[(Int, BusStop, Long)])
 
-class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection) extends Actor with StrictLogging {
+class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
   val name: String = self.path.name
   type StringValidation[T] = ValidationNel[String, T]
 
@@ -38,7 +38,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
       validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList) match {
         case Success(completeList) =>
           logger.info(s"Persisting data for vehicle $name to DB")
-          historicalRecordsCollection.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
+          historicalDbInsertPublisher.publish(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
         case Failure(e) => //logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
       }
   }

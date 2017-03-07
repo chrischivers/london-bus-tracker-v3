@@ -24,7 +24,6 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
   override val uniqueIndex = true
 
   private var numberToProcess:Long = 0
-  private var definitionsLastRefreshedFromDB: Long = 0
   private var definitionsCache: BusRouteDefinitions = Map.empty
 
   def insertBusRouteDefinitionIntoDB(busRoute: BusRoute, busStops: List[BusStop]) = {
@@ -37,15 +36,18 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
   }
 
   def getBusRouteDefinitions(forceDBRefresh: Boolean = false): BusRouteDefinitions = {
-    if (System.currentTimeMillis() - definitionsLastRefreshedFromDB > defConfig.definitionsCachedTime || definitionsCache.isEmpty || forceDBRefresh) {
-      logger.info("Updating definitions from DB")
-      definitionsCache = getBusRouteDefinitionsFromDB
-      definitionsLastRefreshedFromDB = System.currentTimeMillis()
-      definitionsCache
-    } else definitionsCache
+//    if (System.currentTimeMillis() - definitionsLastRefreshedFromDB > defConfig.definitionsCachedTime || definitionsCache.isEmpty || forceDBRefresh) {
+    //      logger.info("Updating definitions from DB")
+    //      definitionsCache = getBusRouteDefinitionsFromDB
+    //      definitionsLastRefreshedFromDB = System.currentTimeMillis()
+    //      definitionsCache
+    //    } else definitionsCache
+    definitionsCache
   }
 
-  private def getBusRouteDefinitionsFromDB: BusRouteDefinitions = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection)
+  def updateBusRouteDefinitionsFromDB: Unit = {
+    definitionsCache = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection)
+  }
 
   def refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly: Boolean = false, getOnly: Option[List[BusRoute]] = None): Unit = {
     implicit val formats = DefaultFormats

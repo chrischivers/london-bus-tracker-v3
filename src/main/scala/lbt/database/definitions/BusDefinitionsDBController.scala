@@ -44,6 +44,7 @@ object BusDefinitionsDBController extends StrictLogging {
   }
 
   def loadBusRouteDefinitionsFromDB(col: MongoCollection): BusRouteDefinitions = {
+    logger.info("Loading Bus Route Definitions From DB")
       val cursor = col.find()
       cursor.map(routeDef => {
         BusRoute(

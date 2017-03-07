@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
-import lbt.HistoricalRecordsConfig
+import lbt.{HistoricalRecordsConfig, MessagingConfig}
 import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
@@ -23,9 +23,10 @@ case class VehicleID(vehicleReg: String, busRoute: BusRoute) {
   override def toString: String = vehicleReg + "-" + busRoute.id + "-" + busRoute.direction
 }
 
-class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, historicalRecordsConfig: HistoricalRecordsConfig) extends Actor with StrictLogging {
+class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, messagingConfig: MessagingConfig, historicalRecordsConfig: HistoricalRecordsConfig) extends Actor with StrictLogging {
   logger.info("Vehicle Actor Supervisor Actor Created")
   implicit val timeout = Timeout(10 seconds)
+  val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(messagingConfig)(context.system)
 
   def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter)
 
@@ -67,6 +68,6 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
 
   def createNewActor(vehicleID: VehicleID): ActorRef = {
    // logger.info(s"Creating new actor for vehicle ID $vehicleID")
-    context.actorOf(Props(classOf[VehicleActor], vehicleID.vehicleReg, historicalRecordsConfig, busDefinitionsCollection, historicalRecordsCollection), vehicleID.toString)
+    context.actorOf(Props(classOf[VehicleActor], vehicleID.vehicleReg, historicalRecordsConfig, busDefinitionsCollection, historicalDbInsertPublisher), vehicleID.toString)
   }
 }

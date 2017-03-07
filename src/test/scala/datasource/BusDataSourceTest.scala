@@ -11,8 +11,8 @@ class BusDataSourceTest extends FunSuite with Matchers {
   val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
   val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
     exchangeName = "test-lbt-exchange",
-    historicalRecorderQueueName = "test-historical-recorder-queue-name",
-    historicalRecorderRoutingKey = "test-historical-recorder-routing-key")
+    historicalDBInsertQueueName = "test-historical-db-insert-queue-name",
+    historicalDbRoutingKey = "test-historical-db-insert-routing-key")
 
 //  test("Data stream should be opened and return with next value") {
 //    withClue("No data stream returned") {
