@@ -1,4 +1,4 @@
-[info] Updating {file:/Users/chrichiv/nonwork-dev/london-bus-tracker-v3/}london-bus-tracker-v3...
+[info] Updating {file:/home/chrischivers/Code/london-bus-tracker-v3/}london-bus-tracker-v3...
 [warn] Multiple dependencies with the same organization/name but different versions. To avoid conflict, pick one version:
 [warn]  * ch.qos.logback:logback-classic:(1.1.9, 1.1.5)
 [debug] :: resolving dependencies :: default#london-bus-tracker-v3_2.11;1.0
@@ -9,7 +9,7 @@
 [debug] == resolving dependencies for default#london-bus-tracker-v3_2.11;1.0 [compile]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.scala-lang#scala-library;2.11.7 [compile->default(compile)]
 [info] Resolving org.scala-lang#scala-library;2.11.7 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@3dc2f977
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@145caee2
 [debug] sbt-chain: module revision found in cache: org.scala-lang#scala-library;2.11.7
 [debug] 	found org.scala-lang#scala-library;2.11.7 in sbt-chain
 [debug] 	[2.11.7] org.scala-lang#scala-library;2.11.7
@@ -98,17 +98,17 @@
 [debug] 	found org.apache.httpcomponents#httpclient;4.5.2 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)]
 [info] Resolving org.apache.httpcomponents#httpcore;4.4.4 ...
-[debug] sbt-chain: Checking cache for: dependency: org.apache.httpcomponents#httpcore;4.4.4 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] sbt-chain: Checking cache for: dependency: org.apache.httpcomponents#httpcore;4.4.4 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
 [debug] sbt-chain: module revision found in cache: org.apache.httpcomponents#httpcore;4.4.4
 [debug] 	found org.apache.httpcomponents#httpcore;4.4.4 in sbt-chain
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)]
 [info] Resolving commons-logging#commons-logging;1.2 ...
-[debug] sbt-chain: Checking cache for: dependency: commons-logging#commons-logging;1.2 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] sbt-chain: Checking cache for: dependency: commons-logging#commons-logging;1.2 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
 [debug] sbt-chain: module revision found in cache: commons-logging#commons-logging;1.2
 [debug] 	found commons-logging#commons-logging;1.2 in sbt-chain
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
@@ -117,9 +117,9 @@
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)]
 [info] Resolving commons-codec#commons-codec;1.9 ...
-[debug] sbt-chain: Checking cache for: dependency: commons-codec#commons-codec;1.9 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] sbt-chain: Checking cache for: dependency: commons-codec#commons-codec;1.9 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
 [debug] sbt-chain: module revision found in cache: commons-codec#commons-codec;1.9
 [debug] 	found commons-codec#commons-codec;1.9 in sbt-chain
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)]
@@ -206,8 +206,8 @@
 [debug] sbt-chain: module revision found in cache: org.scala-lang.modules#scala-java8-compat_2.11;0.7.0
 [debug] 	found org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 in sbt-chain
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->runtime(*)]
@@ -533,13 +533,13 @@
 [debug] sbt-chain: module revision found in cache: eu.medsea.mimeutil#mime-util;2.1.3
 [debug] 	found eu.medsea.mimeutil#mime-util;2.1.3 in sbt-chain
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)]
-[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)]
+[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->runtime(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile]
-[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
-[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
+[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime
+[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile]
@@ -714,13 +714,13 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile]
@@ -773,8 +773,8 @@
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)]
@@ -983,7 +983,7 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)]
-[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)]
+[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)]
@@ -1014,8 +1014,8 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile]
-[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
-[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
+[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime
+[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile]
@@ -1123,13 +1123,13 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile]
@@ -1182,8 +1182,8 @@
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)]
@@ -1392,7 +1392,7 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)]
-[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)]
+[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)]
@@ -1423,8 +1423,8 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile]
-[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
-[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
+[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime
+[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile]
@@ -1866,13 +1866,13 @@
 [debug] sbt-chain: module revision found in cache: org.mockito#mockito-core;1.9.5
 [debug] 	found org.mockito#mockito-core;1.9.5 in sbt-chain
 [debug] == resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.mockito#mockito-core;1.9.5 [compile->compile(*)]
-[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(compile)]
-[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(compile)]
+[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(*)]
+[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(*)]
 [debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->compile(*)]
 [debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->compile(*)]
-[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(compile)]
+[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(*)]
 [info] Resolving org.objenesis#objenesis;1.0 ...
-[debug] sbt-chain: Checking cache for: dependency: org.objenesis#objenesis;1.0 {compile=[compile(*), master(compile)], runtime=[runtime(*)]}
+[debug] sbt-chain: Checking cache for: dependency: org.objenesis#objenesis;1.0 {compile=[compile(*), master(*)], runtime=[runtime(*)]}
 [debug] sbt-chain: module revision found in cache: org.objenesis#objenesis;1.0
 [debug] 	found org.objenesis#objenesis;1.0 in sbt-chain
 [debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->compile(*)]
@@ -2032,7 +2032,7 @@
 [debug] == resolving dependencies for default#london-bus-tracker-v3_2.11;1.0 [jetty]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.eclipse.jetty#jetty-runner;9.2.1.v20140609 [jetty->default(compile)]
 [info] Resolving org.eclipse.jetty#jetty-runner;9.2.1.v20140609 ...
-[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@385ec6a
+[debug] sbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@90e331
 [debug] sbt-chain: module revision found in cache: org.eclipse.jetty#jetty-runner;9.2.1.v20140609
 [debug] 	found org.eclipse.jetty#jetty-runner;9.2.1.v20140609 in sbt-chain
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.eclipse.jetty#jetty-runner;9.2.1.v20140609 [jetty->runtime]
@@ -2083,13 +2083,13 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile]
@@ -2142,8 +2142,8 @@
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)]
@@ -2352,7 +2352,7 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)]
-[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)]
+[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)]
@@ -2383,8 +2383,8 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile]
-[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
-[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
+[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime
+[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile]
@@ -2493,13 +2493,13 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile]
@@ -2552,8 +2552,8 @@
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)]
@@ -2762,7 +2762,7 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)]
-[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)]
+[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)]
@@ -2793,8 +2793,8 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile]
-[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
-[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
+[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime
+[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile]
@@ -2904,13 +2904,13 @@
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->default(compile)]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->runtime]
 [debug] == resolving dependencies default#london-bus-tracker-v3_2.11;1.0->org.apache.httpcomponents#httpclient;4.5.2 [compile->compile]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [compile->compile(*)]
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->master(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-logging#commons-logging;1.2 [compile->compile(*)]
 [debug] dependency descriptor has been mediated: dependency: junit#junit;3.8.1 {test=[runtime(*), master(compile)]} => dependency: junit#junit;4.11 {test=[runtime(*), master(compile)]}
-[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(compile)]
+[debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->master(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->commons-codec#commons-codec;1.9 [compile->compile(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->runtime(*)]
 [debug] == resolving dependencies org.apache.httpcomponents#httpclient;4.5.2->org.apache.httpcomponents#httpcore;4.4.4 [runtime->compile]
@@ -2963,8 +2963,8 @@
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->com.typesafe#config;1.3.1 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->master(compile)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang.modules#scala-java8-compat_2.11;0.7.0 [compile->compile(*)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(compile)]
-[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(compile)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->master(*)]
+[debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->master(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.7 [compile->compile(*)]
 [debug] == resolving dependencies org.scala-lang.modules#scala-java8-compat_2.11;0.7.0->org.scala-lang#scala-library;2.11.8 [compile->compile(*)]
 [debug] == resolving dependencies com.typesafe.akka#akka-actor_2.11;2.4.16->org.scala-lang#scala-library;2.11.8 [runtime->runtime(*)]
@@ -3173,7 +3173,7 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->master(compile)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [compile->compile(*)]
-[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(compile)]
+[debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->master(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [compile->compile(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->org.apache.commons#commons-lang3;3.5 [compile->master(compile)]
@@ -3204,8 +3204,8 @@
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->com.googlecode.juniversalchardet#juniversalchardet;1.0.3 [runtime->compile]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->runtime(*)]
 [debug] == resolving dependencies org.scalatra#scalatra_2.11;2.5.0->eu.medsea.mimeutil#mime-util;2.1.3 [runtime->compile]
-[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
-[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(compile)]} in runtime
+[debug] excluding dependency: org.slf4j#slf4j-log4j12;1.5.6 {runtime=[compile(*), runtime(*), master(*)]} in runtime
+[debug] excluding dependency: log4j#log4j;1.2.14 {runtime=[compile(*), runtime(*), master(*)]} in runtime
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.5.6 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->runtime(*)]
 [debug] == resolving dependencies eu.medsea.mimeutil#mime-util;2.1.3->org.slf4j#slf4j-api;1.7.22 [runtime->compile]
@@ -3474,11 +3474,11 @@
 [debug] == resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.hamcrest#hamcrest-core;1.3 [compile->compile(*)]
 [debug] == resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.mockito#mockito-core;1.9.5 [compile->master(compile)]
 [debug] == resolving dependencies org.specs2#specs2-mock_2.11;3.8.6->org.mockito#mockito-core;1.9.5 [compile->compile(*)]
-[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(compile)]
-[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(compile)]
+[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->master(*)]
+[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->master(*)]
 [debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.1 [compile->compile(*)]
 [debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.hamcrest#hamcrest-core;1.3 [compile->compile(*)]
-[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(compile)]
+[debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->master(*)]
 [debug] == resolving dependencies org.mockito#mockito-core;1.9.5->org.objenesis#objenesis;1.0 [compile->compile(*)]
 [debug] == resolving dependencies org.scalatra#scalatra-specs2_2.11;2.5.0->org.specs2#specs2-matcher-extra_2.11;3.8.6 [compile->master(compile)]
 [debug] == resolving dependencies org.scalatra#scalatra-specs2_2.11;2.5.0->org.specs2#specs2-matcher-extra_2.11;3.8.6 [compile->compile(*)]
@@ -3785,23 +3785,23 @@
 [debug] 	[NOT REQUIRED] org.specs2#classycle;1.4.3!classycle.jar
 [debug] 	[NOT REQUIRED] org.eclipse.jetty#jetty-runner;9.2.1.v20140609!jetty-runner.jar
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar
-[debug] :: resolution report :: resolve 847ms :: artifacts dl 30ms
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 compile produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 runtime produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 test produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 provided produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-provided.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 optional produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-optional.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 container produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-container.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 jetty produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-jetty.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 compile-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile-internal.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 runtime-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime-internal.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 test-internal produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test-internal.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 plugin produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-plugin.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 sources produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-sources.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 docs produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-docs.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 pom produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-pom.xml
-[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 scala-tool produced in /Users/chrichiv/nonwork-dev/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-scala-tool.xml
-[debug] 	resolve done (847ms resolve - 30ms download)
+[debug] :: resolution report :: resolve 1430ms :: artifacts dl 26ms
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 compile produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 runtime produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 test produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 provided produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-provided.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 optional produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-optional.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 container produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-container.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 jetty produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-jetty.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 compile-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-compile-internal.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 runtime-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-runtime-internal.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 test-internal produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-test-internal.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 plugin produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-plugin.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 sources produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-sources.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 docs produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-docs.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 pom produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-pom.xml
+[debug] 	report for default#london-bus-tracker-v3_2.11;1.0 scala-tool produced in /home/chrischivers/Code/london-bus-tracker-v3/target/resolution-cache/reports/default-london-bus-tracker-v3_2.11-scala-tool.xml
+[debug] 	resolve done (1430ms resolve - 26ms download)
 [info] Done updating.
 [warn] Scala version was updated by one of library dependencies:
 [warn] 	* org.scala-lang:scala-library:(2.11.7, 2.11.0, 2.11.6, 2.11.4) -> 2.11.8
