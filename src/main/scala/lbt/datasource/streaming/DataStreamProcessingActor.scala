@@ -43,13 +43,14 @@ class DataStreamProcessingActor(historicalMessageProcessor: HistoricalSourceLine
 
   }
 
-  override def preRestart(reason: Throwable, message: Option[Any]): Unit = {
+  override def postStop(): Unit = {
+    logger.info("Post Stop being called for Data Processing Actor")
     dataSource.closeClient()
-    super.preRestart(reason, message)
+    super.postStop()
   }
 
   override def postRestart(reason: Throwable): Unit = {
-    logger.error("DataStreamProcessingActor Restarting")
+    logger.info("Post restart being called for Data Processing Actor")
     self ! Start
   }
 

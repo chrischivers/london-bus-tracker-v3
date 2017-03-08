@@ -1,5 +1,0 @@
-[0m[[0mdebug[0m] [0mRunning TaskDef(datasource.DataStreamProcessingTest, org.scalatest.tools.Framework$$anon$1@96e1117, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(datasource.BusDataSourceTest, org.scalatest.tools.Framework$$anon$1@96e1117, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(DefinitionsTest, org.scalatest.tools.Framework$$anon$1@96e1117, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(historical.HistoricalRecorderTest, org.scalatest.tools.Framework$$anon$1@96e1117, false, [SuiteSelector])[0m
-[0m[[0mdebug[0m] [0mRunning TaskDef(servlet.LbtServletTest, org.scalatest.tools.Framework$$anon$1@96e1117, false, [SuiteSelector])[0m

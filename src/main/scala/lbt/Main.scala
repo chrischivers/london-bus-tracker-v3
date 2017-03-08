@@ -7,7 +7,7 @@ import lbt.comon.{BusRoute, Start}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.HistoricalSourceLineProcessor
+import lbt.historical.{HistoricalDbInsertPublisher, HistoricalSourceLineProcessor}
 import lbt.servlet.LbtServlet
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,8 +32,9 @@ object Main extends App {
   Thread.sleep(3000)
   val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig, definitionsCollection)
   val historicalRecordsCollectionConsumer = new HistoricalRecordsCollectionConsumer(messagingConfig, historicalRecordsCollection)
+  val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(messagingConfig)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, messagingConfig)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalDbInsertPublisher)
 
   val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, messagingConfig, historicalSourceLineProcessor)
 

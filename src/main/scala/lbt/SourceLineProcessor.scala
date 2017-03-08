@@ -18,12 +18,9 @@ import lbt.historical.ValidatedSourceLine
 trait SourceLineProcessor extends StrictLogging {
   def processSourceLine(sourceLine: SourceLine)
   var lastProcessedSourceLine: Option[SourceLine] = None
-  protected var sourceLinesProcessed: AtomicLong = new AtomicLong(0)
+  val numberSourceLinesProcessed: AtomicLong = new AtomicLong(0)
   var lastValidatedSourceLine: Option[ValidatedSourceLine] = None
-  protected var sourceLinesValidated: AtomicLong = new AtomicLong(0)
-
-  def getNumberProcessed = sourceLinesProcessed.get()
-  def getNumberValidated = sourceLinesValidated.get()
+  val numberSourceLinesValidated: AtomicLong = new AtomicLong(0)
 }
 
 //class MessageConsumer(processor: SourceLineProcessor, val messagingConfig: MessagingConfig)(implicit actorSystem: ActorSystem) extends RabbitMQConfig  {

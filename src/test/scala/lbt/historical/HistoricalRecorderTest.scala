@@ -1,9 +1,8 @@
-package historical
+package lbt.historical
 
 import lbt.comon._
 import lbt.datasource.SourceLine
-import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.{PersistAndRemoveInactiveVehicles, PersistToDB, ValidatedSourceLine, VehicleID}
+import lbt.datasource.streaming.DataStreamProcessor
 import org.scalatest.Matchers._
 import org.scalatest._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
@@ -49,8 +48,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe 2
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe 2
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe 1
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 2
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 1
       testLines should contain(sourceLineBackToLine(f.historicalSourceLineProcessor.lastProcessedSourceLine.get))
       validSourceline shouldEqual validatedSourceLineBackToLine(f.historicalSourceLineProcessor.lastValidatedSourceLine.get)
     }
@@ -75,10 +74,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe 2
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe 2
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 2
       testLines should contain (sourceLineBackToLine(f.historicalSourceLineProcessor.lastProcessedSourceLine.get))
       validSourceline shouldEqual validatedSourceLineBackToLine(f.historicalSourceLineProcessor.lastValidatedSourceLine.get)
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe 1
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 1
     }
   }
 
@@ -99,10 +98,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe 3
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe 3
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 3
       testLines should contain (sourceLineBackToLine(f.historicalSourceLineProcessor.lastProcessedSourceLine.get))
       validSourceline shouldEqual validatedSourceLineBackToLine(f.historicalSourceLineProcessor.lastValidatedSourceLine.get)
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe 1
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 1
     }
   }
 
@@ -126,8 +125,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe joinedLines.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe joinedLines.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe joinedLines.size - 1
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe joinedLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe joinedLines.size - 1
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
     }
   }
@@ -155,8 +154,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe 4
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe 4
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe 4
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 4
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 4
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 3
     }
   }
@@ -176,8 +175,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
       f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.size shouldBe testLines.size
     }
@@ -204,8 +203,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesWithUpdated.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLinesWithUpdated.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLinesWithUpdated.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithUpdated.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
       f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.apply(routeDefFromDb.head) shouldBe newArrivalTime
     }
@@ -232,8 +231,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
@@ -265,8 +264,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
@@ -299,8 +298,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesWithMissing.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLinesWithMissing.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLinesWithMissing.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithMissing.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 0
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe false
@@ -330,8 +329,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesLast4.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLinesLast4.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLinesLast4.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesLast4.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 0
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe false
@@ -362,8 +361,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesSecondHalf.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLinesSecondHalf.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLinesSecondHalf.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesSecondHalf.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
@@ -407,8 +406,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     }
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLines1.size + testLines2.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLines1.size + testLines2.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines1.size + testLines2.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
@@ -445,8 +444,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesDoubled.size
-      f.historicalSourceLineProcessor.getNumberProcessed shouldBe testLinesDoubled.size
-      f.historicalSourceLineProcessor.getNumberValidated shouldBe testLinesDoubled.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesDoubled.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
@@ -484,8 +483,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
       eventually {
         dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesFirstHalf.size
-        tempFixture.historicalSourceLineProcessor.getNumberProcessed shouldBe testLinesFirstHalf.size
-        tempFixture.historicalSourceLineProcessor.getNumberValidated shouldBe testLinesFirstHalf.size
+        tempFixture.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesFirstHalf.size
+        tempFixture.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesFirstHalf.size
         tempFixture.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
         tempFixture.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
         tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true

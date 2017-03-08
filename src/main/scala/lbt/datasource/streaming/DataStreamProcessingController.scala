@@ -24,7 +24,8 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
   logger.info("Data stream Processing Controller Actor Created")
 
 //  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
-  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], historicalSourceLineProcessor, dataSourceConfig))
+  val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], historicalSourceLineProcessor, dataSourceConfig), "dataStreamProcessingActor")
+logger.info(iteratingActor.path.toString)
 
   var numberProcessed = new AtomicLong(0)
   var numberProcessedSinceRestart = new AtomicLong(0)
@@ -46,12 +47,6 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
   def incrementNumberProcessed() = {
     numberProcessed.incrementAndGet()
     numberProcessedSinceRestart.incrementAndGet()
-  }
-
-
-  override def postRestart(reason: Throwable): Unit = {
-    logger.info("In post restart of Data Stream processing Controller")
-    super.postRestart(reason)
   }
 
   /**
@@ -78,7 +73,7 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
 
 class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor)(implicit actorSystem: ActorSystem)  {
   implicit val timeout:Timeout = 20 seconds
-  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig, historicalSourceLineProcessor))
+  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig, historicalSourceLineProcessor), "dataStreamProcessingController")
 
   def start = processorControllerActor ! Start
 

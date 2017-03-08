@@ -23,10 +23,9 @@ case class VehicleID(vehicleReg: String, busRoute: BusRoute) {
   override def toString: String = vehicleReg + "-" + busRoute.id + "-" + busRoute.direction
 }
 
-class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, messagingConfig: MessagingConfig, historicalRecordsConfig: HistoricalRecordsConfig) extends Actor with StrictLogging {
+class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsConfig: HistoricalRecordsConfig, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
   logger.info("Vehicle Actor Supervisor Actor Created")
   implicit val timeout = Timeout(10 seconds)
-  val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(messagingConfig)(context.system)
 
   def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter)
 
@@ -52,7 +51,7 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
         sender ! List.empty
     }
     case PersistAndRemoveInactiveVehicles =>
-      logger.info("Checking for inactive vehicles, persisting and deleting...")
+//      logger.info("Checking for inactive vehicles, persisting and deleting...")
       val currentTime = System.currentTimeMillis()
       val currentActorsSplit = currentActors.partition {
         case (_, (_, lastActivity)) => currentTime - lastActivity > historicalRecordsConfig.vehicleInactivityTimeBeforePersist

@@ -1,5 +1,7 @@
 package lbt.database
 
+import java.util.concurrent.atomic.AtomicLong
+
 import com.mongodb.casbah.MongoCollection
 import lbt.{DatabaseConfig, DefinitionsConfig}
 
@@ -15,18 +17,11 @@ trait DatabaseCollections {
 
   lazy val dBCollection: MongoCollection = db.getCollection(collectionName, indexKeyList, uniqueIndex)
 
-  var numberInsertsRequested: Long = 0
-  var numberInsertsCompleted: Long = 0
-  var numberGetRequests: Long = 0
-  var numberDeleteRequests: Long = 0
-
-
-  def incrementLogRequest(ilv: IncrementLogValues) = ilv match {
-    case IncrementNumberInsertsRequested(n) => numberInsertsRequested += n
-    case IncrementNumberInsertsCompleted(n) => numberInsertsCompleted += n
-    case IncrementNumberGetRequests(n) => numberGetRequests += n
-    case IncrementNumberDeleteRequests(n) => numberDeleteRequests += n
-  }
+  val numberInsertsRequested: AtomicLong = new AtomicLong(0)
+  val numberInsertsFailed: AtomicLong = new AtomicLong(0)
+  val numberInsertsCompleted: AtomicLong = new AtomicLong(0)
+  val numberGetsRequested: AtomicLong = new AtomicLong(0)
+  val numberDeletesRequested: AtomicLong = new AtomicLong(0)
 }
 
 trait IncrementLogValues

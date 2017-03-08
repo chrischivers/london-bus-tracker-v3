@@ -6,19 +6,28 @@ import akka.actor.{Actor, ActorSystem, Props}
 import com.github.sstone.amqp.Amqp.{Ack, Delivery, QueueUnbind, _}
 import com.github.sstone.amqp.{Amqp, ConnectionOwner, Consumer}
 import com.rabbitmq.client.ConnectionFactory
-import lbt.MessagingConfig
 import lbt.historical.RecordedVehicleDataToPersist
 import net.liftweb.json.{DefaultFormats, _}
+import akka.pattern.ask
+import akka.util.Timeout
+import lbt.MessagingConfig
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
+case class GetNumberMessagesConsumed()
+
 class HistoricalRecordsCollectionConsumer(messagingConfig: MessagingConfig, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem) {
+
+  val formats = DefaultFormats
+  implicit val timeout:Timeout = 10 seconds
+
   val connFactory = new ConnectionFactory()
   connFactory.setUri(messagingConfig.rabbitUrl)
   val conn = actorSystem.actorOf(ConnectionOwner.props(connFactory, 1 second))
 
-  val listener = actorSystem.actorOf(Props(classOf[ListeningActor], historicalRecordsCollection))
 
+  val listener = actorSystem.actorOf(Props(classOf[ListeningActor], historicalRecordsCollection))
   val consumer = ConnectionOwner.createChildActor(conn, Consumer.props(listener, channelParams = None, autoack = false))
   Amqp.waitForConnection(actorSystem, consumer).await()
   consumer ! DeclareExchange(ExchangeParameters(messagingConfig.exchangeName, passive = true, "direct"))
@@ -37,6 +46,8 @@ class HistoricalRecordsCollectionConsumer(messagingConfig: MessagingConfig, hist
     consumer ! QueueUnbind(messagingConfig.historicalDBInsertQueueName, messagingConfig.exchangeName, messagingConfig.historicalDBInsertQueueName)
     consumer ! DeleteQueue(messagingConfig.historicalDBInsertQueueName)
   }
+
+  def getNumberMessagesConsumed: Future[Long] = (listener ? GetNumberMessagesConsumed).mapTo[Long]
 }
 
 class ListeningActor(historicalRecordsCollection: HistoricalRecordsCollection) extends Actor {
@@ -50,5 +61,6 @@ class ListeningActor(historicalRecordsCollection: HistoricalRecordsCollection) e
       historicalRecordsCollection.insertHistoricalRecordIntoDB(parse(new String(body, "UTF-8")).extract[RecordedVehicleDataToPersist])
       sender ! Ack(envelope.getDeliveryTag)
     }
+    case GetNumberMessagesConsumed => sender ! numberMessagesReceived.get()
   }
 }

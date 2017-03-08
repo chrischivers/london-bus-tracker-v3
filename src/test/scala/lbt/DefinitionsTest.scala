@@ -1,5 +1,7 @@
-import historical.HistoricalTestFixture
-import lbt.comon.{BusRoute, Stop}
+package lbt
+
+import lbt.comon.BusRoute
+import lbt.historical.HistoricalTestFixture
 import org.scalatest.Matchers._
 import org.scalatest.concurrent.Eventually._
 import org.scalatest.concurrent.ScalaFutures

@@ -1,13 +1,13 @@
-package servlet
+package lbt.servlet
 
 import akka.actor.ActorSystem
 import lbt.ConfigLoader
 import lbt.comon.BusRoute
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.HistoricalRecordsCollection
+import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
 import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
-import lbt.historical.{HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
+import lbt.historical.{HistoricalDbInsertPublisher, HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
 import net.liftweb.json.DefaultFormats
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,8 +19,8 @@ trait LbtServletTestFixture {
 
   val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
     exchangeName = "test-lbt-exchange",
-    historicalDBInsertQueueName = "test-historical-db-insert-queue-name",
-    historicalDbRoutingKey = "test-historical-db-insert-routing-key")
+    historicalDBInsertQueueName = "test-lbt.historical-db-insert-queue-name",
+    historicalDbRoutingKey = "test-lbt.historical-db-insert-routing-key")
   val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
   val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(databaseName = "TestDB")
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
@@ -37,7 +37,11 @@ trait LbtServletTestFixture {
 
   val definitions: BusRouteDefinitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testMessagingConfig)
+  val historicalRecordsCollectionConsumer = new HistoricalRecordsCollectionConsumer(testMessagingConfig, testHistoricalRecordsCollection)
+
+  val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(testMessagingConfig)
+
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, historicalDbInsertPublisher)
 
   val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem)
 

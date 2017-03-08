@@ -17,20 +17,20 @@ import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-class HistoricalSourceLineProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, messagingConfig: MessagingConfig)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends SourceLineProcessor {
+class HistoricalSourceLineProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends SourceLineProcessor {
 
 //  val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, messagingConfig, historicalRecordsConfig))
+  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsConfig, historicalDbInsertPublisher))
 
   type StringValidation[T] = ValidationNel[String, T]
 
   implicit val formats = DefaultFormats
 
   override def processSourceLine(sourceLine: SourceLine) = {
-    sourceLinesProcessed.incrementAndGet()
+    numberSourceLinesProcessed.incrementAndGet()
     lastProcessedSourceLine = Some(sourceLine)
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
@@ -41,7 +41,7 @@ class HistoricalSourceLineProcessor(dataSourceConfig: DataSourceConfig, historic
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
     lastValidatedSourceLine = Some(validatedSourceLine)
-    sourceLinesValidated.incrementAndGet()
+    numberSourceLinesValidated.incrementAndGet()
     vehicleActorSupervisor ! validatedSourceLine
   }
 

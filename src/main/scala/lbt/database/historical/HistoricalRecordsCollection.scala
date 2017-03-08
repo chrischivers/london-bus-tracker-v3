@@ -20,15 +20,21 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
   var numberToProcess: Long = 0
 
   def insertHistoricalRecordIntoDB(vehicleRecordedData: RecordedVehicleDataToPersist) = {
-    incrementLogRequest(IncrementNumberInsertsRequested(1))
+   numberInsertsRequested.incrementAndGet()
     HistoricalRecordsDBController.insertHistoricalRecordIntoDB(dBCollection, vehicleRecordedData).onComplete {
-      case Success(ack) => if (ack) incrementLogRequest(IncrementNumberInsertsCompleted(1))
-      else logger.info(s"Insert VehicleRecorded data for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleID} was not acknowledged by DB")
-      case Failure(e) => logger.info(s"Insert Bus Route Definition for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleID} was not completed successfully", e)
+      case Success(ack) => if (ack) numberInsertsCompleted.incrementAndGet()
+      else {
+        numberInsertsFailed.incrementAndGet()
+        logger.info(s"Insert VehicleRecorded data for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleID} was not acknowledged by DB")
+      }
+      case Failure(e) =>
+        numberInsertsFailed.incrementAndGet()
+        logger.info(s"Insert Bus Route Definition for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleID} was not completed successfully", e)
     }
   }
 
   def getHistoricalRecordFromDB(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
+    numberGetsRequested.incrementAndGet()
     HistoricalRecordsDBController.loadHistoricalRecordsFromDB(dBCollection, busRoute)
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
           .filter(stopRec =>

@@ -27,11 +27,16 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
   private var definitionsCache: BusRouteDefinitions = Map.empty
 
   def insertBusRouteDefinitionIntoDB(busRoute: BusRoute, busStops: List[BusStop]) = {
-    incrementLogRequest(IncrementNumberInsertsRequested(1))
+    numberGetsRequested.incrementAndGet()
     BusDefinitionsDBController.insertRouteIntoDB(dBCollection, busRoute, busStops).onComplete {
-      case Success(ack) =>  if (ack) incrementLogRequest(IncrementNumberInsertsCompleted(1))
-                            else logger.info(s"Insert Bus Route Definition for route $busRoute was not acknowledged by DB")
-      case Failure(e) => logger.info(s"Insert Bus Route Definition for route $busRoute not completed successfully", e)
+      case Success(ack) =>  if (ack) numberInsertsCompleted.incrementAndGet()
+                            else {
+        numberInsertsFailed.incrementAndGet()
+        logger.info(s"Insert Bus Route Definition for route $busRoute was not acknowledged by DB")
+      }
+      case Failure(e) =>
+        numberInsertsFailed.incrementAndGet()
+        logger.info(s"Insert Bus Route Definition for route $busRoute not completed successfully", e)
     }
   }
 
@@ -46,6 +51,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
   }
 
   def updateBusRouteDefinitionsFromDB: Unit = {
+    numberGetsRequested.incrementAndGet()
     definitionsCache = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection)
   }
 

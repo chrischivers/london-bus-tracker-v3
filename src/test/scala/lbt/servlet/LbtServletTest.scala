@@ -1,8 +1,7 @@
-package servlet
+package lbt.servlet
 
 import lbt.comon.{BusRoute, BusStop}
 import lbt.database.historical.HistoricalRecordFromDb
-import lbt.servlet.LbtServlet
 import net.liftweb.json._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
@@ -16,7 +15,7 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
   implicit val formats = DefaultFormats
   implicit val ec = ExecutionContext.Implicits.global
 
-  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessor, historicalSourceLineProcessor), "/*")
+  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessor, historicalSourceLineProcessor, historicalRecordsCollectionConsumer, historicalDbInsertPublisher), "/*")
 
 
   test("Should produce 404 for undefined paths") {
@@ -28,14 +27,14 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
     }
   }
 
-  test("should start the servlet") {
+  test("should start the lbt.servlet") {
     get("/streamstart") {
       status should equal(200)
       dataStreamProcessor.numberLinesProcessed.futureValue shouldBe >(0)
     }
   }
 
-  test("should stop the servlet") {
+  test("should stop the lbt.servlet") {
     get("/streamstop") {
       status should equal(200)
       val numberProcessed  = dataStreamProcessor.numberLinesProcessed.futureValue

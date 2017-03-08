@@ -28,7 +28,7 @@ object ConfigLoader {
     val dataSourceStreamingParamsPrefix = "dataSource.streaming-parameters."
     val dataBaseParamsPrefix = "database."
     val definitionsParamsPrefix = "dataSource.definitions."
-    val historicalRecordsParamsPrefix = "historical-records."
+    val historicalRecordsParamsPrefix = "lbt.historical-records."
     val messagingParamsPrefix = "messaging.rabbitmq."
     LBTConfig(
       DataSourceConfig(
@@ -46,7 +46,7 @@ object ConfigLoader {
       DatabaseConfig(
         defaultConfigFactory.getString(dataBaseParamsPrefix + "database-name"),
         defaultConfigFactory.getString(dataBaseParamsPrefix + "bus-definitions-collection-name"),
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "historical-records-collection-name")
+        defaultConfigFactory.getString(dataBaseParamsPrefix + "lbt.historical-records-collection-name")
       ),
       DefinitionsConfig(
         defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-all-url"),
@@ -56,8 +56,8 @@ object ConfigLoader {
       MessagingConfig(
         defaultConfigFactory.getString(messagingParamsPrefix + "rabbitmq-url"),
         defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "historical-db-insert-queue-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "historical-db-insert-routing-key")
+        defaultConfigFactory.getString(messagingParamsPrefix + "lbt.historical-db-insert-queue-name"),
+        defaultConfigFactory.getString(messagingParamsPrefix + "lbt.historical-db-insert-routing-key")
       ),
       HistoricalRecordsConfig(
         defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "vehicle-inactivity-time-before-persist"),
