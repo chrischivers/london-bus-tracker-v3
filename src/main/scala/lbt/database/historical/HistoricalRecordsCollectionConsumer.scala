@@ -10,6 +10,7 @@ import lbt.historical.RecordedVehicleDataToPersist
 import net.liftweb.json.{DefaultFormats, _}
 import akka.pattern.ask
 import akka.util.Timeout
+import com.typesafe.scalalogging.StrictLogging
 import lbt.MessagingConfig
 
 import scala.concurrent.Future
@@ -17,7 +18,7 @@ import scala.concurrent.duration._
 
 case class GetNumberMessagesConsumed()
 
-class HistoricalRecordsCollectionConsumer(messagingConfig: MessagingConfig, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem) {
+class HistoricalRecordsCollectionConsumer(messagingConfig: MessagingConfig, historicalRecordsCollection: HistoricalRecordsCollection)(implicit actorSystem: ActorSystem) extends StrictLogging {
 
   val formats = DefaultFormats
   implicit val timeout:Timeout = 10 seconds
@@ -50,7 +51,7 @@ class HistoricalRecordsCollectionConsumer(messagingConfig: MessagingConfig, hist
   def getNumberMessagesConsumed: Future[Long] = (listener ? GetNumberMessagesConsumed).mapTo[Long]
 }
 
-class ListeningActor(historicalRecordsCollection: HistoricalRecordsCollection) extends Actor {
+class ListeningActor(historicalRecordsCollection: HistoricalRecordsCollection) extends Actor with StrictLogging {
 
   implicit val formats = DefaultFormats
   val numberMessagesReceived: AtomicLong = new AtomicLong(0)
@@ -59,6 +60,7 @@ class ListeningActor(historicalRecordsCollection: HistoricalRecordsCollection) e
     case Delivery(consumerTag, envelope, properties, body) => {
       numberMessagesReceived.incrementAndGet()
       historicalRecordsCollection.insertHistoricalRecordIntoDB(parse(new String(body, "UTF-8")).extract[RecordedVehicleDataToPersist])
+      logger.info("Record to persist: " + parse(new String(body, "UTF-8")).extract[RecordedVehicleDataToPersist])
       sender ! Ack(envelope.getDeliveryTag)
     }
     case GetNumberMessagesConsumed => sender ! numberMessagesReceived.get()

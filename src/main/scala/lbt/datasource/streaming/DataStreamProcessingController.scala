@@ -12,7 +12,7 @@ import lbt.datasource.BusDataSource
 import lbt.historical.HistoricalSourceLineProcessor
 import lbt.{ConfigLoader, DataSourceConfig, MessagingConfig}
 
-import scala.concurrent.TimeoutException
+import scala.concurrent.{Future, TimeoutException}
 import scala.concurrent.duration._
 
 case class Next()
@@ -25,7 +25,6 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
 
 //  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
   val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], historicalSourceLineProcessor, dataSourceConfig), "dataStreamProcessingActor")
-logger.info(iteratingActor.path.toString)
 
   var numberProcessed = new AtomicLong(0)
   var numberProcessedSinceRestart = new AtomicLong(0)
@@ -79,11 +78,11 @@ class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: 
 
   def stop = processorControllerActor ! Stop
 
-  def numberLinesProcessed = {
+  def numberLinesProcessed: Future[Long] = {
     (processorControllerActor ? GetNumberLinesProcessed).mapTo[Long]
   }
 
-  def numberLinesProcessedSinceRestart = {
+  def numberLinesProcessedSinceRestart: Future[Long] = {
     (processorControllerActor ? GetNumberLinesProcessedSinceRestart).mapTo[Long]
   }
 }

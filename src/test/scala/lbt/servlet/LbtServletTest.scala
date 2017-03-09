@@ -1,19 +1,24 @@
 package lbt.servlet
 
+import akka.actor.Kill
 import lbt.comon.{BusRoute, BusStop}
 import lbt.database.historical.HistoricalRecordFromDb
 import net.liftweb.json._
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
+import org.scalatest.concurrent.{Eventually, ScalaFutures}
+import org.scalatest.{BeforeAndAfterAll, FunSuite, FunSuiteLike, Matchers}
 import org.scalatra.test.scalatest.ScalatraSuite
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 
 
-class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with Matchers with BeforeAndAfterAll with LbtServletTestFixture {
+class LbtServletTest extends ScalatraSuite with FunSuiteLike with ScalaFutures with Matchers with BeforeAndAfterAll with Eventually with LbtServletTestFixture {
 
   implicit val formats = DefaultFormats
   implicit val ec = ExecutionContext.Implicits.global
+  override implicit val patienceConfig = PatienceConfig(
+    timeout = scaled(30 seconds),
+    interval = scaled(1 second))
 
   addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessor, historicalSourceLineProcessor, historicalRecordsCollectionConsumer, historicalDbInsertPublisher), "/*")
 
@@ -30,15 +35,20 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
   test("should start the lbt.servlet") {
     get("/streamstart") {
       status should equal(200)
-      dataStreamProcessor.numberLinesProcessed.futureValue shouldBe >(0)
+      eventually {
+        dataStreamProcessor.numberLinesProcessed.futureValue should be > 0L
+      }
     }
   }
 
   test("should stop the lbt.servlet") {
+    get("/streamstart") {}
+    Thread.sleep(2000)
     get("/streamstop") {
       status should equal(200)
+      Thread.sleep(2000)
       val numberProcessed  = dataStreamProcessor.numberLinesProcessed.futureValue
-      Thread.sleep(1000)
+      Thread.sleep(2000)
       numberProcessed shouldEqual dataStreamProcessor.numberLinesProcessed.futureValue
     }
   }
@@ -267,7 +277,6 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
 
   test("should produce a list of arrival information for a given vehicle") {
     testBusRoutes.foreach(route => {
-      val vehicleReg = historicalSourceLineProcessor.lastValidatedSourceLine.map(_.vehicleID).get
       get("/" + route.id + "/" + route.direction + "?vehicleID=" + vehicleReg) {
         status should equal(200)
         parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalRecordsCollection.getHistoricalRecordFromDB(route, None, None, None, None, Some(vehicleReg)))
@@ -279,6 +288,9 @@ class LbtServletTest extends FunSuite with ScalatraSuite with ScalaFutures with 
     actorSystem.terminate().futureValue
     testDefinitionsCollection.db.dropDatabase
     testHistoricalRecordsCollection.db.dropDatabase
+    historicalRecordsCollectionConsumer.unbindAndDelete
+    dataStreamProcessor.processorControllerActor ! Kill
+    Thread.sleep(1000)
     super.afterAll()
   }
 }

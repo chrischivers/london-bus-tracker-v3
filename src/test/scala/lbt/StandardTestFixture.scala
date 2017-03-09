@@ -4,13 +4,15 @@ import akka.actor.ActorSystem
 import lbt.comon.BusRoute
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.HistoricalRecordsCollection
+import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
 import lbt.datasource.streaming.DataStreamProcessor
 import lbt.historical.{HistoricalDbInsertPublisher, HistoricalSourceLineProcessor}
+import lbt.servlet.LbtServlet
+import org.scalatra.test.scalatest.ScalatraSuite
 
 import scala.concurrent.ExecutionContext
 
-class StandardTestFixture {
+class StandardTestFixture extends ScalatraSuite {
 
   implicit val actorSystem = ActorSystem("TestLbtSystem")
   implicit val executionContext = ExecutionContext.Implicits.global
@@ -33,11 +35,18 @@ class StandardTestFixture {
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 
   val definitions: BusRouteDefinitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
+  println("Definitions: " + definitions)
+
+  val testHistoricalRecordsCollectionConsumer = new HistoricalRecordsCollectionConsumer(testMessagingConfig, testHistoricalRecordsCollection)
 
   val testHistoricalDbInsertPublisher = new HistoricalDbInsertPublisher(testMessagingConfig)
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalDbInsertPublisher)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsCollection, testHistoricalDbInsertPublisher)
 
   val arrivalTimeMultipliers: Iterator[Int] = Stream.from(1).iterator
   def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
+
+  val dataStreamProcessorForServlet = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem)
+  addServlet(new LbtServlet(testDefinitionsCollection, testHistoricalRecordsCollection, dataStreamProcessorForServlet, historicalSourceLineProcessor, testHistoricalRecordsCollectionConsumer, testHistoricalDbInsertPublisher), "/*")
+
 
 }

@@ -1,4 +1,4 @@
-package lbt.datasource
+package lbt.datasource.streaming
 
 import java.util.concurrent.TimeUnit
 
@@ -6,9 +6,10 @@ import akka.actor.Kill
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt.StandardTestFixture
-import lbt.datasource.streaming.DataStreamProcessor
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
+import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{Matchers, fixture}
+import org.scalatest.concurrent.Eventually._
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
@@ -29,6 +30,7 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
     try test(fixture)
     finally {
       fixture.actorSystem.terminate().futureValue
+      fixture.testHistoricalRecordsCollectionConsumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
       fixture.testHistoricalRecordsCollection.db.dropDatabase
       Thread.sleep(1000)
@@ -39,37 +41,39 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
     val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
     withClue("No data stream returned") {
       dataStreamProcessingControllerReal.start
-      Thread.sleep(2000)
-      dataStreamProcessingControllerReal.stop
 
       eventually {
         dataStreamProcessingControllerReal.numberLinesProcessed.futureValue should be > 0L
       }
+      dataStreamProcessingControllerReal.stop
     }
   }
 
   test("Data Stream Processing Actor should close http connection and open new one if it restarts") { f =>
 
     val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
-    implicit val timeout = Timeout(FiniteDuration(10, TimeUnit.SECONDS))
+    implicit val futureTimeout = Timeout(FiniteDuration(10, TimeUnit.SECONDS))
 
     dataStreamProcessingControllerReal.start
-    Thread.sleep(2000)
-    dataStreamProcessingControllerReal.stop
-    Thread.sleep(20000)
+
     eventually {
     dataStreamProcessingControllerReal.numberLinesProcessed.futureValue should be > 0L
     }
+
+    dataStreamProcessingControllerReal.stop
+
     val numberProcessedBeforeRestart = dataStreamProcessingControllerReal.numberLinesProcessed.futureValue
 
     val dataStreamProcessingActor = f.actorSystem.actorSelection("user/dataStreamProcessingController/dataStreamProcessingActor").resolveOne().futureValue
     dataStreamProcessingActor ! Kill
     Thread.sleep(1000)
     dataStreamProcessingControllerReal.start
-    Thread.sleep(2000)
-    dataStreamProcessingControllerReal.stop
-    Thread.sleep(20000)
     eventually {
+      dataStreamProcessingControllerReal.numberLinesProcessedSinceRestart.futureValue should be > 0L
+    }
+    dataStreamProcessingControllerReal.stop
+
+    eventually(timeout(60 seconds)) {
       val numberProcessedAfterRestart = dataStreamProcessingControllerReal.numberLinesProcessedSinceRestart.futureValue
       numberProcessedAfterRestart should be > numberProcessedBeforeRestart
       (numberProcessedAfterRestart + numberProcessedBeforeRestart) shouldEqual dataStreamProcessingControllerReal.numberLinesProcessed.futureValue

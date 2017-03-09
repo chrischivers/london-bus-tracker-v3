@@ -24,13 +24,4 @@ trait DatabaseCollections {
   val numberDeletesRequested: AtomicLong = new AtomicLong(0)
 }
 
-trait IncrementLogValues
-
-case class IncrementNumberInsertsRequested(incrementBy: Int) extends IncrementLogValues
-
-case class IncrementNumberInsertsCompleted(incrementBy: Int) extends IncrementLogValues
-
-case class IncrementNumberGetRequests(incrementBy: Int) extends IncrementLogValues
-
-case class IncrementNumberDeleteRequests(incrementBy: Int) extends IncrementLogValues
 

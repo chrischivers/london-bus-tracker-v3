@@ -34,7 +34,7 @@ object Main extends App {
   val historicalRecordsCollectionConsumer = new HistoricalRecordsCollectionConsumer(messagingConfig, historicalRecordsCollection)
   val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(messagingConfig)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(dataSourceConfig, historicalRecordsConfig, definitionsCollection, historicalDbInsertPublisher)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(historicalRecordsConfig, definitionsCollection, historicalDbInsertPublisher)
 
   val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, messagingConfig, historicalSourceLineProcessor)
 

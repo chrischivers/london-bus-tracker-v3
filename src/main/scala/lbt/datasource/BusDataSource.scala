@@ -22,6 +22,7 @@ class BusDataSource(config: DataSourceConfig) extends Iterator[SourceLine] with 
   logger.info("Creating new Bus Data Source")
 
   private val dataSourceClient = new BusDataSourceHttpClient(config)
+  if (config.simulationIterator.isDefined) logger.info("Using simulation iterator instead of real data stream")
   private val dataSourceIterator = config.simulationIterator.getOrElse(dataSourceClient.dataStream)
   protected val numberLinesStreamed = new AtomicLong(0)
 

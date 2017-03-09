@@ -10,7 +10,8 @@ import lbt.database.historical.HistoricalRecordsCollection
 import scalaz.Scalaz._
 import scalaz._
 
-case class RecordedVehicleDataToPersist(vehicleID: String, busRoute: BusRoute, stopArrivalRecords: List[(Int, BusStop, Long)])
+case class StopDataRecordToPersist(seqNo: Int, busStopId: String, arrivalTime: Long)
+case class RecordedVehicleDataToPersist(vehicleID: String, busRoute: BusRoute, stopArrivalRecords: List[StopDataRecordToPersist])
 
 class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
   val name: String = self.path.name
@@ -43,7 +44,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
       }
   }
 
-  def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop]): StringValidation[List[(Int, BusStop, Long)]] = {
+  def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop]): StringValidation[List[StopDataRecordToPersist]] = {
 
     val orderedStopsList: List[(Int, BusStop, Option[Long])] = busStopDefinitionList.zipWithIndex.map{case(stop, index) => (index, stop, stopArrivalRecords.get(stop))}
 
@@ -79,7 +80,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
       |@| stopArrivalTimesAreIncremental).tupled
       .map(_ => orderedStopsList
         .filter(elem => elem._3.isDefined)
-        .map(elem => (elem._1, elem._2, elem._3.get)))
+        .map(elem => StopDataRecordToPersist(elem._1, elem._2.id, elem._3.get)))
     }
 
   override def postStop: Unit = logger.info(s"Vehicle $name has been killed")

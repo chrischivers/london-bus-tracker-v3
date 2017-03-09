@@ -47,12 +47,14 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     //      definitionsLastRefreshedFromDB = System.currentTimeMillis()
     //      definitionsCache
     //    } else definitionsCache
+    if (definitionsCache.isEmpty || forceDBRefresh) updateBusRouteDefinitionsFromDB
     definitionsCache
   }
 
   def updateBusRouteDefinitionsFromDB: Unit = {
     numberGetsRequested.incrementAndGet()
     definitionsCache = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection)
+    logger.info("Bus Route Definitions cache updated from database")
   }
 
   def refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly: Boolean = false, getOnly: Option[List[BusRoute]] = None): Unit = {
@@ -112,6 +114,9 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
       })
     }
     logger.info("Bus Route Definitions update complete")
+    updateBusRouteDefinitionsFromDB
+    logger.info("Bus Route Definitions cache updated from database")
+
   }
 
 }

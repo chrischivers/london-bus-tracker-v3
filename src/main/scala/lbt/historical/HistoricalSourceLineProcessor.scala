@@ -1,8 +1,11 @@
 package lbt.historical
 
+import java.util.concurrent.atomic.AtomicLong
+
 import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
+import com.typesafe.scalalogging.StrictLogging
 import lbt._
 import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.database.definitions.BusDefinitionsCollection
@@ -17,9 +20,12 @@ import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
 
-class HistoricalSourceLineProcessor(dataSourceConfig: DataSourceConfig, historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends SourceLineProcessor {
+class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends StrictLogging {
 
 //  val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
+
+  val numberSourceLinesProcessed: AtomicLong = new AtomicLong(0)
+  val numberSourceLinesValidated: AtomicLong = new AtomicLong(0)
 
   val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
 
@@ -29,18 +35,16 @@ class HistoricalSourceLineProcessor(dataSourceConfig: DataSourceConfig, historic
 
   implicit val formats = DefaultFormats
 
-  override def processSourceLine(sourceLine: SourceLine) = {
+  def processSourceLine(sourceLine: SourceLine) = {
     numberSourceLinesProcessed.incrementAndGet()
-    lastProcessedSourceLine = Some(sourceLine)
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-        case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+        case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
 //      cache.put(sourceLine)
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
-    lastValidatedSourceLine = Some(validatedSourceLine)
     numberSourceLinesValidated.incrementAndGet()
     vehicleActorSupervisor ! validatedSourceLine
   }

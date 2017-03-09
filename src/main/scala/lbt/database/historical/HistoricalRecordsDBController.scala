@@ -6,7 +6,7 @@ import com.mongodb.casbah.commons.{Imports, MongoDBObject}
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.database.historical.HISTORICAL_RECORDS_DOCUMENT.HISTORICAL_VEHICLE_RECORD_DOCUMENT
-import lbt.historical.RecordedVehicleDataToPersist
+import lbt.historical.{RecordedVehicleDataToPersist, StopDataRecordToPersist}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -23,23 +23,23 @@ object HistoricalRecordsDBController extends StrictLogging {
       val newRecord = MongoDBObject(
         HISTORICAL_RECORDS_DOCUMENT.ROUTE_ID -> vehicleRecordedData.busRoute.id,
         HISTORICAL_RECORDS_DOCUMENT.DIRECTION -> vehicleRecordedData.busRoute.direction.toString,
-        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._3,
+        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head.arrivalTime,
         HISTORICAL_RECORDS_DOCUMENT.VEHICLE_ID -> vehicleRecordedData.vehicleID,
         HISTORICAL_RECORDS_DOCUMENT.VEHICLE_RECORD ->
 
           vehicleRecordedData.stopArrivalRecords
-            .map {case(seqNo, busStop, arrivalTime) =>
+            .map {rec: StopDataRecordToPersist =>
               MongoDBObject(
-                HISTORICAL_VEHICLE_RECORD_DOCUMENT.SEQ_NO -> seqNo,
-                HISTORICAL_VEHICLE_RECORD_DOCUMENT.STOP_ID -> busStop.id,
-                HISTORICAL_VEHICLE_RECORD_DOCUMENT.ARRIVAL_TIME -> arrivalTime
+                HISTORICAL_VEHICLE_RECORD_DOCUMENT.SEQ_NO -> rec.seqNo,
+                HISTORICAL_VEHICLE_RECORD_DOCUMENT.STOP_ID -> rec.busStopId,
+                HISTORICAL_VEHICLE_RECORD_DOCUMENT.ARRIVAL_TIME -> rec.arrivalTime
               )
             }
       )
       val query = MongoDBObject(
         HISTORICAL_RECORDS_DOCUMENT.ROUTE_ID -> vehicleRecordedData.busRoute.id,
         HISTORICAL_RECORDS_DOCUMENT.DIRECTION -> vehicleRecordedData.busRoute.direction.toString,
-        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head._3,
+        HISTORICAL_RECORDS_DOCUMENT.STARTING_TIME -> vehicleRecordedData.stopArrivalRecords.head.arrivalTime,
         HISTORICAL_RECORDS_DOCUMENT.VEHICLE_ID -> vehicleRecordedData.vehicleID
       )
 

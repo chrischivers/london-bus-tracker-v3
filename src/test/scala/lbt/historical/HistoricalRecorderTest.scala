@@ -1,5 +1,7 @@
 package lbt.historical
 
+import akka.actor.Kill
+import lbt.StandardTestFixture
 import lbt.comon._
 import lbt.datasource.SourceLine
 import lbt.datasource.streaming.DataStreamProcessor
@@ -12,7 +14,7 @@ import scala.util.Random
 
 class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eventually {
 
-  type FixtureParam = HistoricalTestFixture
+  type FixtureParam = StandardTestFixture
 
   override implicit val patienceConfig = PatienceConfig(
     timeout = scaled(30 seconds),
@@ -20,13 +22,16 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
   )
 
   override def withFixture(test: OneArgTest) = {
-    val fixture = new HistoricalTestFixture
+    val fixture = new StandardTestFixture
     try test(fixture)
     finally {
-      fixture.dataStreamProcessingControllerReal.stop
       fixture.actorSystem.terminate().futureValue
+      fixture.testHistoricalRecordsCollectionConsumer.unbindAndDelete
       fixture.testDefinitionsCollection.db.dropDatabase
       fixture.testHistoricalRecordsCollection.db.dropDatabase
+      fixture.dataStreamProcessorForServlet.stop
+      fixture.dataStreamProcessorForServlet.processorControllerActor ! Kill
+      Thread.sleep(1000)
     }
   }
 
@@ -39,27 +44,22 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val invalidSourceLine = "[1,\"" + randomStop.id + "\",\"99XXXX\",2,\"Bromley North\",\"YX62DYN\"," + f.generateArrivalTime + "]"
     val testLines = List(validSourceline, invalidSourceLine)
 
-    val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
-    val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
+    val testDataSourceConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
+    val dataStreamProcessorTest = new DataStreamProcessor(testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
-
     eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe 2
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe 2
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 2
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 1
-      testLines should contain(sourceLineBackToLine(f.historicalSourceLineProcessor.lastProcessedSourceLine.get))
-      validSourceline shouldEqual validatedSourceLineBackToLine(f.historicalSourceLineProcessor.lastValidatedSourceLine.get)
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Line should be accepted if bus stop is in definitions and rejected if not") { f =>
 
     val routeDefFromDb = f.definitions(f.testBusRoute1)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
-
 
     val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
     val invalidSourceLine = "[1,\"" + "XXSTOP" + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
@@ -69,66 +69,37 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe 2
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe 2
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 2
-      testLines should contain (sourceLineBackToLine(f.historicalSourceLineProcessor.lastProcessedSourceLine.get))
-      validSourceline shouldEqual validatedSourceLineBackToLine(f.historicalSourceLineProcessor.lastValidatedSourceLine.get)
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 1
     }
-  }
-
-  test("Duplicate lines received within x seconds should not be processed") { f =>
-
-    val routeDefFromDb = f.definitions(f.testBusRoute1)
-    def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
-
-    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime + "]"
-    val testLines = List(validSourceline, validSourceline, validSourceline)
-
-    val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
-    val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
-
-    dataStreamProcessorTest.start
-    Thread.sleep(500)
     dataStreamProcessorTest.stop
-
-    eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe 3
-      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 3
-      testLines should contain (sourceLineBackToLine(f.historicalSourceLineProcessor.lastProcessedSourceLine.get))
-      validSourceline shouldEqual validatedSourceLineBackToLine(f.historicalSourceLineProcessor.lastValidatedSourceLine.get)
-      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 1
-    }
   }
 
   test("Lines received with arrival time in past should be ignored"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val arrivalTime = f.generateArrivalTime
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
 
     val splitLines = testLines.splitAt(testLines.size / 2)
-    val pastLine = List(splitLines._2.head.replace(arrivalTime.toString, (arrivalTime - 100000).toString))
+    val pastLine = List(splitLines._2.head.replace(splitLines._2.head.substring(splitLines._2.head.lastIndexOf(",") + 1, splitLines._2.head.lastIndexOf("]")), (System.currentTimeMillis() - 100000000).toString))
     val joinedLines = splitLines._1 ++ pastLine ++ splitLines._2.tail
 
-    val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
+    val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(joinedLines.toIterator))
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe joinedLines.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe joinedLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe joinedLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe joinedLines.size - 1
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
     }
+    dataStreamProcessorTest.stop
   }
 
   test("An actor should be created for each new vehicle received with a new route") { f=>
@@ -149,15 +120,14 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe 4
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe 4
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 4
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 4
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 3
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Vehicle actors should add incoming lines relating to arrival times to stop record"){f=>
@@ -170,16 +140,15 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLines.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
       f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.size shouldBe testLines.size
     }
+    dataStreamProcessorTest.stop
   }
 
 
@@ -198,16 +167,15 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesWithUpdated.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
       f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.apply(routeDefFromDb.head) shouldBe newArrivalTime
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Vehicle actors should persist record if stop arrival time information is complete and passes validation"){f=>
@@ -221,8 +189,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -230,17 +196,17 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLines.size
-      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
-      f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesProcessed.get().toInt shouldBe testLines.size
+      f.historicalSourceLineProcessor.numberSourceLinesValidated.get().toInt shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines.size
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
-
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Persisted record should be loaded with stop sequence in same order and with same values"){f=>
@@ -254,8 +220,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -263,17 +227,19 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLines.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe true
       val historicalRecord = f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head
       historicalRecord.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
     }
+    dataStreamProcessorTest.stop
   }
+
 
   test("Vehicle actors should not persist record if there is a gap in the sequence"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
@@ -289,22 +255,21 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
     }
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesWithMissing.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 0
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 0
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe false
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe false
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Vehicle actors should not persist record if the number of stops received falls below the minimum required"){f=>
@@ -320,22 +285,21 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
     }
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesLast4.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 0
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 0
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe false
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe false
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Vehicle actors should persist record if there is a gap at the beginning of the sequence (bus started midway through route)"){f=>
@@ -351,8 +315,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -360,11 +322,11 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesSecondHalf.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 1
@@ -372,6 +334,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id).splitAt(routeDefFromDb.size / 2)._2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.id == record.stopID)) shouldEqual f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.seqNo)
     }
+    dataStreamProcessorTest.stop
   }
 
   test("Multiple records should be persisted where the same bus on the same route makes the same journey after period of inactivity"){f=>
@@ -385,12 +348,15 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest1 = new DataStreamProcessor(testConfig1, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest1.start
-    Thread.sleep(500)
-    dataStreamProcessorTest1.stop
+
     Thread.sleep(7000)
 
     f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
     Thread.sleep(1000)
+    dataStreamProcessorTest1.stop
+    dataStreamProcessorTest1.processorControllerActor ! Kill
+    Thread.sleep(1000)
+
     val testLines2: List[String] = routeDefFromDb.map(busStop =>
       "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
@@ -398,8 +364,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest2 = new DataStreamProcessor(testConfig2, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest2.start
-    Thread.sleep(500)
-    dataStreamProcessorTest2.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -409,7 +373,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 2
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 2
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
@@ -417,6 +381,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg)(1).stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
     }
+    dataStreamProcessorTest2.stop
+
   }
 
   test("Only one record should be persisted if multiple persists are requested for the same bus making the same route at the same time"){f=>
@@ -434,8 +400,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
 
     dataStreamProcessorTest.start
-    Thread.sleep(500)
-    dataStreamProcessorTest.stop
 
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
@@ -443,60 +407,17 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
-      dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesDoubled.size
+      dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
+      f.testHistoricalRecordsCollection.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDB(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id)
     }
-  }
-
-  test("Vehicles should persist and be shut down after specified period of inactivity"){f =>
-    f.dataStreamProcessingControllerReal.stop
-    f.actorSystem.terminate().futureValue
-    f.testDefinitionsCollection.db.dropDatabase
-
-    val tempFixture = new HistoricalTestFixture(5000)
-
-    try {
-      val routeDefFromDb = tempFixture.definitions(tempFixture.testBusRoute1)
-      val vehicleReg = "V123456"
-
-      val testLines: List[String] = routeDefFromDb.map(busStop =>
-        "[1,\"" + busStop.id + "\",\"" + tempFixture.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + tempFixture.generateArrivalTime + "]")
-
-      val testLinesFirstHalf = testLines.splitAt(testLines.size / 2)._1
-
-      val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLinesFirstHalf.toIterator))
-      val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
-
-      dataStreamProcessorTest.start
-      Thread.sleep(500)
-      dataStreamProcessorTest.stop
-      Thread.sleep(7000) //Period of inactivity
-      val mockValidatedSourceLine = ValidatedSourceLine(tempFixture.testBusRoute1, routeDefFromDb.head, "direction", "V98765", System.currentTimeMillis())
-      tempFixture.historicalSourceLineProcessor.vehicleActorSupervisor ! mockValidatedSourceLine //A new line is needed to prompt the vehicle actor to clean up
-
-      eventually {
-        dataStreamProcessorTest.numberLinesProcessed shouldBe testLinesFirstHalf.size
-        tempFixture.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesFirstHalf.size
-        tempFixture.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesFirstHalf.size
-        tempFixture.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
-        tempFixture.testHistoricalRecordsCollection.numberInsertsRequested shouldBe 1
-        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
-        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute1).exists(result => result.busRoute == tempFixture.testBusRoute1) shouldBe true
-        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute1).count(result => result.busRoute == tempFixture.testBusRoute1) shouldBe 1
-        tempFixture.testHistoricalRecordsCollection.getHistoricalRecordFromDB(tempFixture.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesFirstHalf.size
-      }
-    } finally {
-      tempFixture.dataStreamProcessingControllerReal.stop
-      tempFixture.actorSystem.terminate().futureValue
-      tempFixture.testDefinitionsCollection.db.dropDatabase
-    }
+    dataStreamProcessorTest.stop
   }
 
   def sourceLineBackToLine(sourceLine: SourceLine): String = {

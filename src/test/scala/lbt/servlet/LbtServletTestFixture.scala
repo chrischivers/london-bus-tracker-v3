@@ -41,13 +41,12 @@ trait LbtServletTestFixture {
 
   val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(testMessagingConfig)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testDataSourceConfig, testHistoricalRecordsConfig, testDefinitionsCollection, historicalDbInsertPublisher)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsCollection, historicalDbInsertPublisher)
 
   val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem)
 
-
+  val vehicleReg = "V" + Random.nextInt(99999)
   testBusRoutes.foreach { route =>
-    val vehicleReg = "V" + Random.nextInt(99999)
     val arrivalTimeMultipliers = Stream.from(1).iterator
     def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
     implicit val formats = DefaultFormats
