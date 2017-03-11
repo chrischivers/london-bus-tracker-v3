@@ -22,6 +22,8 @@ trait DatabaseCollections {
   val numberInsertsCompleted: AtomicLong = new AtomicLong(0)
   val numberGetsRequested: AtomicLong = new AtomicLong(0)
   val numberDeletesRequested: AtomicLong = new AtomicLong(0)
+
+  def getStats = dBCollection.stats
 }
 
 

@@ -41,12 +41,6 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
   }
 
   def getBusRouteDefinitions(forceDBRefresh: Boolean = false): BusRouteDefinitions = {
-//    if (System.currentTimeMillis() - definitionsLastRefreshedFromDB > defConfig.definitionsCachedTime || definitionsCache.isEmpty || forceDBRefresh) {
-    //      logger.info("Updating definitions from DB")
-    //      definitionsCache = getBusRouteDefinitionsFromDB
-    //      definitionsLastRefreshedFromDB = System.currentTimeMillis()
-    //      definitionsCache
-    //    } else definitionsCache
     if (definitionsCache.isEmpty || forceDBRefresh) updateBusRouteDefinitionsFromDB
     definitionsCache
   }

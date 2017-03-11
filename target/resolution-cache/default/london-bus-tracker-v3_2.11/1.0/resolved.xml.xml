@@ -4,7 +4,7 @@
 		module="london-bus-tracker-v3_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170309222802"
+		publication="20170311111137"
 	>
 		<description>
 		london-bus-tracker-v3
@@ -55,5 +55,6 @@
 		<dependency org="org.scalatra" name="scalatra-specs2_2.11" rev="2.5.0" conf="test->default(compile)"/>
 		<dependency org="ch.qos.logback" name="logback-classic" rev="1.1.5" conf="runtime->default(compile)"/>
 		<dependency org="org.eclipse.jetty" name="jetty-webapp" rev="9.2.15.v20160210" conf="container->default(compile);compile->default(compile)"/>
+		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" conf="provided->default(compile)"/>
 	</dependencies>
 </ivy-module>

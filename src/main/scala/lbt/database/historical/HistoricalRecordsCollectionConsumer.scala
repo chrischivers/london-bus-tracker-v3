@@ -60,7 +60,6 @@ class ListeningActor(historicalRecordsCollection: HistoricalRecordsCollection) e
     case Delivery(consumerTag, envelope, properties, body) => {
       numberMessagesReceived.incrementAndGet()
       historicalRecordsCollection.insertHistoricalRecordIntoDB(parse(new String(body, "UTF-8")).extract[RecordedVehicleDataToPersist])
-      logger.info("Record to persist: " + parse(new String(body, "UTF-8")).extract[RecordedVehicleDataToPersist])
       sender ! Ack(envelope.getDeliveryTag)
     }
     case GetNumberMessagesConsumed => sender ! numberMessagesReceived.get()

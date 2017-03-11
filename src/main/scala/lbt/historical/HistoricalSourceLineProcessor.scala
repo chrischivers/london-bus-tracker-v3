@@ -39,7 +39,7 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     numberSourceLinesProcessed.incrementAndGet()
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-        case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+        case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
 //      cache.put(sourceLine)
   }

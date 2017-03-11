@@ -27,31 +27,45 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     <html>
       <body>
         <h1>Lbt Status</h1>
-        <h2>Bus Definitions</h2>
+        <h2>Bus Definitions Collection</h2>
         Number Inserts Requested = {busDefinitionsCollection.numberInsertsRequested.get()}<br />
         Number Inserts Completed = {busDefinitionsCollection.numberInsertsCompleted.get()}<br />
         Number Inserts Failed = {busDefinitionsCollection.numberInsertsFailed.get()}<br />
         Number Get Requests= {busDefinitionsCollection.numberGetsRequested.get()}<br />
         Number Delete Requests = {busDefinitionsCollection.numberDeletesRequested.get()}<br />
-      <br />
+
+        <h3>Database</h3>
+        Number of objects: {busDefinitionsCollection.getStats.getInt("count")}<br />
+        Average Object Size: {busDefinitionsCollection.getStats.getDouble("avgObjSize").toInt/1024} Kb}<br />
+        Records Size: {busDefinitionsCollection.getStats.getLong("size")/(1024 * 1024)} Mb<br />
+        Storage Size: {busDefinitionsCollection.getStats.getLong("storageSize")/(1024 * 1024)} Mb<br />
+        Number Indexes: {busDefinitionsCollection.getStats.getInt("nindexes")}<br />
+        Total Index Size: {busDefinitionsCollection.getStats.getLong("totalIndexSize")/(1024 * 1024)} Mb<br />
+
       <h2>Historical Records Collection</h2>
-        Number Insert Messages Published =
-        Number Insert Messages Consumed = {historicalRecordsCollectionConsumer.getNumberMessagesConsumed}
+        Number Insert Messages Published = {historicalDbInsertPublisher.numberMessagesPublished}<br />
+        Number Insert Messages Consumed = {Await.result(historicalRecordsCollectionConsumer.getNumberMessagesConsumed, 5 seconds)}<br />
         Number Inserts Requested = {historicalRecordsCollection.numberInsertsRequested.get()}<br />
         Number Inserts Completed = {historicalRecordsCollection.numberInsertsCompleted.get()}<br />
         Number Inserts Failed = {historicalRecordsCollection.numberInsertsFailed.get()}<br />
         Number Get Requests= {historicalRecordsCollection.numberGetsRequested.get()}<br />
         Number Delete Requests = {historicalRecordsCollection.numberDeletesRequested.get()}<br />
-      <br></br>
+        <h3>Database</h3>
+        Objects: {historicalRecordsCollection.getStats.getInt("count")}<br />
+        Average Object Size: {historicalRecordsCollection.getStats.getDouble("avgObjSize").toInt/1024} Kb}<br />
+        Records Size: {historicalRecordsCollection.getStats.getLong("size")/(1024 * 1024)} Mb<br />
+        Storage Size: {historicalRecordsCollection.getStats.getLong("storageSize")/(1024 * 1024)} Mb<br />
+        Number Indexes: {historicalRecordsCollection.getStats.getInt("nindexes")}<br />
+        Total Index Size: {historicalRecordsCollection.getStats.getLong("totalIndexSize")/(1024 * 1024)} Mb<br />
+
         <h2>Data Stream Processor</h2>
         Number Lines Processed = {Await.result(dataStreamProcessor.numberLinesProcessed, 5 seconds)}<br />
         Number Lines Processed Since Restart = {Await.result(dataStreamProcessor.numberLinesProcessedSinceRestart, 5 seconds)}<br />
-        <br></br>
         <h2>Historical Message Processor</h2>
         Number Lines Processed = {historicalMessageProcessor.numberSourceLinesProcessed.get()}<br />
         Number Lines Validated= {historicalMessageProcessor.numberSourceLinesValidated.get()}<br />
         Number of Vehicle Actors = {Await.result(historicalMessageProcessor.getCurrentActors, 5 seconds).size}<br />
-        <br />
+
       </body>
     </html>
   }
