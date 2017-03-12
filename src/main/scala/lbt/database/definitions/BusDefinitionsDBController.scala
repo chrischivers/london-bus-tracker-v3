@@ -22,21 +22,21 @@ object BusDefinitionsDBController extends StrictLogging {
         .map(seq => {
           MongoDBObject(
             BUS_STOP_SEQUENCE_DEFINITION.SEQUENCE_NO -> seq._2,
-            BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_ID -> seq._1.id,
-            BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_NAME -> seq._1.name,
+            BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_ID -> seq._1.id.value,
+            BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_NAME -> seq._1.name.value,
             BUS_STOP_SEQUENCE_DEFINITION.LONGITUDE -> seq._1.longitude,
             BUS_STOP_SEQUENCE_DEFINITION.LATITUDE -> seq._1.latitude)
 
         })
 
       val newRouteDefDoc = MongoDBObject(
-        BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID -> busRoute.id,
-        BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION -> busRoute.direction.toString,
+        BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID -> busRoute.id.value,
+        BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION -> busRoute.direction.value,
         BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE -> stopSequenceList)
 
       val query = MongoDBObject(
-        BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID -> busRoute.id,
-        BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION -> busRoute.direction.toString
+        BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID -> busRoute.id.value,
+        BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION -> busRoute.direction.value
       )
 
       col.update(query, newRouteDefDoc, upsert = true).wasAcknowledged()
@@ -48,14 +48,14 @@ object BusDefinitionsDBController extends StrictLogging {
       val cursor = col.find()
       cursor.map(routeDef => {
         BusRoute(
-          routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID).get,
-          routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION).get) ->
+          RouteID(routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID).get),
+          Direction(routeDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION).get)) ->
           routeDef.getAs[List[DBObject]](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE).get
             .sortBy(stopDef => stopDef.getAs[Int](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.SEQUENCE_NO))
             .map(stopDef => {
               BusStop(
-                stopDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_ID).get,
-                stopDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_NAME).get,
+                StopID(stopDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_ID).get),
+                StopName(stopDef.getAs[String](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.BUS_STOP_NAME).get),
                 stopDef.getAs[Double](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.LATITUDE).get,
                 stopDef.getAs[Double](BUS_ROUTE_DEFINITION_DOCUMENT.BUS_STOP_SEQUENCE_DEFINITION.LONGITUDE).get
               )

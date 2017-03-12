@@ -38,7 +38,7 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
   }
 
   test("Data stream should be opened and produce a stream of data") { f =>
-    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
+    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
     withClue("No data stream returned") {
       dataStreamProcessingControllerReal.start
 
@@ -51,7 +51,7 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
 
   test("Data Stream Processing Actor should close http connection and open new one if it restarts") { f =>
 
-    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
+    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
     implicit val futureTimeout = Timeout(FiniteDuration(10, TimeUnit.SECONDS))
 
     dataStreamProcessingControllerReal.start
@@ -74,15 +74,16 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
     dataStreamProcessingControllerReal.stop
 
     eventually(timeout(60 seconds)) {
-      val numberProcessedAfterRestart = dataStreamProcessingControllerReal.numberLinesProcessedSinceRestart.futureValue
-      numberProcessedAfterRestart should be > numberProcessedBeforeRestart
-      (numberProcessedAfterRestart + numberProcessedBeforeRestart) shouldEqual dataStreamProcessingControllerReal.numberLinesProcessed.futureValue
+      val numberProcessedSinceRestart = dataStreamProcessingControllerReal.numberLinesProcessedSinceRestart.futureValue
+      val totalNumberProcessed = dataStreamProcessingControllerReal.numberLinesProcessed.futureValue
+      totalNumberProcessed should be > numberProcessedBeforeRestart
+      (numberProcessedSinceRestart + numberProcessedBeforeRestart) + 1 shouldEqual totalNumberProcessed
     }
   }
 
   test("Data Stream Processor processes same number of messages as those queued") { f =>
 
-    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem)
+    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
     dataStreamProcessingControllerReal.start
     Thread.sleep(2000)
     dataStreamProcessingControllerReal.stop

@@ -4,7 +4,7 @@ import com.mongodb.casbah.Imports.{DBObject, _}
 import com.mongodb.casbah.MongoCollection
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.Commons.BusRouteDefinitions
-import lbt.comon.{BusRoute, BusStop, Commons}
+import lbt.comon._
 import lbt.database._
 import lbt.{ConfigLoader, DatabaseConfig, DefinitionsConfig}
 import net.liftweb.json.JsonAST.JArray
@@ -56,7 +56,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     logger.info("Refreshing bus route definitions from web")
 
     val allRoutesUrl = defConfig.sourceAllUrl
-    def getSingleRouteUrl(busRoute: BusRoute) = defConfig.sourceSingleUrl.replace("#RouteID#", busRoute.id).replace("#Direction#", busRoute.direction.toString)
+    def getSingleRouteUrl(busRoute: BusRoute) = defConfig.sourceSingleUrl.replace("#RouteID#", busRoute.id.value).replace("#Direction#", busRoute.direction.value)
     val allRouteJsonDataRaw = Source.fromURL(allRoutesUrl).mkString
     val updatedRouteList = parse(allRouteJsonDataRaw)
     val routeIDs = (updatedRouteList \ "id").extract[List[String]]
@@ -71,13 +71,13 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     busRoutes.foreach(route => {
       route._2.foreach(direction => {
         try {
-          val routeIDString = route._1._1.toUpperCase
-          val busRoute = BusRoute(routeIDString, direction)
+          val routeID = RouteID(route._1._1.toUpperCase)
+          val busRoute = BusRoute(routeID, Direction(direction))
           if((getBusRouteDefinitions().get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
             //TODO What if it is in DB but incomplete?
-            logger.info("skipping route " + routeIDString + " and direction " + direction + " as already in DB")
+            logger.info("skipping route " + routeID.value + " and direction " + direction + " as already in DB")
           } else {
-            logger.info("processing route " + routeIDString + ", direction " + direction)
+            logger.info("processing route " + routeID.value + ", direction " + direction)
             val singleRouteJsonDataRaw = Source.fromURL(getSingleRouteUrl(busRoute)).mkString
             val singleRouteJsonDataParsed = parse(singleRouteJsonDataRaw)
             val busStopSequence = ((singleRouteJsonDataParsed \ "stopPointSequences").extract[List[JValue]].head \ "stopPoint").extract[List[JValue]]
@@ -103,7 +103,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
         }
         val latitude = (busStop \ "lat").extractOpt[Double].getOrElse(throw new IllegalArgumentException("No Stop latitude value found in record"))
         val longitude = (busStop \ "lon").extractOpt[Double].getOrElse(throw new IllegalArgumentException("No Stop longitude value found in record"))
-        BusStop(id, stopName, latitude, longitude)
+        BusStop(StopID(id), StopName(stopName), latitude, longitude)
 
       })
     }

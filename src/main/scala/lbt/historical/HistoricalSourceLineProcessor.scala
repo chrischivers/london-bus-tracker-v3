@@ -7,7 +7,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt._
-import lbt.comon.{BusRoute, BusStop, Commons}
+import lbt.comon._
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 import lbt.datasource.SourceLine
@@ -18,11 +18,9 @@ import scala.concurrent.duration._
 import scalaz.Scalaz._
 import scalaz._
 
-case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleID: String, arrival_TimeStamp: Long)
+case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleReg: VehicleReg, arrival_TimeStamp: Long)
 
 class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends StrictLogging {
-
-//  val cache = new SourceLineCache(dataSourceConfig.cacheTimeToLiveSeconds)
 
   val numberSourceLinesProcessed: AtomicLong = new AtomicLong(0)
   val numberSourceLinesValidated: AtomicLong = new AtomicLong(0)
@@ -39,9 +37,8 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     numberSourceLinesProcessed.incrementAndGet()
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-        case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+        case Failure(e) => logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
-//      cache.put(sourceLine)
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
@@ -50,26 +47,21 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
   }
 
   def validateSourceLine(sourceLine: SourceLine): StringValidation[ValidatedSourceLine] = {
-    val busRoute = BusRoute(sourceLine.route, Commons.toDirection(sourceLine.direction))
+    val busRoute = BusRoute(RouteID(sourceLine.route), Commons.toDirection(sourceLine.direction))
 
     def validRouteAndStop (busRoute: BusRoute): StringValidation[BusStop] = {
       definitions.get(busRoute) match {
         case Some(stopList) => validStop(stopList)
-        case None => s"Route not defined in definitions. Route ID: ${busRoute.id}. Direction: ${busRoute.direction}".failureNel
+        case None => s"Route not defined in definitions. Route ID: ${busRoute.id.value}. Direction: ${busRoute.direction.value}".failureNel
       }
     }
 
     def validStop(busStopList: List[BusStop]): StringValidation[BusStop] = {
-      busStopList.find(stop => stop.id == sourceLine.stopID) match {
+      busStopList.find(stop => stop.id.value == sourceLine.stopID) match {
         case Some(busStop) => busStop.successNel
         case None => s"Bus Stop ${sourceLine.stopID} not defined in definitions for route ${sourceLine.route} and direction ${sourceLine.direction}".failureNel
       }
     }
-
-//    def nonDuplicateLine(): StringValidation[Unit] = {
-//      if (cache.contains(sourceLine)) "Duplicate Line Received recently".failureNel
-//      else ().successNel
-//    }
 
     def notOnIgnoreList(): StringValidation[Unit] = {
       ().successNel
@@ -81,10 +73,9 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     }
 
       (validRouteAndStop(busRoute)
-//      |@| nonDuplicateLine()
       |@| notOnIgnoreList()
       |@| isInPast()).tupled.map {
-        x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, sourceLine.vehicleID, sourceLine.arrival_TimeStamp)
+        x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, VehicleReg(sourceLine.vehicleID), sourceLine.arrival_TimeStamp)
       }
   }
 
@@ -93,37 +84,13 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     (vehicleActorSupervisor ? GetCurrentActors).mapTo[Map[String, ActorRef]]
   }
 
-  def getArrivalRecords(vehicleReg: String, busRoute: BusRoute) = {
+  def getArrivalRecords(vehicleReg: VehicleReg, busRoute: BusRoute) = {
     implicit val timeout = Timeout(10 seconds)
     for {
-      futureResult <- (vehicleActorSupervisor ? GetArrivalRecords(VehicleID(vehicleReg, busRoute))).mapTo[Future[Map[BusStop, Long]]]
+      futureResult <- (vehicleActorSupervisor ? GetArrivalRecords(VehicleActorID(vehicleReg, busRoute))).mapTo[Future[Map[BusStop, Long]]]
       listResult <- futureResult
     } yield listResult
   }
-
-//  def getCacheSize: Int = cache.size
-
-//  class SourceLineCache(timeToLiveSeconds: Int) {
-//    private var cache: Map[SourceLine, Long] = Map()
-//
-//    def put(sourceLine: SourceLine) = {
-//      cache += (sourceLine -> System.currentTimeMillis())
-//      cleanupCache
-//    }
-//
-//    def contains(sourceLine: SourceLine): Boolean = {
-//      cache.get(sourceLine).isDefined
-//    }
-//
-//    def size: Int = {
-//      cache.size
-//    }
-//
-//    private def cleanupCache = {
-//      val now = System.currentTimeMillis()
-//      cache = cache.filter(line => (now - line._2) < timeToLiveSeconds * 1000)
-//    }
-//  }
 }
 
 

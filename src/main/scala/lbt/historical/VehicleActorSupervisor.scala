@@ -5,7 +5,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt.{HistoricalRecordsConfig, MessagingConfig}
-import lbt.comon.BusRoute
+import lbt.comon.{BusRoute, VehicleReg}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 
@@ -13,14 +13,14 @@ import scala.concurrent.duration._
 
 case class GetCurrentActors()
 
-case class GetArrivalRecords(vehicleID: VehicleID)
+case class GetArrivalRecords(vehicleID: VehicleActorID)
 
 case class PersistToDB()
 
 case class PersistAndRemoveInactiveVehicles()
 
-case class VehicleID(vehicleReg: String, busRoute: BusRoute) {
-  override def toString: String = vehicleReg + "-" + busRoute.id + "-" + busRoute.direction
+case class VehicleActorID(vehicleReg: VehicleReg, busRoute: BusRoute) {
+  override def toString: String = vehicleReg.value + "-" + busRoute.id.value + "-" + busRoute.direction.value
 }
 
 class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsConfig: HistoricalRecordsConfig, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
@@ -29,17 +29,17 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
 
   def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter)
 
-  def active(currentActors: Map[VehicleID, (ActorRef, Long)], linesUntilCleanup: Int): Receive = {
+  def active(currentActors: Map[VehicleActorID, (ActorRef, Long)], linesUntilCleanup: Int): Receive = {
     case vsl: ValidatedSourceLine => {
-      val vehicleID = VehicleID(vsl.vehicleID, vsl.busRoute)
-      currentActors.get(vehicleID) match {
+      val vehicleActorID = VehicleActorID(vsl.vehicleReg, vsl.busRoute)
+      currentActors.get(vehicleActorID) match {
         case Some((actorRef, _)) =>
           actorRef ! vsl
-          context.become(active(currentActors + (vehicleID -> (actorRef, System.currentTimeMillis())), linesUntilCleanup - 1))
+          context.become(active(currentActors + (vehicleActorID -> (actorRef, System.currentTimeMillis())), linesUntilCleanup - 1))
         case None =>
-          val newVehicle = createNewActor(vehicleID)
+          val newVehicle = createNewActor(vehicleActorID)
           newVehicle ! vsl
-          context.become(active(currentActors + (vehicleID -> (newVehicle, System.currentTimeMillis())), linesUntilCleanup - 1))
+          context.become(active(currentActors + (vehicleActorID -> (newVehicle, System.currentTimeMillis())), linesUntilCleanup - 1))
       }
       if (linesUntilCleanup <= 0) self ! PersistAndRemoveInactiveVehicles
     }
@@ -65,8 +65,8 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
       context.become(active(currentActorsSplit._2, historicalRecordsConfig.numberOfLinesToCleanupAfter))
   }
 
-  def createNewActor(vehicleID: VehicleID): ActorRef = {
+  def createNewActor(vehicleActorID: VehicleActorID): ActorRef = {
    // logger.info(s"Creating new actor for vehicle ID $vehicleID")
-    context.actorOf(Props(classOf[VehicleActor], vehicleID.vehicleReg, historicalRecordsConfig, busDefinitionsCollection, historicalDbInsertPublisher), vehicleID.toString)
+    context.actorOf(Props(classOf[VehicleActor], vehicleActorID, historicalRecordsConfig, busDefinitionsCollection, historicalDbInsertPublisher), vehicleActorID.toString)
   }
 }

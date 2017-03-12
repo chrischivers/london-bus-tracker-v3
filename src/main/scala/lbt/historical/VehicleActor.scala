@@ -3,17 +3,17 @@ package lbt.historical
 import akka.actor.Actor
 import com.typesafe.scalalogging.StrictLogging
 import lbt.HistoricalRecordsConfig
-import lbt.comon.{BusRoute, BusStop}
+import lbt.comon._
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 
 import scalaz.Scalaz._
 import scalaz._
 
-case class StopDataRecordToPersist(seqNo: Int, busStopId: String, arrivalTime: Long)
-case class RecordedVehicleDataToPersist(vehicleID: String, busRoute: BusRoute, stopArrivalRecords: List[StopDataRecordToPersist])
+case class StopDataRecordToPersist(seqNo: SeqNo, busStopId: StopID, arrivalTime: Long)
+case class RecordedVehicleDataToPersist(vehicleReg: VehicleReg, busRoute: BusRoute, stopArrivalRecords: List[StopDataRecordToPersist])
 
-class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
+class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
   val name: String = self.path.name
   type StringValidation[T] = ValidationNel[String, T]
 
@@ -24,7 +24,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
              busStopDefinitionList: List[BusStop]): Receive = {
 
     case vsl: ValidatedSourceLine =>
-      assert(vsl.vehicleID + "-" + vsl.busRoute.id + "-" + vsl.busRoute.direction == name)
+      assert(vsl.vehicleReg.value + "-" + vsl.busRoute.id.value + "-" + vsl.busRoute.direction.value == name)
 
       if (route.isEmpty) {
         val stopDefinitionList = busDefinitionsCollection.getBusRouteDefinitions().apply(vsl.busRoute)
@@ -39,7 +39,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
       validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList) match {
         case Success(completeList) =>
           logger.info(s"Persisting data for vehicle $name to DB")
-          historicalDbInsertPublisher.publish(RecordedVehicleDataToPersist(vehicleReg, route.get, completeList))
+          historicalDbInsertPublisher.publish(RecordedVehicleDataToPersist(vehicleActorID.vehicleReg, route.get, completeList))
         case Failure(e) => //logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
       }
   }
@@ -80,7 +80,7 @@ class VehicleActor(vehicleReg: String, historicalRecordsConfig: HistoricalRecord
       |@| stopArrivalTimesAreIncremental).tupled
       .map(_ => orderedStopsList
         .filter(elem => elem._3.isDefined)
-        .map(elem => StopDataRecordToPersist(elem._1, elem._2.id, elem._3.get)))
+        .map(elem => StopDataRecordToPersist(SeqNo(elem._1 + 1), elem._2.id, elem._3.get)))
     }
 
   override def postStop: Unit = logger.info(s"Vehicle $name has been killed")

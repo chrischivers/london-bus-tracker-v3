@@ -2,7 +2,7 @@ package lbt.database.historical
 
 import com.typesafe.scalalogging.StrictLogging
 import lbt.DatabaseConfig
-import lbt.comon.{BusRoute, BusStop}
+import lbt.comon.{BusRoute, BusStop, StopID, VehicleReg}
 import lbt.database._
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.historical.RecordedVehicleDataToPersist
@@ -25,17 +25,17 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
       case Success(ack) => if (ack) numberInsertsCompleted.incrementAndGet()
       else {
         numberInsertsFailed.incrementAndGet()
-        logger.info(s"Insert VehicleRecorded data for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleID} was not acknowledged by DB")
+        logger.info(s"Insert VehicleRecorded data for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleReg} was not acknowledged by DB")
       }
       case Failure(e) =>
         numberInsertsFailed.incrementAndGet()
-        logger.info(s"Insert Bus Route Definition for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleID} was not completed successfully", e)
+        logger.info(s"Insert Bus Route Definition for route ${vehicleRecordedData.busRoute} and vehicle ${vehicleRecordedData.vehicleReg} was not completed successfully", e)
     }
   }
 
-  def getHistoricalRecordFromDB(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByBusRoute(busRoute: BusRoute, fromStopID: Option[StopID] = None, toStopID: Option[StopID] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[VehicleReg] = None): List[HistoricalRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
-    HistoricalRecordsDBController.loadHistoricalRecordsFromDB(dBCollection, busRoute)
+    HistoricalRecordsDBController.loadHistoricalRecordsFromDbByBusRoute(dBCollection, busRoute)
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
           .filter(stopRec =>
             (fromStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) >= rec.stopRecords.indexWhere(x => x.stopID == fromStopID.get)) &&
@@ -44,6 +44,33 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
               (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
       .filter(rec =>
         (vehicleReg.isEmpty || rec.vehicleID == vehicleReg.get) &&
+          rec.stopRecords.nonEmpty)
+  }
+
+  def getHistoricalRecordFromDbByVehicle(vehicleReg: VehicleReg, fromStopID: Option[StopID] = None, toStopID: Option[StopID] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None): List[HistoricalRecordFromDb] = {
+    numberGetsRequested.incrementAndGet()
+    HistoricalRecordsDBController.loadHistoricalRecordsFromDbByVehicle(dBCollection, vehicleReg)
+      .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
+        .filter(stopRec =>
+          (fromStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) >= rec.stopRecords.indexWhere(x => x.stopID == fromStopID.get)) &&
+            (toStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) <= rec.stopRecords.indexWhere(x => x.stopID == toStopID.get)) &&
+            (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
+            (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
+      .filter(rec =>
+        (busRoute.isEmpty || rec.busRoute == busRoute.get) &&
+          rec.stopRecords.nonEmpty)
+  }
+
+  def getHistoricalRecordFromDbByStop(stopID: StopID, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[VehicleReg] = None): List[HistoricalRecordFromDb] = {
+    numberGetsRequested.incrementAndGet()
+    HistoricalRecordsDBController.loadHistoricalRecordsFromDbByStop(dBCollection, stopID)
+      .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
+        .filter(stopRec =>
+            (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
+            (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
+      .filter(rec =>
+        (vehicleReg.isEmpty || rec.vehicleID == vehicleReg.get) &&
+        (busRoute.isEmpty || rec.busRoute == busRoute.get) &&
           rec.stopRecords.nonEmpty)
   }
 }

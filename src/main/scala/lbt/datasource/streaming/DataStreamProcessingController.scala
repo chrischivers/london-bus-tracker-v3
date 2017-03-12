@@ -1,6 +1,6 @@
 package lbt.datasource.streaming
 
-import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
 
 import akka.actor.SupervisorStrategy.{Escalate, Restart}
 import akka.actor.{Actor, ActorRef, ActorSystem, OneForOneStrategy, Props}
@@ -11,14 +11,17 @@ import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
 import lbt.historical.HistoricalSourceLineProcessor
 import lbt.{ConfigLoader, DataSourceConfig, MessagingConfig}
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 
-import scala.concurrent.{Future, TimeoutException}
+import scala.concurrent.{ExecutionContext, Future, TimeoutException}
 import scala.concurrent.duration._
 
 case class Next()
 case class Increment()
 case class GetNumberLinesProcessed()
 case class GetNumberLinesProcessedSinceRestart()
+case class GetTimeOfLastRestart()
+case class GetNumberOfRestarts()
 
 class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor) extends Actor with StrictLogging {
   logger.info("Data stream Processing Controller Actor Created")
@@ -26,8 +29,10 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
 //  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
   val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], historicalSourceLineProcessor, dataSourceConfig), "dataStreamProcessingActor")
 
-  var numberProcessed = new AtomicLong(0)
-  var numberProcessedSinceRestart = new AtomicLong(0)
+  val numberProcessed = new AtomicLong(0)
+  val numberProcessedSinceRestart = new AtomicLong(0)
+  val timeOfLastRestart = new AtomicLong(System.currentTimeMillis())
+  val numberOfRestarts = new AtomicInteger(0)
 
   implicit val timeout = Timeout(5 seconds) // needed for `?` below
 
@@ -41,6 +46,8 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
     case Increment => incrementNumberProcessed()
     case GetNumberLinesProcessed => sender ! numberProcessed.get()
     case GetNumberLinesProcessedSinceRestart => sender ! numberProcessedSinceRestart.get()
+    case GetTimeOfLastRestart => sender ! timeOfLastRestart.get()
+    case GetNumberOfRestarts => sender ! numberOfRestarts.get()
   }
 
   def incrementNumberProcessed() = {
@@ -57,12 +64,16 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
         logger.error("Incoming Stream TimeOut Exception. Restarting...")
         Thread.sleep(5000)
        numberProcessedSinceRestart.set(0)
+        timeOfLastRestart.set(System.currentTimeMillis())
+        numberOfRestarts.incrementAndGet()
         Restart
       case e: Exception =>
         logger.error("Exception. Incoming Stream Exception. Restarting...")
         e.printStackTrace()
         Thread.sleep(5000)
         numberProcessedSinceRestart.set(0)
+        timeOfLastRestart.set(System.currentTimeMillis())
+        numberOfRestarts.incrementAndGet()
         Restart
       case t =>
         super.supervisorStrategy.decider.applyOrElse(t, (_: Any) => Escalate)
@@ -70,8 +81,9 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
 
 }
 
-class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor)(implicit actorSystem: ActorSystem)  {
+class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor)(implicit actorSystem: ActorSystem, ec: ExecutionContext)  {
   implicit val timeout:Timeout = 20 seconds
+  val dtf: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")
   val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig, historicalSourceLineProcessor), "dataStreamProcessingController")
 
   def start = processorControllerActor ! Start
@@ -84,5 +96,16 @@ class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: 
 
   def numberLinesProcessedSinceRestart: Future[Long] = {
     (processorControllerActor ? GetNumberLinesProcessedSinceRestart).mapTo[Long]
+  }
+
+  def numberOfRestarts: Future[Int] = {
+    (processorControllerActor ? GetNumberOfRestarts).mapTo[Int]
+  }
+
+  def timeOfLastRestart: Future[String] = {
+    for {
+      timeOfRestart <- (processorControllerActor ? GetTimeOfLastRestart).mapTo[Long]
+      formattedDate = dtf.print(timeOfRestart)
+    } yield formattedDate
   }
 }
