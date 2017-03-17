@@ -101,8 +101,8 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
                   ("busStop" ->
-                    ("stopID" -> stopRec.stopID) ~
-                    ("stopName" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse("N/A")) ~
+                    ("id" -> stopRec.stopID) ~
+                    ("name" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse("N/A")) ~
                     ("longitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
                     ("latitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.latitude).getOrElse(0.0))
                     ) ~
