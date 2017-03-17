@@ -61,15 +61,14 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
   override val supervisorStrategy =
     OneForOneStrategy(loggingEnabled = false) {
       case e: TimeoutException =>
-        logger.error("Incoming Stream TimeOut Exception. Restarting...")
+        logger.error("Incoming Stream TimeOut Exception. Restarting...", e)
         Thread.sleep(5000)
        numberProcessedSinceRestart.set(0)
         timeOfLastRestart.set(System.currentTimeMillis())
         numberOfRestarts.incrementAndGet()
         Restart
       case e: Exception =>
-        logger.error("Exception. Incoming Stream Exception. Restarting...")
-        e.printStackTrace()
+        logger.error("Exception. Incoming Stream Exception. Restarting...", e)
         Thread.sleep(5000)
         numberProcessedSinceRestart.set(0)
         timeOfLastRestart.set(System.currentTimeMillis())

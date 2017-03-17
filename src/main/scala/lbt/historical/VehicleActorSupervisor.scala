@@ -5,7 +5,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt.{HistoricalRecordsConfig, MessagingConfig}
-import lbt.comon.{BusRoute, VehicleReg}
+import lbt.comon.{BusRoute}
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.HistoricalRecordsCollection
 
@@ -19,8 +19,8 @@ case class PersistToDB()
 
 case class PersistAndRemoveInactiveVehicles()
 
-case class VehicleActorID(vehicleReg: VehicleReg, busRoute: BusRoute) {
-  override def toString: String = vehicleReg.value + "-" + busRoute.id.value + "-" + busRoute.direction.value
+case class VehicleActorID(vehicleReg: String, busRoute: BusRoute) {
+  override def toString: String = vehicleReg + "-" + busRoute.id + "-" + busRoute.direction
 }
 
 class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsConfig: HistoricalRecordsConfig, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {

@@ -2,7 +2,7 @@ package lbt.servlet
 
 import akka.actor.ActorSystem
 import lbt.ConfigLoader
-import lbt.comon.{BusRoute, Direction, RouteID, VehicleReg}
+import lbt.comon.BusRoute
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
@@ -31,7 +31,7 @@ trait LbtServletTestFixture {
 
   val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig, testDefinitionsCollection)
 
-  val testBusRoutes = List(BusRoute(RouteID("3"), Direction("outbound")), BusRoute(RouteID("3"), Direction("inbound"))) //TODO include more randomisation on routes
+  val testBusRoutes = List(BusRoute("3", "outbound"), BusRoute("3", "inbound")) //TODO include more randomisation on routes
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes))
 
   Thread.sleep(1000)
@@ -46,7 +46,7 @@ trait LbtServletTestFixture {
 
   val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem, executionContext)
 
-  val vehicleReg = VehicleReg("V" + Random.nextInt(99999))
+  val vehicleReg = "V" + Random.nextInt(99999)
   testBusRoutes.foreach { route =>
     val arrivalTimeMultipliers = Stream.from(1).iterator
     def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
@@ -54,7 +54,7 @@ trait LbtServletTestFixture {
 
     println("definitions: " + definitions)
     definitions(route).foreach(busStop => {
-      val message = SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction.value) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
+      val message = SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
       historicalSourceLineProcessor.processSourceLine(message)
     })
   }

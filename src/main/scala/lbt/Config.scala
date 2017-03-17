@@ -2,7 +2,7 @@ package lbt
 
 import com.typesafe.config.ConfigFactory
 
-case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int, timeWindowToAcceptLines: Int, simulationIterator: Option[Iterator[String]] = None)
+case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int, timeWindowToAcceptLines: Int, numberEmptyIteratorCasesBeforeRestart: Int, simulationIterator: Option[Iterator[String]] = None)
 
 case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, definitionsCachedTime: Int)
 
@@ -41,7 +41,8 @@ object ConfigLoader {
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-lines-disregarded"),
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "wait-time-after-close"),
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "cache-time-to-live-seconds"),
-        defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "time-window-to-accept-lines")
+        defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "time-window-to-accept-lines"),
+        defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-empty-iterator-cases-before-restart")
       ),
       DatabaseConfig(
         defaultConfigFactory.getString(dataBaseParamsPrefix + "database-name"),

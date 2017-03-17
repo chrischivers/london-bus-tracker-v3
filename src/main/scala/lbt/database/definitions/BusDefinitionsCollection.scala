@@ -56,7 +56,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     logger.info("Refreshing bus route definitions from web")
 
     val allRoutesUrl = defConfig.sourceAllUrl
-    def getSingleRouteUrl(busRoute: BusRoute) = defConfig.sourceSingleUrl.replace("#RouteID#", busRoute.id.value).replace("#Direction#", busRoute.direction.value)
+    def getSingleRouteUrl(busRoute: BusRoute) = defConfig.sourceSingleUrl.replace("#RouteID#", busRoute.id).replace("#Direction#", busRoute.direction)
     val allRouteJsonDataRaw = Source.fromURL(allRoutesUrl).mkString
     val updatedRouteList = parse(allRouteJsonDataRaw)
     val routeIDs = (updatedRouteList \ "id").extract[List[String]]
@@ -65,19 +65,19 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     val directions = routeSection.map(x => (x \ "direction")).map(y => y.extractOpt[List[String]].getOrElse(List(y.extract[String])).toSet)
 
     val allRoutes: Seq[((String, String), Set[String])] = routeIDs zip modeNames zip directions
-    val busRoutes: Seq[((String, String), Set[String])] = allRoutes.filter(x => x._1._2 == "bus") //.filter(x => x._1._1.as[String] == "3")
+    val busRoutes: Seq[((String, String), Set[String])] = allRoutes.filter(x => x._1._2 == "bus")
     numberToProcess = busRoutes.foldLeft(0)((acc, x) => acc + x._2.size)
     logger.info(s"number of routes to process: $numberToProcess")
     busRoutes.foreach(route => {
       route._2.foreach(direction => {
         try {
-          val routeID = RouteID(route._1._1.toUpperCase)
-          val busRoute = BusRoute(routeID, Direction(direction))
+          val routeID = route._1._1.toUpperCase
+          val busRoute = BusRoute(routeID, direction)
           if((getBusRouteDefinitions().get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
             //TODO What if it is in DB but incomplete?
-            logger.info("skipping route " + routeID.value + " and direction " + direction + " as already in DB")
+            logger.info("skipping route " + routeID + " and direction " + direction + " as already in DB")
           } else {
-            logger.info("processing route " + routeID.value + ", direction " + direction)
+            logger.info("processing route " + routeID + ", direction " + direction)
             val singleRouteJsonDataRaw = Source.fromURL(getSingleRouteUrl(busRoute)).mkString
             val singleRouteJsonDataParsed = parse(singleRouteJsonDataRaw)
             val busStopSequence = ((singleRouteJsonDataParsed \ "stopPointSequences").extract[List[JValue]].head \ "stopPoint").extract[List[JValue]]
@@ -103,7 +103,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
         }
         val latitude = (busStop \ "lat").extractOpt[Double].getOrElse(throw new IllegalArgumentException("No Stop latitude value found in record"))
         val longitude = (busStop \ "lon").extractOpt[Double].getOrElse(throw new IllegalArgumentException("No Stop longitude value found in record"))
-        BusStop(StopID(id), StopName(stopName), latitude, longitude)
+        BusStop(id, stopName, latitude, longitude)
 
       })
     }

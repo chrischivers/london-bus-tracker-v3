@@ -2,7 +2,7 @@ package lbt.database.historical
 
 import com.typesafe.scalalogging.StrictLogging
 import lbt.DatabaseConfig
-import lbt.comon.{BusRoute, BusStop, StopID, VehicleReg}
+import lbt.comon.{BusRoute, BusStop}
 import lbt.database._
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.historical.RecordedVehicleDataToPersist
@@ -33,7 +33,7 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
     }
   }
 
-  def getHistoricalRecordFromDbByBusRoute(busRoute: BusRoute, fromStopID: Option[StopID] = None, toStopID: Option[StopID] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[VehicleReg] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByBusRoute(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
     HistoricalRecordsDBController.loadHistoricalRecordsFromDbByBusRoute(dBCollection, busRoute)
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
@@ -47,7 +47,7 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
           rec.stopRecords.nonEmpty)
   }
 
-  def getHistoricalRecordFromDbByVehicle(vehicleReg: VehicleReg, fromStopID: Option[StopID] = None, toStopID: Option[StopID] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByVehicle(vehicleReg: String, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None): List[HistoricalRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
     HistoricalRecordsDBController.loadHistoricalRecordsFromDbByVehicle(dBCollection, vehicleReg)
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
@@ -61,7 +61,7 @@ class HistoricalRecordsCollection(dbConfig: DatabaseConfig, busDefinitionsCollec
           rec.stopRecords.nonEmpty)
   }
 
-  def getHistoricalRecordFromDbByStop(stopID: StopID, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[VehicleReg] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByStop(stopID: String, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
     HistoricalRecordsDBController.loadHistoricalRecordsFromDbByStop(dBCollection, stopID)
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords

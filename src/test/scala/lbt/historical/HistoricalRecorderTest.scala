@@ -2,7 +2,6 @@ package lbt.historical
 
 import akka.actor.Kill
 import lbt.StandardTestFixture
-import lbt.comon.{VehicleReg, _}
 import lbt.datasource.SourceLine
 import lbt.datasource.streaming.DataStreamProcessor
 import org.scalatest.Matchers._
@@ -38,8 +37,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val routeDefFromDb = f.definitions(f.testBusRoute1)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
 
-    val validSourceline = "[1,\"" + randomStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime + "]"
-    val invalidSourceLine = "[1,\"" + randomStop.id.value + "\",\"99XXXX\",2,\"Bromley North\",\"YX62DYN\"," + f.generateArrivalTime + "]"
+    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime + "]"
+    val invalidSourceLine = "[1,\"" + randomStop.id + "\",\"99XXXX\",2,\"Bromley North\",\"YX62DYN\"," + f.generateArrivalTime + "]"
     val testLines = List(validSourceline, invalidSourceLine)
 
     val testDataSourceConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
@@ -59,8 +58,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val routeDefFromDb = f.definitions(f.testBusRoute1)
     def randomStop = routeDefFromDb(Random.nextInt(routeDefFromDb.size - 1))
 
-    val validSourceline = "[1,\"" + randomStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
-    val invalidSourceLine = "[1,\"" + "XXSTOP" + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
+    val validSourceline = "[1,\"" + randomStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
+    val invalidSourceLine = "[1,\"" + "XXSTOP" + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"SampleReg\"," + f.generateArrivalTime  + "]"
     val testLines = List(validSourceline, invalidSourceLine)
 
     val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
@@ -80,7 +79,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val routeDefFromDb = f.definitions(f.testBusRoute1)
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
 
     val splitLines = testLines.splitAt(testLines.size / 2)
     val pastLine = List(splitLines._2.head.replace(splitLines._2.head.substring(splitLines._2.head.lastIndexOf(",") + 1, splitLines._2.head.lastIndexOf("]")), (System.currentTimeMillis() - 100000000).toString))
@@ -107,10 +106,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     def randomStopRoute1 = routeDef1FromDb(Random.nextInt(routeDef1FromDb.size - 1))
     def randomStopRoute2 = routeDef2FromDb(Random.nextInt(routeDef2FromDb.size - 1))
 
-    val validSourceline1 = "[1,\"" + randomStopRoute1.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]"
-    val validSourceline2 = "[1,\"" + randomStopRoute1.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]"
-    val validSourceline3 = "[1,\"" + randomStopRoute1.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"V23456\"," + f.generateArrivalTime + "]"
-    val validSourceline4 = "[1,\"" + randomStopRoute2.id.value + "\",\"" + f.testBusRoute2.id.value + "\",2,\"Any Place\",\"V23456\"," + f.generateArrivalTime + "]"
+    val validSourceline1 = "[1,\"" + randomStopRoute1.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]"
+    val validSourceline2 = "[1,\"" + randomStopRoute1.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]"
+    val validSourceline3 = "[1,\"" + randomStopRoute1.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V23456\"," + f.generateArrivalTime + "]"
+    val validSourceline4 = "[1,\"" + randomStopRoute2.id + "\",\"" + f.testBusRoute2.id + "\",2,\"Any Place\",\"V23456\"," + f.generateArrivalTime + "]"
 
     val testLines = List(validSourceline1, validSourceline2, validSourceline3, validSourceline4)
 
@@ -132,7 +131,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val routeDefFromDb = f.definitions(f.testBusRoute1)
 
     val testLines = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + f.generateArrivalTime + "]")
 
     val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, f.executionContext)
@@ -144,7 +143,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
-      f.historicalSourceLineProcessor.getArrivalRecords(VehicleReg("V123456"), f.testBusRoute1).futureValue.size shouldBe testLines.size
+      f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.size shouldBe testLines.size
     }
     dataStreamProcessorTest.stop
   }
@@ -155,7 +154,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     val arrivalTime = System.currentTimeMillis() + 100000
 
     val testLines = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"V123456\"," + arrivalTime + "]")
 
     val newArrivalTime = arrivalTime - 50000
     val newRecord = testLines.head.replace(arrivalTime.toString, newArrivalTime.toString)
@@ -171,17 +170,17 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
-      f.historicalSourceLineProcessor.getArrivalRecords(VehicleReg("V123456"), f.testBusRoute1).futureValue.apply(routeDefFromDb.head) shouldBe newArrivalTime
+      f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.apply(routeDefFromDb.head) shouldBe newArrivalTime
     }
     dataStreamProcessorTest.stop
   }
 
   test("Vehicle actors should persist record if stop arrival time information is complete and passes validation"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, f.executionContext)
@@ -209,10 +208,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
   test("Persisted record should be loaded with stop sequence in same order and with same values"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testConfig = f.testDataSourceConfig.copy(simulationIterator = Some(testLines.toIterator))
     val dataStreamProcessorTest = new DataStreamProcessor(testConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, f.executionContext)
@@ -241,10 +240,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
   test("Vehicle actors should not persist record if there is a gap in the sequence"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val splitTestLines = testLines.splitAt(testLines.size / 2)
     val testLinesWithMissing = splitTestLines._1 ++ splitTestLines._2.tail
@@ -272,10 +271,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
   test("Vehicle actors should not persist record if the number of stops received falls below the minimum required"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testLinesLast4 = testLines.takeRight(4)
 
@@ -302,10 +301,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
   test("Vehicle actors should persist record if there is a gap at the beginning of the sequence (bus started midway through route)"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testLinesSecondHalf = testLines.splitAt(testLines.size / 2)._2
 
@@ -330,17 +329,17 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 1
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
       f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.id).splitAt(routeDefFromDb.size / 2)._2
-      f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => SeqNo(routeDefFromDb.indexWhere(x => x.id == record.stopID) + 1)) shouldEqual f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.seqNo)
+      f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.id == record.stopID) + 1) shouldEqual f.testHistoricalRecordsCollection.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.seqNo)
     }
     dataStreamProcessorTest.stop
   }
 
   test("Multiple records should be persisted where the same bus on the same route makes the same journey after period of inactivity"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines1: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testConfig1 = f.testDataSourceConfig.copy(simulationIterator = Some(testLines1.toIterator))
     val dataStreamProcessorTest1 = new DataStreamProcessor(testConfig1, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, f.executionContext)
@@ -356,7 +355,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     Thread.sleep(1000)
 
     val testLines2: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testConfig2 = f.testDataSourceConfig.copy(simulationIterator = Some(testLines2.toIterator))
     val dataStreamProcessorTest2 = new DataStreamProcessor(testConfig2, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, f.executionContext)
@@ -385,10 +384,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
   test("Only one record should be persisted if multiple persists are requested for the same bus making the same route at the same time"){f=>
     val routeDefFromDb = f.definitions(f.testBusRoute1)
-    val vehicleReg = VehicleReg("V123456")
+    val vehicleReg = "V123456"
 
     val testLines1: List[String] = routeDefFromDb.map(busStop =>
-      "[1,\"" + busStop.id.value + "\",\"" + f.testBusRoute1.id.value + "\",1,\"Any Place 1\",\"" + vehicleReg.value + "\"," + f.generateArrivalTime + "]")
+      "[1,\"" + busStop.id + "\",\"" + f.testBusRoute1.id + "\",1,\"Any Place 1\",\"" + vehicleReg + "\"," + f.generateArrivalTime + "]")
 
     val testLines2: List[String] = testLines1.map(line => line.replace("Any Place 1", "Any Place 2"))
 
@@ -426,6 +425,6 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       case "outbound" => 1
       case "inbound" => 2
     }
-    "[1,\"" + sourceLine.busStop.id.value + "\",\"" + sourceLine.busRoute.id.value + "\"," + directionToInt(sourceLine.busRoute.direction.value) + ",\"" + sourceLine.destinationText + "\",\"" + sourceLine.vehicleReg.value + "\"," + sourceLine.arrival_TimeStamp + "]"
+    "[1,\"" + sourceLine.busStop.id + "\",\"" + sourceLine.busRoute.id + "\"," + directionToInt(sourceLine.busRoute.direction) + ",\"" + sourceLine.destinationText + "\",\"" + sourceLine.vehicleReg + "\"," + sourceLine.arrival_TimeStamp + "]"
   }
 }

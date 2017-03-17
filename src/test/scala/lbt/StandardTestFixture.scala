@@ -1,7 +1,7 @@
 package lbt
 
 import akka.actor.ActorSystem
-import lbt.comon.{BusRoute, Direction, RouteID}
+import lbt.comon.BusRoute
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsCollection
 import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
@@ -29,8 +29,8 @@ class StandardTestFixture extends ScalatraSuite {
   val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
   val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig, testDefinitionsCollection)
 
-  val testBusRoute1 = BusRoute(RouteID("3"), Direction("outbound")) //TODO include more randomisation on routes
-  val testBusRoute2 = BusRoute(RouteID("3"), Direction("inbound"))
+  val testBusRoute1 = BusRoute("3", "outbound") //TODO include more randomisation on routes
+  val testBusRoute2 = BusRoute("3", "inbound")
   val getOnlyList = List(testBusRoute1, testBusRoute2)
   testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList))
 

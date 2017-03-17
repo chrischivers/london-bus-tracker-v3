@@ -37,37 +37,43 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
   }
 
   get("/routelist") {
-    compactRender(busDefinitionsCollection.getBusRouteDefinitions().keys.toList.map(key =>
-      ("id" -> key.id.value) ~ ("direction" -> key.direction.value)))
+    compactRender(busDefinitionsCollection.getBusRouteDefinitions().map(route =>
+      ("id" -> route._1.id) ~ ("direction" -> route._1.direction) ~ ("towards" -> route._2.last.name)))
   }
 
   get("/stoplist/:route/:direction") {
-    val busRoute = BusRoute(RouteID(params("route")), Direction(params("direction")))
+    val busRoute = BusRoute(params("route"), params("direction"))
     busDefinitionsCollection.getBusRouteDefinitions().get(busRoute) match {
       case Some(stops) => compactRender(stops map (stop =>
-        ("id" -> stop.id.value) ~ ("name" -> stop.name.value) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
+        ("id" -> stop.id) ~ ("name" -> stop.name) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
       case None => NotFound(s"The route $busRoute could not be found")
     }
   }
 
   get("/busroute/:route/:direction") {
-    val busRoute = BusRoute(RouteID(params("route")), Direction(params("direction")))
-    val fromStopID = params.get("fromStopID").map(x => StopID(x))
-    val toStopID = params.get("toStopID").map(x => StopID(x))
+    val busRoute = BusRoute(params("route"), params("direction"))
+    val fromStopID = params.get("fromStopID")
+    val toStopID = params.get("toStopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
-    val vehicleReg = params.get("vehicleID").map(x => VehicleReg(x))
+    val vehicleReg = params.get("vehicleID")
     val definitions = busDefinitionsCollection.getBusRouteDefinitions()(busRoute)
 
-    def getStopName(stopID: StopID): Option[StopName] = definitions.find(x => x.id == stopID).map(_.name)
+    def getBusStop(stopID: String): Option[BusStop] = definitions.find(x => x.id == stopID)
 
     if (validateBusRoute(Some(busRoute))) {
       if (validateFromToStops(Some(busRoute), fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
           compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), vehicleReg).map { rec =>
-            ("busRoute" -> ("id" -> rec.busRoute.id.value) ~ ("direction" -> rec.busRoute.direction.value)) ~ ("vehicleID" -> rec.vehicleID.value) ~ ("stopRecords" ->
+            ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
-                ("seqNo" -> stopRec.seqNo.value) ~ ("stopID" -> stopRec.stopID.value) ~ ("stopName" -> getStopName(stopRec.stopID).getOrElse(StopName("N/A")).value) ~ ("arrivalTime" -> stopRec.arrivalTime)))
+                ("seqNo" -> stopRec.seqNo) ~
+                  ("busStop" ->
+                    ("stopID" -> stopRec.stopID) ~
+                    ("stopName" -> getBusStop(stopRec.stopID).map(_.name).getOrElse("N/A")) ~
+                      ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude)) ~
+                      ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude)
+                  ) ~ ("arrivalTime" -> stopRec.arrivalTime))))
           })
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
       } else NotFound(s"No records found for bus route $busRoute, from stop: $fromStopID and to stop: $toStopID")
@@ -75,15 +81,15 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
   }
 
   get("/vehicle/:vehicleID") {
-    val vehicleReg = VehicleReg(params("vehicleID"))
-    val fromStopID = params.get("fromStopID").map(x => StopID(x))
-    val toStopID = params.get("toStopID").map(x => StopID(x))
+    val vehicleReg = params("vehicleID")
+    val fromStopID = params.get("fromStopID")
+    val toStopID = params.get("toStopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
     val busRoute = for {
       route <- params.get("route")
       direction <- params.get("direction")
-      busRoute = BusRoute(RouteID(route), Direction(direction))
+      busRoute = BusRoute(route, direction)
     } yield busRoute
 
 
@@ -91,11 +97,15 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
       if (validateFromToStops(busRoute, fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
           compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute).map { rec =>
-            ("busRoute" -> ("id" -> rec.busRoute.id.value) ~ ("direction" -> rec.busRoute.direction.value)) ~ ("vehicleID" -> rec.vehicleID.value) ~ ("stopRecords" ->
+            ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
-                ("seqNo" -> stopRec.seqNo.value) ~
-                  ("stopID" -> stopRec.stopID.value) ~
-                  ("stopName" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse(StopName("N/A")).value) ~
+                ("seqNo" -> stopRec.seqNo) ~
+                  ("busStop" -> (
+                    ("stopID" -> stopRec.stopID) ~
+                      ("stopName" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse("N/A")) ~
+                      ("longitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.longitude).getOrElse(0)) ~
+                      ("latitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.latitude).getOrElse(0))
+                    )) ~
                   ("arrivalTime" -> stopRec.arrivalTime)))
           })
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
@@ -104,27 +114,33 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
   }
 
   get("/stop/:stopID") {
-    val stopID = StopID(params("stopID"))
+    val stopID = params("stopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
-    val vehicleReg = params.get("vehicleID").map(x => VehicleReg(x))
+    val vehicleReg = params.get("vehicleID")
     val busRoute = for {
       route <- params.get("route")
       direction <- params.get("direction")
-      busRoute = BusRoute(RouteID(route), Direction(direction))
+      busRoute = BusRoute(route, direction)
     } yield busRoute
-
 
     if (validateBusRoute(busRoute)) {
       if (validateStopID(stopID)) {
         if (validateFromToTime(fromTime, toTime)) {
+
+          val stopDetails = busDefinitionsCollection.getBusRouteDefinitions().find(route => route._2.exists(y => y.id == stopID)).head._2.find(stop => stop.id == stopID).get
+
           compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
-            ("busRoute" -> ("id" -> rec.busRoute.id.value) ~ ("direction" -> rec.busRoute.direction.value)) ~ ("vehicleID" -> rec.vehicleID.value) ~ ("stopRecords" ->
+            ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
-                ("seqNo" -> stopRec.seqNo.value) ~
-                  ("stopID" -> stopRec.stopID.value) ~
-                  ("stopName" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse(StopName("N/A")).value) ~
-                  ("arrivalTime" -> stopRec.arrivalTime)))
+                ("seqNo" -> stopRec.seqNo) ~
+                  ("busStop" -> (
+                  ("stopID" -> stopDetails.id) ~
+                  ("stopName" -> stopDetails.name) ~
+                  ("longitude" -> stopDetails.longitude) ~
+                  ("latitude" -> stopDetails.latitude)
+                    )) ~
+                ("arrivalTime" -> stopRec.arrivalTime)))
           })
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
       } else NotFound(s"No records found for stopID: $stopID")
@@ -188,7 +204,7 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     } else true
   }
 
-  private def validateFromToStops(busRoute: Option[BusRoute], fromStopID: Option[StopID], toStopID: Option[StopID]): Boolean = {
+  private def validateFromToStops(busRoute: Option[BusRoute], fromStopID: Option[String], toStopID: Option[String]): Boolean = {
     if (busRoute.isDefined) {
       val definition = busDefinitionsCollection.getBusRouteDefinitions()(busRoute.get)
       if (fromStopID.isDefined && toStopID.isDefined) {
@@ -203,7 +219,7 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     } else true
   }
 
-  private def validateStopID(stopID: StopID): Boolean = {
+  private def validateStopID(stopID: String): Boolean = {
     busDefinitionsCollection.getBusRouteDefinitions().exists(definition =>
       definition._2.exists(stop => stop.id == stopID)
     )
