@@ -71,8 +71,8 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
                   ("busStop" ->
                     ("stopID" -> stopRec.stopID) ~
                     ("stopName" -> getBusStop(stopRec.stopID).map(_.name).getOrElse("N/A")) ~
-                      ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude)) ~
-                      ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude)
+                      ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
+                      ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude).getOrElse((0.0))
                   ) ~ ("arrivalTime" -> stopRec.arrivalTime))))
           })
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
@@ -100,12 +100,12 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
             ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
-                  ("busStop" -> (
+                  ("busStop" ->
                     ("stopID" -> stopRec.stopID) ~
-                      ("stopName" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse("N/A")) ~
-                      ("longitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.longitude).getOrElse(0)) ~
-                      ("latitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.latitude).getOrElse(0))
-                    )) ~
+                    ("stopName" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse("N/A")) ~
+                    ("longitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
+                    ("latitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.latitude).getOrElse(0.0))
+                    ) ~
                   ("arrivalTime" -> stopRec.arrivalTime)))
           })
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
