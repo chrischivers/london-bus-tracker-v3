@@ -69,8 +69,8 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
                   ("busStop" ->
-                    ("stopID" -> stopRec.stopID) ~
-                    ("stopName" -> getBusStop(stopRec.stopID).map(_.name).getOrElse("N/A")) ~
+                    ("id" -> stopRec.stopID) ~
+                    ("name" -> getBusStop(stopRec.stopID).map(_.name).getOrElse("N/A")) ~
                       ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
                       ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude).getOrElse(0.0))
                   ) ~ ("arrivalTime" -> stopRec.arrivalTime)))
@@ -128,20 +128,22 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
       if (validateStopID(stopID)) {
         if (validateFromToTime(fromTime, toTime)) {
 
-          val stopDetails = busDefinitionsCollection.getBusRouteDefinitions().find(route => route._2.exists(y => y.id == stopID)).head._2.find(stop => stop.id == stopID).get
-
-          compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
-            ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
-              rec.stopRecords.map(stopRec =>
-                ("seqNo" -> stopRec.seqNo) ~
-                  ("busStop" -> (
-                  ("stopID" -> stopDetails.id) ~
-                  ("stopName" -> stopDetails.name) ~
-                  ("longitude" -> stopDetails.longitude) ~
-                  ("latitude" -> stopDetails.latitude)
-                    )) ~
-                ("arrivalTime" -> stopRec.arrivalTime)))
-          })
+          busDefinitionsCollection.getBusRouteDefinitions().flatMap(x => x._2).find(stop => stop.id == stopID) match {
+            case Some(stopDetails) =>
+              compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
+                ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
+                  rec.stopRecords.map(stopRec =>
+                    ("seqNo" -> stopRec.seqNo) ~
+                      ("busStop" -> (
+                        ("id" -> stopDetails.id) ~
+                          ("name" -> stopDetails.name) ~
+                          ("longitude" -> stopDetails.longitude) ~
+                          ("latitude" -> stopDetails.latitude)
+                        )) ~
+                      ("arrivalTime" -> stopRec.arrivalTime)))
+              })
+            case None => NotFound(s"No records found for stopID: $stopID")
+          }
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
       } else NotFound(s"No records found for stopID: $stopID")
     } else NotFound(s"No records found for stopID $stopID and bus route ${busRoute.get}")
