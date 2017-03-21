@@ -10,6 +10,8 @@ version := "1.0"
 
 scalaVersion := "2.11.7"
 
+resolvers += Resolver.bintrayRepo("dwhjames", "maven")
+
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.9"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
@@ -24,15 +26,15 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 
-libraryDependencies += "com.github.sstone" % "amqp-client_2.11" % "1.5"
-
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.4.16"
 
 libraryDependencies += "net.liftweb" % "lift-json_2.11" % "3.0.1"
 
-libraryDependencies += "org.mongodb" %% "casbah" % "3.1.1"
-
 libraryDependencies += "com.internetitem" % "logback-elasticsearch-appender" % "1.4"
+
+libraryDependencies += "com.github.dwhjames" %% "aws-wrap" % "0.8.0"
+
+libraryDependencies += "com.amazonaws" % "aws-java-sdk" % "1.10.77"
 
 libraryDependencies ++= Seq(
   "org.scalatra" %% "scalatra" % ScalatraVersion,

@@ -7,14 +7,14 @@ import javax.servlet.{Filter, Servlet, ServletContext, SessionTrackingMode}
 import scala.concurrent.ExecutionContext.Implicits.global
 import lbt.{ConfigLoader, Main}
 import lbt.comon.BusRoute
-import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.HistoricalRecordsCollection
+import lbt.database.definitions.BusDefinitionsTable
+import lbt.database.historical.HistoricalTable
 import lbt.servlet.LbtServlet
 
 class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
-    context mount (new LbtServlet(Main.definitionsCollection, Main.historicalRecordsCollection, Main.dataStreamProcessor, Main.historicalSourceLineProcessor, Main.historicalRecordsCollectionConsumer, Main.historicalDbInsertPublisher), "/*")
+    context mount (new LbtServlet(Main.definitionsTable, Main.historicalTable, Main.dataStreamProcessor, Main.historicalSourceLineProcessor), "/*")
     context.initParameters("org.scalatra.environment") = "production"
   }
 }

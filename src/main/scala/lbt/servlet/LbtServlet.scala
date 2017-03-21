@@ -2,10 +2,10 @@ package lbt.servlet
 
 import lbt.Main
 import lbt.comon._
-import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.{HistoricalRecordFromDb, HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
+import lbt.database.definitions.BusDefinitionsTable
+import lbt.database.historical.{HistoricalRecordFromDb, HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.{HistoricalDbInsertPublisher, HistoricalSourceLineProcessor}
+import lbt.historical.{ HistoricalSourceLineProcessor}
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
@@ -21,7 +21,7 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success, Try}
 
 
-class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsCollection: HistoricalRecordsCollection, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor, historicalRecordsCollectionConsumer: HistoricalRecordsCollectionConsumer, historicalDbInsertPublisher: HistoricalDbInsertPublisher)(implicit ec: ExecutionContext) extends ScalatraServlet {
+class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTable: HistoricalTable, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet {
 
   implicit val formats = DefaultFormats
   val dtf: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")
@@ -37,15 +37,15 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
   }
 
   get("/routelist") {
-    compactRender(busDefinitionsCollection.getBusRouteDefinitions().map(route =>
-      ("id" -> route._1.id) ~ ("direction" -> route._1.direction) ~ ("towards" -> route._2.last.name)))
+    compactRender(busDefinitionsTable.getBusRouteDefinitions().map(route =>
+      ("name" -> route._1.name) ~ ("direction" -> route._1.direction) ~ ("towards" -> route._2.last.stopName)))
   }
 
   get("/stoplist/:route/:direction") {
     val busRoute = BusRoute(params("route"), params("direction"))
-    busDefinitionsCollection.getBusRouteDefinitions().get(busRoute) match {
+    busDefinitionsTable.getBusRouteDefinitions().get(busRoute) match {
       case Some(stops) => compactRender(stops map (stop =>
-        ("id" -> stop.id) ~ ("name" -> stop.name) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
+        ("stopID" -> stop.stopID) ~ ("name" -> stop.stopName) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
       case None => NotFound(s"The route $busRoute could not be found")
     }
   }
@@ -57,20 +57,20 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
     val vehicleReg = params.get("vehicleID")
-    val definitions = busDefinitionsCollection.getBusRouteDefinitions()(busRoute)
+    val definitions = busDefinitionsTable.getBusRouteDefinitions()(busRoute)
 
-    def getBusStop(stopID: String): Option[BusStop] = definitions.find(x => x.id == stopID)
+    def getBusStop(stopID: String): Option[BusStop] = definitions.find(x => x.stopID == stopID)
 
     if (validateBusRoute(Some(busRoute))) {
       if (validateFromToStops(Some(busRoute), fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
-          compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), vehicleReg).map { rec =>
-            ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
+          compactRender(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), vehicleReg).map { rec =>
+            ("busRoute" -> ("name" -> rec.busRoute.name) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
                   ("busStop" ->
-                    ("id" -> stopRec.stopID) ~
-                    ("name" -> getBusStop(stopRec.stopID).map(_.name).getOrElse("N/A")) ~
+                    ("stopID" -> stopRec.stopID) ~
+                    ("stopName" -> getBusStop(stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
                       ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
                       ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude).getOrElse(0.0))
                   ) ~ ("arrivalTime" -> stopRec.arrivalTime)))
@@ -96,15 +96,15 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     if (validateBusRoute(busRoute)) {
       if (validateFromToStops(busRoute, fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
-          compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute).map { rec =>
-            ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
+          compactRender(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute).map { rec =>
+            ("busRoute" -> ("name" -> rec.busRoute.name) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
                   ("busStop" ->
-                    ("id" -> stopRec.stopID) ~
-                    ("name" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.name).getOrElse("N/A")) ~
-                    ("longitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
-                    ("latitude" -> busDefinitionsCollection.getBusRouteDefinitions()(BusRoute(rec.busRoute.id, rec.busRoute.direction)).find(x => x.id == stopRec.stopID).map(_.latitude).getOrElse(0.0))
+                    ("stopID" -> stopRec.stopID) ~
+                    ("stopName" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.busRoute.name, rec.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
+                    ("longitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.busRoute.name, rec.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
+                    ("latitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.busRoute.name, rec.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.latitude).getOrElse(0.0))
                     ) ~
                   ("arrivalTime" -> stopRec.arrivalTime)))
           })
@@ -128,15 +128,15 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
       if (validateStopID(stopID)) {
         if (validateFromToTime(fromTime, toTime)) {
 
-          busDefinitionsCollection.getBusRouteDefinitions().flatMap(x => x._2).find(stop => stop.id == stopID) match {
+          busDefinitionsTable.getBusRouteDefinitions().flatMap(x => x._2).find(stop => stop.stopID == stopID) match {
             case Some(stopDetails) =>
-              compactRender(historicalRecordsCollection.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
-                ("busRoute" -> ("id" -> rec.busRoute.id) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
+              compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
+                ("busRoute" -> ("name" -> rec.busRoute.name) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
                   rec.stopRecords.map(stopRec =>
                     ("seqNo" -> stopRec.seqNo) ~
                       ("busStop" -> (
-                        ("id" -> stopDetails.id) ~
-                          ("name" -> stopDetails.name) ~
+                        ("stopID" -> stopDetails.stopID) ~
+                          ("stopName" -> stopDetails.stopName) ~
                           ("longitude" -> stopDetails.longitude) ~
                           ("latitude" -> stopDetails.latitude)
                         )) ~
@@ -153,36 +153,22 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
     <html>
       <body>
         <h1>Lbt Status</h1>
-        <h2>Bus Definitions Collection</h2>
-        Number Inserts Requested = {busDefinitionsCollection.numberInsertsRequested.get()}<br/>
-        Number Inserts Completed = {busDefinitionsCollection.numberInsertsCompleted.get()}<br/>
-        Number Inserts Failed = {busDefinitionsCollection.numberInsertsFailed.get()}<br/>
-        Number Get Requests = {busDefinitionsCollection.numberGetsRequested.get()}<br/>
-        Number Delete Requests = {busDefinitionsCollection.numberDeletesRequested.get()}<br/>
+        <h2>Bus Definitions Database Table</h2>
+        Number Inserts Requested = {busDefinitionsTable.numberInsertsRequested.get()}<br/>
+        Number Inserts Completed = {busDefinitionsTable.numberInsertsCompleted.get()}<br/>
+        Number Inserts Failed = {busDefinitionsTable.numberInsertsFailed.get()}<br/>
+        Number Get Requests = {busDefinitionsTable.numberGetsRequested.get()}<br/>
+        Number Delete Requests = {busDefinitionsTable.numberDeletesRequested.get()}<br/>
 
-        <h3>Database</h3>
-        Number of objects: {busDefinitionsCollection.getStats.getInt("count")}<br/>
-        Average Object Size: {busDefinitionsCollection.getStats.getDouble("avgObjSize").toInt / 1024} Kb<br/>
-        Records Size: {busDefinitionsCollection.getStats.getLong("size") / (1024 * 1024)} Mb<br/>
-        Storage Size: {busDefinitionsCollection.getStats.getLong("storageSize") / (1024 * 1024)} Mb<br/>
-        Number Indexes: {busDefinitionsCollection.getStats.getInt("nindexes")}<br/>
-        Total Index Size:{busDefinitionsCollection.getStats.getLong("totalIndexSize") / (1024 * 1024)} Mb<br/>
 
-        <h2>Historical Records Collection</h2>
-        Number Insert Messages Published = {historicalDbInsertPublisher.numberMessagesPublished}<br/>
-        Number Insert Messages Consumed = {Await.result(historicalRecordsCollectionConsumer.getNumberMessagesConsumed, 5 seconds)}<br/>
-        Number Inserts Requested = {historicalRecordsCollection.numberInsertsRequested.get()}<br/>
-        Number Inserts Completed = {historicalRecordsCollection.numberInsertsCompleted.get()}<br/>
-        Number Inserts Failed = {historicalRecordsCollection.numberInsertsFailed.get()}<br/>
-        Number Get Requests= {historicalRecordsCollection.numberGetsRequested.get()}<br/>
-        Number Delete Requests ={historicalRecordsCollection.numberDeletesRequested.get()}<br/>
-        <h3>Database</h3>
-        Objects: {historicalRecordsCollection.getStats.getInt("count")}<br/>
-        Average Object Size: {historicalRecordsCollection.getStats.getDouble("avgObjSize").toInt / 1024} Kb<br/>
-        Records Size: {historicalRecordsCollection.getStats.getLong("size") / (1024 * 1024)} Mb<br/>
-        Storage Size: {historicalRecordsCollection.getStats.getLong("storageSize") / (1024 * 1024)} Mb<br/>
-        Number Indexes: {historicalRecordsCollection.getStats.getInt("nindexes")}<br/>
-        Total Index Size: {historicalRecordsCollection.getStats.getLong("totalIndexSize") / (1024 * 1024)} Mb<br/>
+        <h2>Historical Records Database Table</h2>
+        Number Inserts Requested = {historicalRecordsTable.numberInsertsRequested.get()}<br/>
+        Number Inserts Completed = {historicalRecordsTable.numberInsertsCompleted.get()}<br/>
+        Number Inserts Failed = {historicalRecordsTable.numberInsertsFailed.get()}<br/>
+        Number Get Requests= {historicalRecordsTable.numberGetsRequested.get()}<br/>
+        Number Delete Requests ={historicalRecordsTable.numberDeletesRequested.get()}<br/>
+
+
         <h2>Data Stream Processor</h2>
         Number Lines Processed = {Await.result(dataStreamProcessor.numberLinesProcessed, 5 seconds)}<br/>
         Number Lines Processed Since Last Restart = {Await.result(dataStreamProcessor.numberLinesProcessedSinceRestart, 5 seconds)}<br/>
@@ -202,28 +188,28 @@ class LbtServlet(busDefinitionsCollection: BusDefinitionsCollection, historicalR
 
   private def validateBusRoute(busRoute: Option[BusRoute]): Boolean = {
     if (busRoute.isDefined) {
-      busDefinitionsCollection.getBusRouteDefinitions().get(busRoute.get).isDefined
+      busDefinitionsTable.getBusRouteDefinitions().get(busRoute.get).isDefined
     } else true
   }
 
   private def validateFromToStops(busRoute: Option[BusRoute], fromStopID: Option[String], toStopID: Option[String]): Boolean = {
     if (busRoute.isDefined) {
-      val definition = busDefinitionsCollection.getBusRouteDefinitions()(busRoute.get)
+      val definition = busDefinitionsTable.getBusRouteDefinitions()(busRoute.get)
       if (fromStopID.isDefined && toStopID.isDefined) {
-        if (definition.exists(stop => stop.id == fromStopID.get) && definition.exists(stop => stop.id == toStopID.get)) {
-          definition.indexWhere(stop => stop.id == fromStopID.get) <= definition.indexWhere(stop => stop.id == toStopID.get)
+        if (definition.exists(stop => stop.stopID == fromStopID.get) && definition.exists(stop => stop.stopID == toStopID.get)) {
+          definition.indexWhere(stop => stop.stopID == fromStopID.get) <= definition.indexWhere(stop => stop.stopID == toStopID.get)
         } else false
       } else if (fromStopID.isDefined && toStopID.isEmpty) {
-        definition.exists(stop => stop.id == fromStopID.get)
+        definition.exists(stop => stop.stopID == fromStopID.get)
       } else if (fromStopID.isEmpty && toStopID.isDefined) {
-        definition.exists(stop => stop.id == toStopID.get)
+        definition.exists(stop => stop.stopID == toStopID.get)
       } else true
     } else true
   }
 
   private def validateStopID(stopID: String): Boolean = {
-    busDefinitionsCollection.getBusRouteDefinitions().exists(definition =>
-      definition._2.exists(stop => stop.id == stopID)
+    busDefinitionsTable.getBusRouteDefinitions().exists(definition =>
+      definition._2.exists(stop => stop.stopID == stopID)
     )
   }
 

@@ -10,7 +10,7 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
 import lbt.historical.HistoricalSourceLineProcessor
-import lbt.{ConfigLoader, DataSourceConfig, MessagingConfig}
+import lbt.{ConfigLoader, DataSourceConfig}
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 
 import scala.concurrent.{ExecutionContext, Future, TimeoutException}
@@ -23,10 +23,9 @@ case class GetNumberLinesProcessedSinceRestart()
 case class GetTimeOfLastRestart()
 case class GetNumberOfRestarts()
 
-class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor) extends Actor with StrictLogging {
+class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor) extends Actor with StrictLogging {
   logger.info("Data stream Processing Controller Actor Created")
 
-//  val publisher = new SourceLinePublisher(messagingConfig)(context.system)
   val iteratingActor: ActorRef = context.actorOf(Props(classOf[DataStreamProcessingActor], historicalSourceLineProcessor, dataSourceConfig), "dataStreamProcessingActor")
 
   val numberProcessed = new AtomicLong(0)
@@ -80,10 +79,10 @@ class DataStreamProcessingController(dataSourceConfig: DataSourceConfig, messagi
 
 }
 
-class DataStreamProcessor(dataSourceConfig : DataSourceConfig, messagingConfig: MessagingConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor)(implicit actorSystem: ActorSystem, ec: ExecutionContext)  {
+class DataStreamProcessor(dataSourceConfig : DataSourceConfig, historicalSourceLineProcessor: HistoricalSourceLineProcessor, controllerActorName: String = "dataStreamProcessingController")(implicit actorSystem: ActorSystem, ec: ExecutionContext)  {
   implicit val timeout:Timeout = 20 seconds
   val dtf: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")
-  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, messagingConfig, historicalSourceLineProcessor), "dataStreamProcessingController")
+  val processorControllerActor = actorSystem.actorOf(Props(classOf[DataStreamProcessingController], dataSourceConfig, historicalSourceLineProcessor), controllerActorName)
 
   def start = processorControllerActor ! Start
 

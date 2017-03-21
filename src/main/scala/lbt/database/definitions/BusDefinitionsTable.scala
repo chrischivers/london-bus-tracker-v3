@@ -1,43 +1,28 @@
 package lbt.database.definitions
 
-import com.mongodb.casbah.Imports.{DBObject, _}
-import com.mongodb.casbah.MongoCollection
 import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.comon._
 import lbt.database._
-import lbt.{ConfigLoader, DatabaseConfig, DefinitionsConfig}
+import lbt.{DatabaseConfig, DefinitionsConfig}
 import net.liftweb.json.JsonAST.JArray
 import net.liftweb.json.{DefaultFormats, JValue, parse}
-import org.bson.json.JsonParseException
 
 import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext
 import scala.io.Source
-import scala.util.{Failure, Success}
 
-class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig)(implicit ec: ExecutionContext) extends DatabaseCollections with StrictLogging{
+class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig)(implicit ec: ExecutionContext) extends DatabaseTables with StrictLogging {
 
-  override val db: MongoDatabase = new MongoDatabase(dbConfig)
-  override val collectionName: String = dbConfig.busDefinitionsCollectionName
-  override val indexKeyList = List((BUS_ROUTE_DEFINITION_DOCUMENT.ROUTE_ID, 1), (BUS_ROUTE_DEFINITION_DOCUMENT.DIRECTION, 1))
-  override val uniqueIndex = true
+  private val definitionsDBController = new DefinitionsDynamoDBController(dbConfig)(ec)
 
-  private var numberToProcess:Long = 0
+  private var numberToProcess: Long = 0
   private var definitionsCache: BusRouteDefinitions = Map.empty
 
   def insertBusRouteDefinitionIntoDB(busRoute: BusRoute, busStops: List[BusStop]) = {
     numberGetsRequested.incrementAndGet()
-    BusDefinitionsDBController.insertRouteIntoDB(dBCollection, busRoute, busStops).onComplete {
-      case Success(ack) =>  if (ack) numberInsertsCompleted.incrementAndGet()
-                            else {
-        numberInsertsFailed.incrementAndGet()
-        logger.info(s"Insert Bus Route Definition for route $busRoute was not acknowledged by DB")
-      }
-      case Failure(e) =>
-        numberInsertsFailed.incrementAndGet()
-        logger.info(s"Insert Bus Route Definition for route $busRoute not completed successfully", e)
-    }
+    definitionsDBController.insertRouteIntoDB(busRoute, busStops)
+    numberInsertsCompleted.incrementAndGet()
   }
 
   def getBusRouteDefinitions(forceDBRefresh: Boolean = false): BusRouteDefinitions = {
@@ -47,7 +32,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
 
   def updateBusRouteDefinitionsFromDB: Unit = {
     numberGetsRequested.incrementAndGet()
-    definitionsCache = BusDefinitionsDBController.loadBusRouteDefinitionsFromDB(dBCollection)
+    definitionsCache = definitionsDBController.loadBusRouteDefinitionsFromDB
     logger.info("Bus Route Definitions cache updated from database")
   }
 
@@ -56,7 +41,9 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
     logger.info("Refreshing bus route definitions from web")
 
     val allRoutesUrl = defConfig.sourceAllUrl
-    def getSingleRouteUrl(busRoute: BusRoute) = defConfig.sourceSingleUrl.replace("#RouteID#", busRoute.id).replace("#Direction#", busRoute.direction)
+
+    def getSingleRouteUrl(busRoute: BusRoute) = defConfig.sourceSingleUrl.replace("#RouteID#", busRoute.name).replace("#Direction#", busRoute.direction)
+
     val allRouteJsonDataRaw = Source.fromURL(allRoutesUrl).mkString
     val updatedRouteList = parse(allRouteJsonDataRaw)
     val routeIDs = (updatedRouteList \ "id").extract[List[String]]
@@ -73,8 +60,10 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
         try {
           val routeID = route._1._1.toUpperCase
           val busRoute = BusRoute(routeID, direction)
-          if((getBusRouteDefinitions().get(busRoute).isDefined && updateNewRoutesOnly) || (getOnly.isDefined && !getOnly.get.contains(busRoute))) {
+          if (getOnly.isDefined && !getOnly.get.contains(busRoute)) {
             //TODO What if it is in DB but incomplete?
+            logger.info("skipping route " + routeID + " and direction " + direction + " as route is not in GetOnly parameter")
+          } else if (getBusRouteDefinitions().get(busRoute).isDefined && updateNewRoutesOnly) {
             logger.info("skipping route " + routeID + " and direction " + direction + " as already in DB")
           } else {
             logger.info("processing route " + routeID + ", direction " + direction)
@@ -86,8 +75,7 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
           }
         } catch {
           case e: NoSuchElementException => logger.info("No Such Element Exception for route: " + route._1._1.toUpperCase + ", and direction: " + direction)
-          case e: JsonParseException => logger.info("JSON parse exception for route: " + route._1._1.toUpperCase + ", and direction: " + direction + ". " + e.printStackTrace())
-          case e: Exception => logger.error("Uncaught exception " + e.printStackTrace())
+          case e: Exception => logger.error("Uncaught exception ", e)
         }
         numberToProcess -= 1
         logger.info(s"number of routes left to process: $numberToProcess")
@@ -107,11 +95,13 @@ class BusDefinitionsCollection(defConfig: DefinitionsConfig, dbConfig: DatabaseC
 
       })
     }
+
     logger.info("Bus Route Definitions update complete")
     updateBusRouteDefinitionsFromDB
     logger.info("Bus Route Definitions cache updated from database")
-
   }
+
+  def deleteTable = definitionsDBController.deleteTable
 
 }
 

@@ -28,38 +28,37 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     try test(fixture)
     finally {
       fixture.actorSystem.terminate().futureValue
-      fixture.testHistoricalRecordsCollectionConsumer.unbindAndDelete
-      fixture.testDefinitionsCollection.db.dropDatabase
-      fixture.testHistoricalRecordsCollection.db.dropDatabase
+      fixture.testDefinitionsTable.deleteTable
+      fixture.testHistoricalTable.deleteTable
       Thread.sleep(1000)
     }
   }
 
   test("Route definitions for existing bus number 3 can be loaded from DB") { f =>
 
-    val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitions()
+    val busDefinitions = f.testDefinitionsTable.getBusRouteDefinitions()
     busDefinitions.get(f.testBusRoute1) shouldBe defined
     busDefinitions.get(f.testBusRoute2) shouldBe defined
-    busDefinitions(f.testBusRoute1).count(stop => stop.name.contains("Brixton")) should be > 0
-    busDefinitions(f.testBusRoute2).count(stop => stop.name.contains("Brixton")) should be > 0
+    busDefinitions(f.testBusRoute1).count(stop => stop.stopName.contains("Brixton")) should be > 0
+    busDefinitions(f.testBusRoute2).count(stop => stop.stopName.contains("Brixton")) should be > 0
 
   }
 
   test("Bus Route not already in DB is reloaded from web on request") { f =>
-    f.testDefinitionsCollection.getBusRouteDefinitions()
+    f.testDefinitionsTable.getBusRouteDefinitions()
     val newBusRoute = BusRoute("521", "inbound")
-    f.testDefinitionsCollection.getBusRouteDefinitions().get(newBusRoute) shouldBe empty
-    f.testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(List(newBusRoute)))
-    f.testDefinitionsCollection.getBusRouteDefinitions().get(f.testBusRoute1) shouldBe defined
-    f.testDefinitionsCollection.getBusRouteDefinitions().get(f.testBusRoute2) shouldBe defined
-    f.testDefinitionsCollection.getBusRouteDefinitions().get(newBusRoute) shouldBe defined
-    f.testDefinitionsCollection.getBusRouteDefinitions()(newBusRoute).count(stop => stop.name.contains("London Bridge")) should be > 0
+    f.testDefinitionsTable.getBusRouteDefinitions().get(newBusRoute) shouldBe empty
+    f.testDefinitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(List(newBusRoute)))
+    f.testDefinitionsTable.getBusRouteDefinitions().get(f.testBusRoute1) shouldBe defined
+    f.testDefinitionsTable.getBusRouteDefinitions().get(f.testBusRoute2) shouldBe defined
+    f.testDefinitionsTable.getBusRouteDefinitions().get(newBusRoute) shouldBe defined
+    f.testDefinitionsTable.getBusRouteDefinitions()(newBusRoute).count(stop => stop.stopName.contains("London Bridge")) should be > 0
   }
 
   test("Sequence is kept in order when loaded from web and retrieved from db") { f =>
-    val busDefinitions = f.testDefinitionsCollection.getBusRouteDefinitions()
+    val busDefinitions = f.testDefinitionsTable.getBusRouteDefinitions()
     busDefinitions.get(f.testBusRoute1) shouldBe defined
-    busDefinitions(f.testBusRoute1).head.name should include("Conduit Street")
-    busDefinitions(f.testBusRoute1).last.name should include("Crystal Palace")
+    busDefinitions(f.testBusRoute1).head.stopName should include("Conduit Street")
+    busDefinitions(f.testBusRoute1).last.stopName should include("Crystal Palace")
   }
 }

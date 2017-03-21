@@ -4,10 +4,10 @@ import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
-import lbt.{HistoricalRecordsConfig, MessagingConfig}
-import lbt.comon.{BusRoute}
-import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.HistoricalRecordsCollection
+import lbt.HistoricalRecordsConfig
+import lbt.comon.BusRoute
+import lbt.database.definitions.BusDefinitionsTable
+import lbt.database.historical.HistoricalTable
 
 import scala.concurrent.duration._
 
@@ -20,10 +20,10 @@ case class PersistToDB()
 case class PersistAndRemoveInactiveVehicles()
 
 case class VehicleActorID(vehicleReg: String, busRoute: BusRoute) {
-  override def toString: String = vehicleReg + "-" + busRoute.id + "-" + busRoute.direction
+  override def toString: String = vehicleReg + "-" + busRoute.name + "-" + busRoute.direction
 }
 
-class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection, historicalRecordsConfig: HistoricalRecordsConfig, historicalDbInsertPublisher: HistoricalDbInsertPublisher) extends Actor with StrictLogging {
+class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historicalRecordsConfig: HistoricalRecordsConfig, historicalTable: HistoricalTable) extends Actor with StrictLogging {
   logger.info("Vehicle Actor Supervisor Actor Created")
   implicit val timeout = Timeout(10 seconds)
 
@@ -67,6 +67,6 @@ class VehicleActorSupervisor(busDefinitionsCollection: BusDefinitionsCollection,
 
   def createNewActor(vehicleActorID: VehicleActorID): ActorRef = {
    // logger.info(s"Creating new actor for vehicle ID $vehicleID")
-    context.actorOf(Props(classOf[VehicleActor], vehicleActorID, historicalRecordsConfig, busDefinitionsCollection, historicalDbInsertPublisher), vehicleActorID.toString)
+    context.actorOf(Props(classOf[VehicleActor], vehicleActorID, historicalRecordsConfig, busDefinitionsTable, historicalTable), vehicleActorID.toString)
   }
 }

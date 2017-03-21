@@ -1,40 +1,32 @@
 package lbt
 
-import javax.servlet.ServletContext
-
 import akka.actor.ActorSystem
-import lbt.comon.{BusRoute, Start}
-import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
-import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.{HistoricalDbInsertPublisher, HistoricalSourceLineProcessor}
+import lbt.database.definitions.BusDefinitionsTable
+import lbt.database.historical.HistoricalTable
+import lbt.datasource.streaming.DataStreamProcessor
+import lbt.historical.HistoricalSourceLineProcessor
 import lbt.servlet.LbtServlet
-
 import scala.concurrent.ExecutionContext.Implicits.global
-
 
 object Main extends App {
   implicit val actorSystem = ActorSystem("LbtSystem")
 
-  val messagingConfig = ConfigLoader.defaultConfig.messagingConfig
   val dataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
   val dBConfig = ConfigLoader.defaultConfig.databaseConfig
   val definitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
   val historicalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig
 
-  val definitionsCollection = new BusDefinitionsCollection(definitionsConfig, dBConfig)
+  val definitionsTable = new BusDefinitionsTable(definitionsConfig, dBConfig)
 
-  definitionsCollection.updateBusRouteDefinitionsFromDB
+  definitionsTable.updateBusRouteDefinitionsFromDB
   Thread.sleep(3000)
-  definitionsCollection.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
+  definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
   Thread.sleep(3000)
-  val historicalRecordsCollection = new HistoricalRecordsCollection(dBConfig, definitionsCollection)
-  val historicalRecordsCollectionConsumer = new HistoricalRecordsCollectionConsumer(messagingConfig, historicalRecordsCollection)
-  val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(messagingConfig)
+  val historicalTable = new HistoricalTable(dBConfig, definitionsTable)
 
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(historicalRecordsConfig, definitionsCollection, historicalDbInsertPublisher)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(historicalRecordsConfig, definitionsTable, historicalTable)
 
-  val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, messagingConfig, historicalSourceLineProcessor)
+  val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, historicalSourceLineProcessor)
 
   LbtServlet.setUpServlet
 

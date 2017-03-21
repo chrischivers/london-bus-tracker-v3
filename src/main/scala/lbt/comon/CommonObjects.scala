@@ -1,12 +1,14 @@
 package lbt.comon
 
+import org.joda.time.DateTime
+
 case class Start()
 case class Stop()
 
 
-case class BusStop(id: String, name: String, longitude: Double, latitude: Double)
+case class BusStop(stopID: String, stopName: String, longitude: Double, latitude: Double)
 
-case class BusRoute(id: String, direction: String)
+case class BusRoute(name: String, direction: String)
 
 object Commons {
 

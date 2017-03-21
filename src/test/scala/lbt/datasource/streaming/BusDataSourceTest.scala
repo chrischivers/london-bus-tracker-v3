@@ -30,15 +30,14 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
     try test(fixture)
     finally {
       fixture.actorSystem.terminate().futureValue
-      fixture.testHistoricalRecordsCollectionConsumer.unbindAndDelete
-      fixture.testDefinitionsCollection.db.dropDatabase
-      fixture.testHistoricalRecordsCollection.db.dropDatabase
+      fixture.testDefinitionsTable.deleteTable
+      fixture.testHistoricalTable.deleteTable
       Thread.sleep(1000)
     }
   }
 
   test("Data stream should be opened and produce a stream of data") { f =>
-    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
+    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
     withClue("No data stream returned") {
       dataStreamProcessingControllerReal.start
 
@@ -51,7 +50,7 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
 
   test("Data Stream Processing Actor should close http connection and open new one if it restarts") { f =>
 
-    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
+    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
     implicit val futureTimeout = Timeout(FiniteDuration(10, TimeUnit.SECONDS))
 
     dataStreamProcessingControllerReal.start
@@ -83,7 +82,7 @@ class BusDataSourceTest extends fixture.FunSuite with ScalaFutures with Eventual
 
   test("Data Stream Processor processes same number of messages as those queued") { f =>
 
-    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.testMessagingConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
+    val dataStreamProcessingControllerReal = new DataStreamProcessor(f.testDataSourceConfig, f.historicalSourceLineProcessor)(f.actorSystem, executionContext)
     dataStreamProcessingControllerReal.start
     Thread.sleep(2000)
     dataStreamProcessingControllerReal.stop

@@ -8,8 +8,8 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt._
 import lbt.comon._
-import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.HistoricalRecordsCollection
+import lbt.database.definitions.BusDefinitionsTable
+import lbt.database.historical.HistoricalTable
 import lbt.datasource.SourceLine
 import net.liftweb.json.{DefaultFormats, _}
 
@@ -20,14 +20,14 @@ import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleReg: String, arrival_TimeStamp: Long)
 
-class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsConfig, definitionsCollection: BusDefinitionsCollection, historicalDbInsertPublisher: HistoricalDbInsertPublisher)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends StrictLogging {
+class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsConfig, definitionsTable: BusDefinitionsTable, historicalTable: HistoricalTable)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends StrictLogging {
 
   val numberSourceLinesProcessed: AtomicLong = new AtomicLong(0)
   val numberSourceLinesValidated: AtomicLong = new AtomicLong(0)
 
-  val definitions = definitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
+  val definitions = definitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsCollection, historicalRecordsConfig, historicalDbInsertPublisher))
+  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsTable, historicalRecordsConfig, historicalTable))
 
   type StringValidation[T] = ValidationNel[String, T]
 
@@ -52,12 +52,12 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     def validRouteAndStop (busRoute: BusRoute): StringValidation[BusStop] = {
       definitions.get(busRoute) match {
         case Some(stopList) => validStop(stopList)
-        case None => s"Route not defined in definitions. Route ID: ${busRoute.id}. Direction: ${busRoute.direction}".failureNel
+        case None => s"Route not defined in definitions. Route ID: ${busRoute.name}. Direction: ${busRoute.direction}".failureNel
       }
     }
 
     def validStop(busStopList: List[BusStop]): StringValidation[BusStop] = {
-      busStopList.find(stop => stop.id == sourceLine.stopID) match {
+      busStopList.find(stop => stop.stopID == sourceLine.stopID) match {
         case Some(busStop) => busStop.successNel
         case None => s"Bus Stop ${sourceLine.stopID} not defined in definitions for route ${sourceLine.route} and direction ${sourceLine.direction}".failureNel
       }

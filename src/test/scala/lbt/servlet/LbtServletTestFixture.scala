@@ -4,10 +4,10 @@ import akka.actor.ActorSystem
 import lbt.ConfigLoader
 import lbt.comon.BusRoute
 import lbt.comon.Commons.BusRouteDefinitions
-import lbt.database.definitions.BusDefinitionsCollection
-import lbt.database.historical.{HistoricalRecordsCollection, HistoricalRecordsCollectionConsumer}
+import lbt.database.definitions.BusDefinitionsTable
+import lbt.database.historical.{HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
-import lbt.historical.{HistoricalDbInsertPublisher, HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
+import lbt.historical.{HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
 import net.liftweb.json.DefaultFormats
 
 import scala.concurrent.ExecutionContext
@@ -18,33 +18,24 @@ trait LbtServletTestFixture {
   implicit val actorSystem = ActorSystem("TestLbtSystem")
   implicit val executionContext = ExecutionContext.Implicits.global
 
-  val testMessagingConfig = ConfigLoader.defaultConfig.messagingConfig.copy(
-    exchangeName = "test-lbt-exchange",
-    historicalDBInsertQueueName = "test-lbt.historical-db-insert-queue-name",
-    historicalDbRoutingKey = "test-lbt.historical-db-insert-routing-key")
   val testDataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
-  val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(databaseName = "TestDB")
+  val testDBConfig = ConfigLoader.defaultConfig.databaseConfig.copy(busDefinitionsTableName = "TestDefinitions", historicalRecordsTableName = "TestHistorical")
   val testDefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
   val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 1000, numberOfLinesToCleanupAfter = 0)
 
-  val testDefinitionsCollection = new BusDefinitionsCollection(testDefinitionsConfig, testDBConfig)
-
-  val testHistoricalRecordsCollection = new HistoricalRecordsCollection(testDBConfig, testDefinitionsCollection)
+  val testDefinitionsTable = new BusDefinitionsTable(testDefinitionsConfig, testDBConfig)
+  val testHistoricalTable = new HistoricalTable(testDBConfig, testDefinitionsTable)
 
   val testBusRoutes = List(BusRoute("3", "outbound"), BusRoute("3", "inbound")) //TODO include more randomisation on routes
-  testDefinitionsCollection.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes))
+  testDefinitionsTable.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes), updateNewRoutesOnly = true)
 
   Thread.sleep(1000)
 
-  val definitions: BusRouteDefinitions = testDefinitionsCollection.getBusRouteDefinitions(forceDBRefresh = true)
+  val definitions: BusRouteDefinitions = testDefinitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
 
-  val historicalRecordsCollectionConsumer = new HistoricalRecordsCollectionConsumer(testMessagingConfig, testHistoricalRecordsCollection)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsTable, testHistoricalTable)
 
-  val historicalDbInsertPublisher = new HistoricalDbInsertPublisher(testMessagingConfig)
-
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsCollection, historicalDbInsertPublisher)
-
-  val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, testMessagingConfig, historicalSourceLineProcessor)(actorSystem, executionContext)
+  val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, historicalSourceLineProcessor)(actorSystem, executionContext)
 
   val vehicleReg = "V" + Random.nextInt(99999)
   testBusRoutes.foreach { route =>
@@ -54,7 +45,7 @@ trait LbtServletTestFixture {
 
     println("definitions: " + definitions)
     definitions(route).foreach(busStop => {
-      val message = SourceLineValidator("[1,\"" + busStop.id + "\",\"" + route.id + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
+      val message = SourceLineValidator("[1,\"" + busStop.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
       historicalSourceLineProcessor.processSourceLine(message)
     })
   }

@@ -6,9 +6,7 @@ case class DataSourceConfig(sourceUrl: String, username: String, password: Strin
 
 case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, definitionsCachedTime: Int)
 
-case class DatabaseConfig(databaseName: String, busDefinitionsCollectionName: String, historicalRecordsCollectionName: String)
-
-case class MessagingConfig(rabbitUrl: String, exchangeName: String, historicalDBInsertQueueName: String, historicalDbRoutingKey: String)
+case class DatabaseConfig(busDefinitionsTableName: String, historicalRecordsTableName: String)
 
 case class HistoricalRecordsConfig(vehicleInactivityTimeBeforePersist: Long, numberOfLinesToCleanupAfter: Int, minimumNumberOfStopsToPersist: Int)
 
@@ -16,7 +14,6 @@ case class LBTConfig(
                    dataSourceConfig: DataSourceConfig,
                    databaseConfig: DatabaseConfig,
                    definitionsConfig: DefinitionsConfig,
-                    messagingConfig: MessagingConfig,
                    historicalRecordsConfig: HistoricalRecordsConfig
                       )
 
@@ -45,20 +42,13 @@ object ConfigLoader {
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-empty-iterator-cases-before-restart")
       ),
       DatabaseConfig(
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "database-name"),
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "bus-definitions-collection-name"),
-        defaultConfigFactory.getString(dataBaseParamsPrefix + "lbt.historical-records-collection-name")
+        defaultConfigFactory.getString(dataBaseParamsPrefix + "bus-definitions-table-name"),
+        defaultConfigFactory.getString(dataBaseParamsPrefix + "lbt.historical-table-name")
       ),
       DefinitionsConfig(
         defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-all-url"),
         defaultConfigFactory.getString(definitionsParamsPrefix + "definitions-single-url"),
         defaultConfigFactory.getInt(definitionsParamsPrefix + "definitions-cached-time")
-      ),
-      MessagingConfig(
-        defaultConfigFactory.getString(messagingParamsPrefix + "rabbitmq-url"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "exchange-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "lbt.historical-db-insert-queue-name"),
-        defaultConfigFactory.getString(messagingParamsPrefix + "lbt.historical-db-insert-routing-key")
       ),
       HistoricalRecordsConfig(
         defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "vehicle-inactivity-time-before-persist"),
