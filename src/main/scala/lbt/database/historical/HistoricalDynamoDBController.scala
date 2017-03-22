@@ -87,8 +87,8 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
   def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute): List[HistoricalRecordFromDb] = {
 
     val mappedResult = for {
-      result <- mapper.scan[HistoricalDBItem] (Map("ROUTE_ID_DIRECTION" -> ScanCondition.equalTo(write(busRoute))))
-      mappedResult = parseScanResult(result)
+      result <- mapper.query[HistoricalDBItem](write(busRoute))
+      mappedResult = parseQueryResult(result)
     } yield mappedResult.toList
 
     Await.result(mappedResult, 30 seconds)
@@ -99,7 +99,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
     val mappedResult = for {
       result <- mapper.scan[HistoricalDBItem] (Map("VEHICLE_REG" -> ScanCondition.equalTo(vehicleReg)))
-      mappedResult = parseScanResult(result)
+      mappedResult = parseQueryResult(result)
     } yield mappedResult.toList
 
     Await.result(mappedResult, 30 seconds)
@@ -108,13 +108,13 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
   def loadHistoricalRecordsFromDbByStop(stopID: String): List[HistoricalRecordFromDb] = {
     val mappedResult = for {
       result <- mapper.scan[HistoricalDBItem] (Map("ARRIVAL_RECORDS" -> ScanCondition.contains(stopID)))
-      mappedResult = parseScanResult(result)
+      mappedResult = parseQueryResult(result)
     } yield mappedResult.toList
 
     Await.result(mappedResult, 30 seconds)
   }
 
-  private def parseScanResult(result: Seq[HistoricalDBItem]): Seq[HistoricalRecordFromDb] = {
+  private def parseQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalRecordFromDb] = {
     result.map(result => HistoricalRecordFromDb(
       parse(result.ROUTE_ID_DIRECTION).extract[BusRoute],
       result.VEHICLE_REG,
@@ -128,7 +128,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
         new CreateTableRequest()
           .withTableName(databaseConfig.historicalRecordsTableName)
           .withProvisionedThroughput(
-            Schema.provisionedThroughput(10L, 5L))
+            Schema.provisionedThroughput(25L, 4L))
           .withAttributeDefinitions(
             Schema.stringAttribute(Attributes.route),
             Schema.numberAttribute(Attributes.startTimeMills))
