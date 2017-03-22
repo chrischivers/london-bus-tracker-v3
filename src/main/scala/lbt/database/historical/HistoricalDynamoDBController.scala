@@ -105,15 +105,6 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     Await.result(mappedResult, 30 seconds)
   }
 
-  def loadHistoricalRecordsFromDbByStop(stopID: String): List[HistoricalRecordFromDb] = {
-    val mappedResult = for {
-      result <- mapper.scan[HistoricalDBItem] (Map("ARRIVAL_RECORDS" -> ScanCondition.contains(stopID)))
-      mappedResult = parseQueryResult(result)
-    } yield mappedResult.toList
-
-    Await.result(mappedResult, 30 seconds)
-  }
-
   private def parseQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalRecordFromDb] = {
     result.map(result => HistoricalRecordFromDb(
       parse(result.ROUTE_ID_DIRECTION).extract[BusRoute],

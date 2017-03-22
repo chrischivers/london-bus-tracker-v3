@@ -51,7 +51,10 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
 
   def getHistoricalRecordFromDbByStop(stopID: String, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
-    historicalDBController.loadHistoricalRecordsFromDbByStop(stopID)
+    val routesContainingStops = busDefinitionsTable.getBusRouteDefinitions().filter(route => route._2.exists(stop => stop.stopID == stopID)).keys
+    val routesContainingStopsWithFilter = if (busRoute.isDefined) routesContainingStops.filter(route => route == busRoute.get) else routesContainingStops
+
+    routesContainingStopsWithFilter.flatMap(route => getHistoricalRecordFromDbByBusRoute(route, None, None, fromTime, toTime, vehicleReg)).toList
       .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
         .filter(stopRec =>
             (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
