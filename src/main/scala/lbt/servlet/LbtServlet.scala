@@ -45,7 +45,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     val busRoute = BusRoute(params("route"), params("direction"))
     busDefinitionsTable.getBusRouteDefinitions().get(busRoute) match {
       case Some(stops) => compactRender(stops map (stop =>
-        ("stopID" -> stop.stopID) ~ ("name" -> stop.stopName) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
+        ("stopID" -> stop.stopID) ~ ("stopName" -> stop.stopName) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
       case None => NotFound(s"The route $busRoute could not be found")
     }
   }
