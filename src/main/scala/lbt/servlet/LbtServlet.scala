@@ -1,11 +1,12 @@
 package lbt.servlet
 
+import com.typesafe.scalalogging.StrictLogging
 import lbt.Main
 import lbt.comon._
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.{HistoricalRecordFromDb, HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.{ HistoricalSourceLineProcessor}
+import lbt.historical.HistoricalSourceLineProcessor
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
@@ -21,28 +22,32 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success, Try}
 
 
-class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTable: HistoricalTable, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet {
+class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTable: HistoricalTable, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet with StrictLogging {
 
   implicit val formats = DefaultFormats
   val dtf: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")
 
   get("/streamstart") {
+    logger.info(s"/streamstart request received")
     dataStreamProcessor.start
     Ok("Started data stream processor")
   }
 
   get("/streamstop") {
+    logger.info(s"/streamstop request received")
     dataStreamProcessor.stop
     Ok("Stopped data stream processor")
   }
 
   get("/routelist") {
+    logger.info("/routelist request received")
     compactRender(busDefinitionsTable.getBusRouteDefinitions().map(route =>
       ("name" -> route._1.name) ~ ("direction" -> route._1.direction) ~ ("towards" -> route._2.last.stopName)))
   }
 
   get("/stoplist/:route/:direction") {
     val busRoute = BusRoute(params("route"), params("direction"))
+    logger.info(s"/stoplist request received for $busRoute")
     busDefinitionsTable.getBusRouteDefinitions().get(busRoute) match {
       case Some(stops) => compactRender(stops map (stop =>
         ("stopID" -> stop.stopID) ~ ("stopName" -> stop.stopName) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
@@ -58,6 +63,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     val toTime = params.get("toTime")
     val vehicleReg = params.get("vehicleID")
     val definitions = busDefinitionsTable.getBusRouteDefinitions()(busRoute)
+    logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, vehicleReg $vehicleReg")
 
     def getBusStop(stopID: String): Option[BusStop] = definitions.find(x => x.stopID == stopID)
 
@@ -91,7 +97,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       direction <- params.get("direction")
       busRoute = BusRoute(route, direction)
     } yield busRoute
-
+    logger.info(s"/vehicle request received for $vehicleReg, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, busRoute $busRoute")
 
     if (validateBusRoute(busRoute)) {
       if (validateFromToStops(busRoute, fromStopID, toStopID)) {
@@ -123,6 +129,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       direction <- params.get("direction")
       busRoute = BusRoute(route, direction)
     } yield busRoute
+    logger.info(s"/stop request received for $stopID, fromTime $fromTime, toTime $toTime, vehiclReg $vehicleReg, busRoute $busRoute")
 
     if (validateBusRoute(busRoute)) {
       if (validateStopID(stopID)) {

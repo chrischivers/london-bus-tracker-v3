@@ -2,7 +2,7 @@ package lbt.servlet
 
 import akka.actor.Kill
 import lbt.comon.{BusRoute, BusStop}
-import lbt.database.historical.HistoricalRecordFromDb
+import lbt.database.historical.{ArrivalRecord, HistoricalRecordFromDb}
 import net.liftweb.json._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, FunSuite, FunSuiteLike, Matchers}
@@ -10,6 +10,10 @@ import org.scalatra.test.scalatest.{ScalatraFunSuite, ScalatraSuite}
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
+
+case class TransmittedBusRouteWithTowards(name: String, direction: String, towards: String)
+case class TransmittedIncomingHistoricalRecord(busRoute: BusRoute, vehicleID: String, stopRecords: List[TransmittedIncomingVehicleStopRecord])
+case class TransmittedIncomingVehicleStopRecord(seqNo: Int, busStop: BusStop, arrivalTime: Long)
 
 
 class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers with BeforeAndAfterAll with Eventually with LbtServletTestFixture {
@@ -21,6 +25,8 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
     interval = scaled(1 second))
 
   addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor), "/*")
+
+
 
   test("Should produce 404 for undefined paths") {
     get("/") {
@@ -70,12 +76,11 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
   test("Should produce a list of routes in the DB with their corresponding 'towards' stop") {
     get("/routelist") {
       status should equal(200)
-      parse(body).extract[List[BusRoute]].foreach(route =>
-        testBusRoutes should contain(route)
-      )
-      val towards = (parse(body) \ "towards").extract[List[String]]
-      testBusRoutes.foreach(route =>
-      towards should contain (definitions(route).last.stopName))
+      val parsedResponse = parse(body).extract[List[TransmittedBusRouteWithTowards]]
+      testBusRoutes.foreach(route => {
+        val routeFromResponse = parsedResponse.find(x => x.name == route.name && x.direction == route.direction).get
+        definitions(route).last.stopName shouldBe routeFromResponse.towards
+      })
     }
   }
 
@@ -83,7 +88,7 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
     testBusRoutes.foreach(route =>
       get("/stoplist/" + route.name + "/" + route.direction) {
         status should equal(200)
-//        parse(body).extract[List[BusStop]] should equal(definitions(route))
+        parse(body).extract[List[BusStop]] should equal(definitions(route))
       }
     )
   }
@@ -101,13 +106,11 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
     testBusRoutes.foreach(route =>
       get("/busroute/" + route.name + "/" + route.direction) {
         status should equal(200)
-        println("PARSED BODY: " + parse(body))
-        println("FROM DB: " + testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route))
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record =>
-//          record.stopRecords.size should equal(definitions(route).size)
-//        )
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1 //TODO START HERE
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record =>
+          record.stopRecords.size should equal(definitions(route).size)
+        )
       }
     )
   }
@@ -118,12 +121,12 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val fromStopID = routeDef(routeDef.size / 3).stopID
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), None))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => {
-//          val indexOfFromStopID = routeDef.indexWhere(x => x.stopID == fromStopID)
-//          record.stopRecords.size should equal(routeDef.size - indexOfFromStopID)
-//        })
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), None))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
+          val indexOfFromStopID = routeDef.indexWhere(x => x.stopID == fromStopID)
+          record.stopRecords.size should equal(routeDef.size - indexOfFromStopID)
+        })
       }
     })
   }
@@ -134,12 +137,12 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toStopID = routeDef((routeDef.size / 3) * 2).stopID
       get("/busroute/" + route.name + "/" + route.direction + "?toStopID=" + toStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, Some(toStopID)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => {
-//          val indexOfToStopID = routeDef.indexWhere(x => x.stopID == toStopID) + 1
-//          record.stopRecords.size should equal(indexOfToStopID)
-//        })
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, Some(toStopID)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
+          val indexOfToStopID = routeDef.indexWhere(x => x.stopID == toStopID) + 1
+          record.stopRecords.size should equal(indexOfToStopID)
+        })
       }
     })
   }
@@ -151,13 +154,13 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toStopID = routeDef((routeDef.size / 3) * 2).stopID
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => {
-//          val indexOfFromStopID = routeDef.indexWhere(x => x.stopID == fromStopID)
-//          val indexOfToStopID = routeDef.indexWhere(x => x.stopID == toStopID) + 1
-//          record.stopRecords.size should equal(indexOfToStopID - indexOfFromStopID)
-//        })
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
+          val indexOfFromStopID = routeDef.indexWhere(x => x.stopID == fromStopID)
+          val indexOfToStopID = routeDef.indexWhere(x => x.stopID == toStopID) + 1
+          record.stopRecords.size should equal(indexOfToStopID - indexOfFromStopID)
+        })
       }
     })
   }
@@ -170,23 +173,23 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toStopID = routeDef.head.stopID
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => record.stopRecords.size shouldBe 1)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => record.stopRecords.size shouldBe 1)
       }
 
       get("/busroute/" + route.name + "/" + route.direction + "?toStopID=" + toStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, Some(toStopID)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => record.stopRecords.size shouldBe 1)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, Some(toStopID)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => record.stopRecords.size shouldBe 1)
       }
 
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), None))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => record.stopRecords.size shouldBe routeDef.size)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), None))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => record.stopRecords.size shouldBe routeDef.size)
       }
     })
   }
@@ -198,23 +201,23 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toStopID = routeDef.last.stopID
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => record.stopRecords.size shouldBe 1)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => record.stopRecords.size shouldBe 1)
       }
 
       get("/busroute/" + route.name + "/" + route.direction + "?toStopID=" + toStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, Some(toStopID)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => record.stopRecords.size shouldBe routeDef.size)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, Some(toStopID)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => record.stopRecords.size shouldBe routeDef.size)
       }
 
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), None))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record => record.stopRecords.size shouldBe 1)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), None))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => record.stopRecords.size shouldBe 1)
       }
     })
   }
@@ -243,10 +246,10 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toTime = System.currentTimeMillis() + (60000 * 7)
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID + "&fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID), Some(fromTime), Some(toTime)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].foreach(record =>
-//          record.stopRecords.count(x => x.arrivalTime < fromTime && x.arrivalTime > toTime) shouldBe 0
-//        )
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID), Some(fromTime), Some(toTime)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record =>
+          record.stopRecords.count(x => x.arrivalTime < fromTime && x.arrivalTime > toTime) shouldBe 0
+        )
       }
     })
   }
@@ -257,9 +260,8 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toTime = System.currentTimeMillis() + (60000 * 7)
       get("/busroute/" + route.name + "/" + route.direction + "?fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, Some(fromTime), Some(toTime)))
-//        println("BODY: " + body)
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 1
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, Some(fromTime), Some(toTime)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
       }
     })
   }
@@ -270,9 +272,9 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
       val toTime = System.currentTimeMillis() - 10000000
       get("/busroute/" + route.name + "/" + route.direction + "?fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
-//        parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, Some(fromTime), Some(toTime)))
-//        parse(body).extract[List[HistoricalRecordFromDb]].size shouldBe 0
-//        parse(body).extract[List[HistoricalRecordFromDb]] shouldBe List.empty
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, Some(fromTime), Some(toTime)))
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 0
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]] shouldBe List.empty
       }
     })
   }
@@ -293,9 +295,15 @@ class LbtServletTest extends ScalatraFunSuite with ScalaFutures with Matchers wi
     testBusRoutes.foreach(route => {
       get("/busroute/" + route.name + "/" + route.direction + "?vehicleID=" + vehicleReg) {
         status should equal(200)
-//          parse(body).extract[List[HistoricalRecordFromDb]] should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, None, None, Some(vehicleReg)))
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, None, None, Some(vehicleReg)))
       }
     })
+  }
+
+  def toDbRecord(transmittedIncomingHistoricalRecordList: List[TransmittedIncomingHistoricalRecord]): List[HistoricalRecordFromDb] = {
+    transmittedIncomingHistoricalRecordList
+      .map(x => HistoricalRecordFromDb(x.busRoute, x.vehicleID, x.stopRecords
+        map(y => ArrivalRecord(y.seqNo, y.busStop.stopID, y.arrivalTime))))
   }
 
   protected override def afterAll(): Unit = {
