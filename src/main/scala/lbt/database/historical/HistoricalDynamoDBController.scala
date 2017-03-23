@@ -3,7 +3,7 @@ package lbt.database.historical
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.regions.{Region, Regions}
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient
-import com.amazonaws.services.dynamodbv2.model.{CreateTableRequest, DeleteTableRequest}
+import com.amazonaws.services.dynamodbv2.model._
 import com.github.dwhjames.awswrap.dynamodb.{AttributeValue, DynamoDBSerializer, Schema}
 import lbt.DatabaseConfig
 import lbt.comon.BusRoute
@@ -44,6 +44,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
   implicit object historicalSerializer extends DynamoDBSerializer[HistoricalDBItem] {
 
     override val tableName = databaseConfig.historicalRecordsTableName
+    val secondaryGlobalIndexName = "VehicleRegIndex"
     override val hashAttributeName = Attributes.route
     override def rangeAttributeName = Some(Attributes.startTimeMills)
     override def primaryKeyOf(historicalItem: HistoricalDBItem) =
@@ -96,14 +97,15 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
 
   def loadHistoricalRecordsFromDbByVehicle(vehicleReg: String): List[HistoricalRecordFromDb]  = {
-
+    //TODO change limit
     val mappedResult = for {
-      result <- mapper.scan[HistoricalDBItem] (Map("VEHICLE_REG" -> ScanCondition.equalTo(vehicleReg)))
+      result <- mapper.query[HistoricalDBItem](historicalSerializer.secondaryGlobalIndexName, Attributes.vehicleReg, vehicleReg, None, true, 100)
       mappedResult = parseQueryResult(result)
     } yield mappedResult.toList
 
     Await.result(mappedResult, 30 seconds)
   }
+
 
   private def parseQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalRecordFromDb] = {
     result.map(result => HistoricalRecordFromDb(
@@ -119,13 +121,27 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
         new CreateTableRequest()
           .withTableName(databaseConfig.historicalRecordsTableName)
           .withProvisionedThroughput(
-            Schema.provisionedThroughput(25L, 4L))
+            Schema.provisionedThroughput(15L, 5L))
           .withAttributeDefinitions(
             Schema.stringAttribute(Attributes.route),
-            Schema.numberAttribute(Attributes.startTimeMills))
+            Schema.numberAttribute(Attributes.startTimeMills),
+            Schema.stringAttribute(Attributes.vehicleReg))
           .withKeySchema(
             Schema.hashKey(Attributes.route),
             Schema.rangeKey(Attributes.startTimeMills))
+          .withGlobalSecondaryIndexes(
+            new GlobalSecondaryIndex()
+              .withIndexName(historicalSerializer.secondaryGlobalIndexName)
+              .withKeySchema(
+                Schema.hashKey(Attributes.vehicleReg),
+                Schema.rangeKey(Attributes.startTimeMills))
+              .withProvisionedThroughput(
+                Schema.provisionedThroughput(10L, 5L))
+              .withProjection(
+                new Projection()
+                  .withProjectionType(ProjectionType.ALL)
+              )
+          )
 
       val createTableCommand = Future(sdkClient.createTableAsync(tableRequest).get())
       Await.result(createTableCommand, 20 seconds)
