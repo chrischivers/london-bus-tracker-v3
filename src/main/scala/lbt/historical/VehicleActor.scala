@@ -63,8 +63,10 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
 
     def noGapsInSequence: StringValidation[Unit] = {
       val orderedExisting = ordererdStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
-      if (orderedExisting.size == orderedExisting.last._1 - orderedExisting.head._1 + 1) ().successNel
-      else  s"Gaps encountered in the sequence received (excluding those at beginning and/or end. StopList: $ordererdStopListWithFutureTimesRemoved".failureNel
+      if (orderedExisting.nonEmpty) {
+        if (orderedExisting.size == orderedExisting.last._1 - orderedExisting.head._1 + 1) ().successNel
+        else s"Gaps encountered in the sequence received (excluding those at beginning and/or end. StopList: $ordererdStopListWithFutureTimesRemoved".failureNel
+      } else s"No elements in filtered sequence".failureNel
     }
 
     def stopArrivalTimesAreIncremental: StringValidation[Unit] = {
