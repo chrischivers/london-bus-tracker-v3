@@ -70,8 +70,11 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
     }
 
     def stopArrivalTimesAreIncremental: StringValidation[Unit] = {
-      if (isSorted(ordererdStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined).map(elem => elem._3.get), (a: Long, b: Long) => a < b)) ().successNel
-      else s"Arrival times in list are not in time order. Stop list: $ordererdStopListWithFutureTimesRemoved".failureNel
+      val orderedExisting = ordererdStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
+      if (orderedExisting.nonEmpty) {
+        if (isSorted(orderedExisting.map(elem => elem._3.get), (a: Long, b: Long) => a < b)) ().successNel
+        else s"Arrival times in list are not in time order. Stop list: $ordererdStopListWithFutureTimesRemoved".failureNel
+      } else s"No elements in filtered sequence".failureNel
     }
 
     def isSorted[A](as: Seq[A], ordered: (A, A) => Boolean): Boolean = {
