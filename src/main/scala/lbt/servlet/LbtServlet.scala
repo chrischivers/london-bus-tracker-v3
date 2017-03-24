@@ -77,8 +77,8 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
                   ("busStop" ->
                     ("stopID" -> stopRec.stopID) ~
                     ("stopName" -> getBusStop(stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
-                      ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
-                      ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude).getOrElse(0.0))
+                    ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
+                    ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude).getOrElse(0.0))
                   ) ~ ("arrivalTime" -> stopRec.arrivalTime)))
           })
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
