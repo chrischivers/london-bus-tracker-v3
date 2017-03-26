@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong
 /*
  * Database Collection Objects
  */
-trait DatabaseTables {
+trait DatabaseControllers {
 
   val numberInsertsRequested: AtomicLong = new AtomicLong(0)
   val numberInsertsFailed: AtomicLong = new AtomicLong(0)

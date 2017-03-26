@@ -12,17 +12,15 @@ import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext
 import scala.io.Source
 
-class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig)(implicit ec: ExecutionContext) extends DatabaseTables with StrictLogging {
+class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig)(implicit ec: ExecutionContext) extends StrictLogging {
 
-  private val definitionsDBController = new DefinitionsDynamoDBController(dbConfig)(ec)
+  val definitionsDBController = new DefinitionsDynamoDBController(dbConfig)(ec)
 
   private var numberToProcess: Long = 0
   private var definitionsCache: BusRouteDefinitions = Map.empty
 
   def insertBusRouteDefinitionIntoDB(busRoute: BusRoute, busStops: List[BusStop]) = {
-    numberGetsRequested.incrementAndGet()
     definitionsDBController.insertRouteIntoDB(busRoute, busStops)
-    numberInsertsCompleted.incrementAndGet()
   }
 
   def getBusRouteDefinitions(forceDBRefresh: Boolean = false): BusRouteDefinitions = {
@@ -31,7 +29,6 @@ class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig
   }
 
   def updateBusRouteDefinitionsFromDB: Unit = {
-    numberGetsRequested.incrementAndGet()
     definitionsCache = definitionsDBController.loadBusRouteDefinitionsFromDB
     logger.info("Bus Route Definitions cache updated from database")
   }

@@ -10,6 +10,7 @@ import lbt.comon.BusRoute
 import lbt.historical.RecordedVehicleDataToPersist
 import com.github.dwhjames.awswrap.dynamodb._
 import com.typesafe.scalalogging.StrictLogging
+import lbt.database.DatabaseControllers
 import lbt.database.definitions.DefinitionsDBItem
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
@@ -18,6 +19,7 @@ import org.joda.time.DateTime
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 case class HistoricalDBItem(ROUTE_ID_DIRECTION: String, JOURNEY_SECTION_ID: String, VEHICLE_REG: String, JOURNEY_START_TIME_MILLIS: Long, JOURNEY_START_MIN_OF_DAY: Int, JOURNEY_START_DAY_OF_WEEK: Int, BUS_STOP_SEQ_NO: Int, BUS_STOP_ID: String, BUS_STOP_ARRIVAL_TIME_MILLIS: Long)
 
@@ -26,7 +28,7 @@ case class Journey(busRoute: BusRoute, vehicleReg: String, startingTime: Long)
 case class HistoricalJourneyRecordFromDb(journey: Journey, stopRecords: List[ArrivalRecord])
 case class HistoricalStopRecordFromDb(stopID: String, arrivalTime: Long, journey: Journey)
 
-class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val ec: ExecutionContext) extends StrictLogging {
+class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val ec: ExecutionContext) extends DatabaseControllers with StrictLogging {
 
   val credentials = new ProfileCredentialsProvider("default")
   val sdkClient = new AmazonDynamoDBAsyncClient(credentials)
@@ -103,13 +105,17 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
         BUS_STOP_ARRIVAL_TIME_MILLIS = record.arrivalTime
       )
     })
-    mapper.batchDump(historicalItemsToPersist).onFailure {
-      case e => logger.error("An error has occurred inserting items toDB :" + historicalItemsToPersist, e)
+    numberInsertsRequested.incrementAndGet()
+    mapper.batchDump(historicalItemsToPersist).onComplete {
+      case Success(_) => numberInsertsCompleted.incrementAndGet()
+      case Failure(e) => numberInsertsFailed.incrementAndGet()
+        logger.error("An error has occurred inserting items to Historical DB :" + historicalItemsToPersist, e)
     }
   }
 
   def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute): List[HistoricalJourneyRecordFromDb] = {
     logger.info(s"Loading historical record from DB for route $busRoute")
+    numberGetsRequested.incrementAndGet()
     val mappedResult = for {
       result <- mapper.query[HistoricalDBItem](write(busRoute))
       mappedResult = parseJourneyQueryResult(result)
@@ -121,6 +127,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
   def loadHistoricalRecordsFromDbByVehicle(vehicleReg: String, limit: Int): List[HistoricalJourneyRecordFromDb]  = {
     logger.info(s"Loading historical record from DB for vehicle $vehicleReg")
+    numberGetsRequested.incrementAndGet()
     val mappedResult = for {
       result <- mapper.query[HistoricalDBItem](historicalSerializer.vehicleRegSecondaryIndexName, Attributes.vehicleReg, vehicleReg, None, true, limit)
       mappedResult = parseJourneyQueryResult(result)
@@ -131,6 +138,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
   def loadHistoricalRecordsFromDbByStopID(stopID: String, limit: Int): List[HistoricalStopRecordFromDb]  = {
     logger.info(s"Loading historical record from DB from stopID $stopID")
+    numberGetsRequested.incrementAndGet()
     val mappedResult = for {
       result <- mapper.query[HistoricalDBItem](historicalSerializer.busStopIDSecondaryIndexName, Attributes.busStopID, stopID, None, true, limit)
       mappedResult = parseStopQueryResult(result)
@@ -163,7 +171,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
   }
 
   private def generateJourneySectionKey(journeyStartTimeMillis: Long, vehicleID: String, seqNo: Int) = {
-    journeyStartTimeMillis + "-" + vehicleID + "-" + "%03d".format(seqNo)
+    vehicleID + "-" + journeyStartTimeMillis + "-" + "%03d".format(seqNo)
   }
 
   def createHistoricalTableIfNotExisting = {

@@ -9,6 +9,7 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.comon.{BusRoute, BusStop}
 import com.github.dwhjames.awswrap.dynamodb._
+import lbt.database.DatabaseControllers
 import lbt.{ConfigLoader, DatabaseConfig}
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization.write
@@ -17,10 +18,11 @@ import net.liftweb.json._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 case class DefinitionsDBItem(ROUTE_ID_DIRECTION: String, SEQUENCE_NO: Int, STOP_ID: String, STOP_NAME: String)
 
-class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val ec: ExecutionContext) extends StrictLogging {
+class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val ec: ExecutionContext) extends DatabaseControllers with StrictLogging {
 
   val credentials = new ProfileCredentialsProvider("default")
   val sdkClient = new AmazonDynamoDBAsyncClient(credentials)
@@ -63,16 +65,22 @@ class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val
   createDefinitionsTableIfNotExisting
 
   def insertRouteIntoDB(busRoute: BusRoute, busStopsSequence: List[BusStop]): Unit = {
+    numberInsertsRequested.incrementAndGet()
     val sequenceWithIndex = busStopsSequence.zipWithIndex
     val definitionItems: Seq[DefinitionsDBItem] = sequenceWithIndex.map(stop => {
       DefinitionsDBItem(write(busRoute), stop._2, stop._1.stopID, stop._1.stopName)
     })
-    Await.result(mapper.batchDump(definitionItems), 30 seconds)
-    logger.info(s"Inserted definitions into DB for Bus Route $busRoute")
+   mapper.batchDump(definitionItems).onComplete {
+      case Success(_) => numberInsertsCompleted.incrementAndGet()
+        logger.info(s"Inserted definitions into DB for Bus Route $busRoute")
+      case Failure(e) => numberInsertsFailed.incrementAndGet()
+        logger.error(s"An error has occurred inserting definition to DB for busRoute $busRoute")
+    }
   }
 
   def loadBusRouteDefinitionsFromDB: BusRouteDefinitions = {
     logger.info("Loading Bus Route Definitions From DB")
+    numberGetsRequested.incrementAndGet()
     val mappedResult = for {
       result <- mapper.scan[DefinitionsDBItem]()
       groupedResult = result.groupBy(item => item.ROUTE_ID_DIRECTION)

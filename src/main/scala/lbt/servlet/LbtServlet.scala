@@ -164,20 +164,20 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     <html>
       <body>
         <h1>Lbt Status</h1>
-        <h2>Bus Definitions Database Table</h2>
-        Number Inserts Requested = {busDefinitionsTable.numberInsertsRequested.get()}<br/>
-        Number Inserts Completed = {busDefinitionsTable.numberInsertsCompleted.get()}<br/>
-        Number Inserts Failed = {busDefinitionsTable.numberInsertsFailed.get()}<br/>
-        Number Get Requests = {busDefinitionsTable.numberGetsRequested.get()}<br/>
-        Number Delete Requests = {busDefinitionsTable.numberDeletesRequested.get()}<br/>
+        <h2>Bus Definitions Table</h2>
+        Number Inserts Requested = {busDefinitionsTable.definitionsDBController.numberInsertsRequested.get()}<br/>
+        Number Inserts Completed = {busDefinitionsTable.definitionsDBController.numberInsertsCompleted.get()}<br/>
+        Number Inserts Failed = {busDefinitionsTable.definitionsDBController.numberInsertsFailed.get()}<br/>
+        Number Get Requests = {busDefinitionsTable.definitionsDBController.numberGetsRequested.get()}<br/>
+        Number Delete Requests = {busDefinitionsTable.definitionsDBController.numberDeletesRequested.get()}<br/>
 
 
-        <h2>Historical Records Database Table</h2>
-        Number Inserts Requested = {historicalRecordsTable.numberInsertsRequested.get()}<br/>
-        Number Inserts Completed = {historicalRecordsTable.numberInsertsCompleted.get()}<br/>
-        Number Inserts Failed = {historicalRecordsTable.numberInsertsFailed.get()}<br/>
-        Number Get Requests= {historicalRecordsTable.numberGetsRequested.get()}<br/>
-        Number Delete Requests ={historicalRecordsTable.numberDeletesRequested.get()}<br/>
+        <h2>Historical Records Table</h2>
+        Number Inserts Requested = {historicalRecordsTable.historicalDBController.numberInsertsRequested.get()}<br/>
+        Number Inserts Completed = {historicalRecordsTable.historicalDBController.numberInsertsCompleted.get()}<br/>
+        Number Inserts Failed = {historicalRecordsTable.historicalDBController.numberInsertsFailed.get()}<br/>
+        Number Get Requests= {historicalRecordsTable.historicalDBController.numberGetsRequested.get()}<br/>
+        Number Delete Requests ={historicalRecordsTable.historicalDBController.numberDeletesRequested.get()}<br/>
 
 
         <h2>Data Stream Processor</h2>
