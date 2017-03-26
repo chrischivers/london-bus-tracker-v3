@@ -1,16 +1,23 @@
 package lbt
 
 import akka.actor.ActorSystem
-import lbt.comon.BusRoute
+import lbt.comon.{BusRoute, BusStop}
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.{HistoricalTable}
+import lbt.database.historical.{HistoricalTable, Journey}
 import lbt.datasource.streaming.DataStreamProcessor
-import lbt.historical.{HistoricalSourceLineProcessor}
+import lbt.historical.HistoricalSourceLineProcessor
 import lbt.servlet.LbtServlet
 import org.scalatra.test.scalatest.ScalatraSuite
 
 import scala.concurrent.ExecutionContext
+
+case class TransmittedIncomingHistoricalRecord(journey: Journey, stopRecords: List[TransmittedIncomingHistoricalArrivalRecord])
+case class TransmittedIncomingHistoricalArrivalRecord(seqNo: Int, busStop: BusStop, arrivalTime: Long)
+case class TransmittedIncomingHistoricalStopRecord(stopID: String, arrivalTime: Long, journey: Journey)
+case class TransmittedBusRouteWithTowards(name: String, direction: String, towards: String)
+
+
 
 class StandardTestFixture extends ScalatraSuite {
 
@@ -20,7 +27,7 @@ class StandardTestFixture extends ScalatraSuite {
   val testDataSourceConfig: DataSourceConfig = ConfigLoader.defaultConfig.dataSourceConfig
   val testDBConfig: DatabaseConfig = ConfigLoader.defaultConfig.databaseConfig.copy(busDefinitionsTableName = "TestDefinitions", historicalRecordsTableName = "TestHistorical")
   val testDefinitionsConfig: DefinitionsConfig = ConfigLoader.defaultConfig.definitionsConfig
-  val testHistoricalRecordsConfig: HistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 5000, numberOfLinesToCleanupAfter = 0)
+  val testHistoricalRecordsConfig: HistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 5000, numberOfLinesToCleanupAfter = 0, toleranceForFuturePredictions = 600000)
 
   val testDefinitionsTable = new BusDefinitionsTable(testDefinitionsConfig, testDBConfig)
   val testHistoricalTable = new HistoricalTable(testDBConfig, testDefinitionsTable)
@@ -36,8 +43,9 @@ class StandardTestFixture extends ScalatraSuite {
 
   val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsTable, testHistoricalTable)
 
-  val arrivalTimeMultipliers: Iterator[Int] = Stream.from(1).iterator
-  def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
+  val now = System.currentTimeMillis() + 5000
+  val arrivalTimeAdder: Iterator[Int] = Stream.from(1).iterator
+  def generateArrivalTime = now + (arrivalTimeAdder.next() * 1000)
 
 
 }

@@ -21,48 +21,43 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
     numberInsertsCompleted.incrementAndGet()
   }
 
-  def getHistoricalRecordFromDbByBusRoute(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByBusRoute(busRoute: BusRoute, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, vehicleReg: Option[String] = None): List[HistoricalJourneyRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
     historicalDBController.loadHistoricalRecordsFromDbByBusRoute(busRoute)
-      .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
+      .map(rec => HistoricalJourneyRecordFromDb(rec.journey, rec.stopRecords
           .filter(stopRec =>
             (fromStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) >= rec.stopRecords.indexWhere(x => x.stopID == fromStopID.get)) &&
               (toStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) <= rec.stopRecords.indexWhere(x => x.stopID == toStopID.get)) &&
               (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
               (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
       .filter(rec =>
-        (vehicleReg.isEmpty || rec.vehicleID == vehicleReg.get) &&
+        (vehicleReg.isEmpty || rec.journey.vehicleReg == vehicleReg.get) &&
           rec.stopRecords.nonEmpty)
   }
 
-  def getHistoricalRecordFromDbByVehicle(vehicleReg: String, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByVehicle(vehicleReg: String, fromStopID: Option[String] = None, toStopID: Option[String] = None, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, limit: Int = 100): List[HistoricalJourneyRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
-    historicalDBController.loadHistoricalRecordsFromDbByVehicle(vehicleReg)
-      .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
+    historicalDBController.loadHistoricalRecordsFromDbByVehicle(vehicleReg, limit)
+      .map(rec => HistoricalJourneyRecordFromDb(rec.journey, rec.stopRecords
         .filter(stopRec =>
           (fromStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) >= rec.stopRecords.indexWhere(x => x.stopID == fromStopID.get)) &&
             (toStopID.isEmpty || rec.stopRecords.indexWhere(x => x.stopID == stopRec.stopID) <= rec.stopRecords.indexWhere(x => x.stopID == toStopID.get)) &&
             (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
             (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
       .filter(rec =>
-        (busRoute.isEmpty || rec.busRoute == busRoute.get) &&
+        (busRoute.isEmpty || rec.journey.busRoute == busRoute.get) &&
           rec.stopRecords.nonEmpty)
   }
 
-  def getHistoricalRecordFromDbByStop(stopID: String, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[String] = None): List[HistoricalRecordFromDb] = {
+  def getHistoricalRecordFromDbByStop(stopID: String, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[String] = None, limit: Int = 100): List[HistoricalStopRecordFromDb] = {
     numberGetsRequested.incrementAndGet()
-    val routesContainingStops = busDefinitionsTable.getBusRouteDefinitions().filter(route => route._2.exists(stop => stop.stopID == stopID)).keys
-    val routesContainingStopsWithFilter = if (busRoute.isDefined) routesContainingStops.filter(route => route == busRoute.get) else routesContainingStops
-
-    routesContainingStopsWithFilter.flatMap(route => getHistoricalRecordFromDbByBusRoute(route, None, None, fromTime, toTime, vehicleReg)).toList
-      .map(rec => HistoricalRecordFromDb(rec.busRoute, rec.vehicleID, rec.stopRecords
-        .filter(stopRec =>
-            (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
-            (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))))
+    historicalDBController.loadHistoricalRecordsFromDbByStopID(stopID, limit)
+      .filter(stopRec =>
+          (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
+          (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))
       .filter(rec =>
-        (vehicleReg.isEmpty || rec.vehicleID == vehicleReg.get) &&
-        (busRoute.isEmpty || rec.busRoute == busRoute.get) &&
-          rec.stopRecords.nonEmpty)
+        (vehicleReg.isEmpty || rec.journey.vehicleReg == vehicleReg.get) &&
+        (busRoute.isEmpty || rec.journey.busRoute == busRoute.get))
   }
 
   def deleteTable = historicalDBController.deleteHistoricalTable

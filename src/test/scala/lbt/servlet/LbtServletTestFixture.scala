@@ -37,10 +37,13 @@ trait LbtServletTestFixture {
 
   val dataStreamProcessor = new DataStreamProcessor(testDataSourceConfig, historicalSourceLineProcessor)(actorSystem, executionContext)
 
+  val now = System.currentTimeMillis()
+
   val vehicleReg = "V" + Random.nextInt(99999)
   testBusRoutes.foreach { route =>
-    val arrivalTimeMultipliers = Stream.from(1).iterator
-    def generateArrivalTime = System.currentTimeMillis() + (60000 * arrivalTimeMultipliers.next())
+
+    val arrivalTimeIncrementer = Stream.from(1).iterator
+    def generateArrivalTime = now + (arrivalTimeIncrementer.next() * 1000)
     implicit val formats = DefaultFormats
 
     println("definitions: " + definitions)

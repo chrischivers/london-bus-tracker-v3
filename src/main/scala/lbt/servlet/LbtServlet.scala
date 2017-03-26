@@ -4,7 +4,7 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.Main
 import lbt.comon._
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.{HistoricalRecordFromDb, HistoricalTable}
+import lbt.database.historical.{HistoricalJourneyRecordFromDb, HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.HistoricalSourceLineProcessor
 import org.scalatra.{NotFound, Ok, ScalatraServlet}
@@ -71,7 +71,11 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       if (validateFromToStops(Some(busRoute), fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
           compactRender(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), vehicleReg).map { rec =>
-            ("busRoute" -> ("name" -> rec.busRoute.name) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
+            ("journey" ->
+              ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
+                ("vehicleReg" -> rec.journey.vehicleReg) ~
+                ("startingTime" -> rec.journey.startingTime)) ~
+              ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
                   ("busStop" ->
@@ -86,8 +90,8 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     } else NotFound(s"No records found for bus route $busRoute")
   }
 
-  get("/vehicle/:vehicleID") {
-    val vehicleReg = params("vehicleID")
+  get("/vehicle/:vehicleReg") {
+    val vehicleReg = params("vehicleReg")
     val fromStopID = params.get("fromStopID")
     val toStopID = params.get("toStopID")
     val fromTime = params.get("fromTime")
@@ -103,14 +107,18 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       if (validateFromToStops(busRoute, fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
           compactRender(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute).map { rec =>
-            ("busRoute" -> ("name" -> rec.busRoute.name) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
+            ("journey" ->
+              ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
+                ("vehicleReg" -> rec.journey.vehicleReg) ~
+                ("startingTime" -> rec.journey.startingTime)) ~
+            ("stopRecords" ->
               rec.stopRecords.map(stopRec =>
                 ("seqNo" -> stopRec.seqNo) ~
                   ("busStop" ->
                     ("stopID" -> stopRec.stopID) ~
-                    ("stopName" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.busRoute.name, rec.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
-                    ("longitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.busRoute.name, rec.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
-                    ("latitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.busRoute.name, rec.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.latitude).getOrElse(0.0))
+                    ("stopName" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.journey.busRoute.name, rec.journey.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
+                    ("longitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.journey.busRoute.name, rec.journey.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
+                    ("latitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.journey.busRoute.name, rec.journey.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.latitude).getOrElse(0.0))
                     ) ~
                   ("arrivalTime" -> stopRec.arrivalTime)))
           })
@@ -138,16 +146,12 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
           busDefinitionsTable.getBusRouteDefinitions().flatMap(x => x._2).find(stop => stop.stopID == stopID) match {
             case Some(stopDetails) =>
               compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
-                ("busRoute" -> ("name" -> rec.busRoute.name) ~ ("direction" -> rec.busRoute.direction)) ~ ("vehicleID" -> rec.vehicleID) ~ ("stopRecords" ->
-                  rec.stopRecords.map(stopRec =>
-                    ("seqNo" -> stopRec.seqNo) ~
-                      ("busStop" -> (
-                        ("stopID" -> stopDetails.stopID) ~
-                          ("stopName" -> stopDetails.stopName) ~
-                          ("longitude" -> stopDetails.longitude) ~
-                          ("latitude" -> stopDetails.latitude)
-                        )) ~
-                      ("arrivalTime" -> stopRec.arrivalTime)))
+                ("stopID" -> rec.stopID) ~
+                ("arrivalTime" -> rec.arrivalTime) ~
+                ("journey" ->
+                   ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
+                    ("vehicleReg" -> rec.journey.vehicleReg) ~
+                     ("startingTime" -> rec.journey.startingTime))
               })
             case None => NotFound(s"No records found for stopID: $stopID")
           }

@@ -50,30 +50,30 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
 
     val orderedStopsList: List[(Int, BusStop, Option[Long])] = busStopDefinitionList.zipWithIndex.map{case(stop, index) => (index, stop, stopArrivalRecords.get(stop))}
 
-    val ordererdStopListWithFutureTimesRemoved: List[(Int, BusStop, Option[Long])] = orderedStopsList.map(stop => {
+    val orderedStopListWithFutureTimesRemoved: List[(Int, BusStop, Option[Long])] = orderedStopsList.map(stop => {
       if(stop._3.isDefined && stop._3.get > vehicleLastUpdated + historicalRecordsConfig.toleranceForFuturePredictions) (stop._1, stop._2, None)
       else stop
     })
 
     def minimumNumberOfRecordsReceived: StringValidation[Unit] = {
-      val numberOfRecordsWithData = ordererdStopListWithFutureTimesRemoved.count(rec => rec._3.isDefined)
+      val numberOfRecordsWithData = orderedStopListWithFutureTimesRemoved.count(rec => rec._3.isDefined)
       if(numberOfRecordsWithData >= historicalRecordsConfig.minimumNumberOfStopsToPersist) ().successNel
       else s"Not enough stops to persist. Number of stops: $numberOfRecordsWithData. Minimum ${historicalRecordsConfig.minimumNumberOfStopsToPersist}".failureNel
     }
 
     def noGapsInSequence: StringValidation[Unit] = {
-      val orderedExisting = ordererdStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
+      val orderedExisting = orderedStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
       if (orderedExisting.nonEmpty) {
         if (orderedExisting.size == orderedExisting.last._1 - orderedExisting.head._1 + 1) ().successNel
-        else s"Gaps encountered in the sequence received (excluding those at beginning and/or end. StopList: $ordererdStopListWithFutureTimesRemoved".failureNel
+        else s"Gaps encountered in the sequence received (excluding those at beginning and/or end. StopList: $orderedStopListWithFutureTimesRemoved".failureNel
       } else s"No elements in filtered sequence".failureNel
     }
 
     def stopArrivalTimesAreIncremental: StringValidation[Unit] = {
-      val orderedExisting = ordererdStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
+      val orderedExisting = orderedStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
       if (orderedExisting.nonEmpty) {
         if (isSorted(orderedExisting.map(elem => elem._3.get), (a: Long, b: Long) => a < b)) ().successNel
-        else s"Arrival times in list are not in time order. Stop list: $ordererdStopListWithFutureTimesRemoved".failureNel
+        else s"Arrival times in list are not in time order. Stop list: $orderedStopListWithFutureTimesRemoved".failureNel
       } else s"No elements in filtered sequence".failureNel
     }
 
@@ -90,7 +90,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
     (minimumNumberOfRecordsReceived
       |@| noGapsInSequence
       |@| stopArrivalTimesAreIncremental).tupled
-      .map(_ => ordererdStopListWithFutureTimesRemoved
+      .map(_ => orderedStopListWithFutureTimesRemoved
         .filter(elem => elem._3.isDefined)
         .map(elem => StopDataRecordToPersist(elem._1 + 1, elem._2.stopID, elem._3.get)))
     }

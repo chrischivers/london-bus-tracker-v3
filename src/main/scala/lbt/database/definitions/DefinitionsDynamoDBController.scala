@@ -68,7 +68,7 @@ class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val
       DefinitionsDBItem(write(busRoute), stop._2, stop._1.stopID, stop._1.stopName)
     })
     Await.result(mapper.batchDump(definitionItems), 30 seconds)
-    logger.info("Inserted definitions into DB")
+    logger.info(s"Inserted definitions into DB for Bus Route $busRoute")
   }
 
   def loadBusRouteDefinitionsFromDB: BusRouteDefinitions = {

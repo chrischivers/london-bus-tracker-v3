@@ -197,12 +197,12 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get().toInt shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
-    dataStreamProcessorTest.stop
+   // dataStreamProcessorTest.stop
   }
 
   test("Persisted record should be loaded with stop sequence in same order and with same values"){f=>
@@ -228,9 +228,9 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe true
-      val historicalRecord = f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
+      val historicalRecord = f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head
       historicalRecord.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
     dataStreamProcessorTest.stop
@@ -262,8 +262,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 0
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe false
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe false
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
     }
     dataStreamProcessorTest.stop
   }
@@ -292,8 +292,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 0
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe false
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe false
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
     }
     dataStreamProcessorTest.stop
   }
@@ -323,12 +323,12 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.busRoute == f.testBusRoute1) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID).splitAt(routeDefFromDb.size / 2)._2
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.stopID == record.stopID) + 1) shouldEqual f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.seqNo)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID).splitAt(routeDefFromDb.size / 2)._2
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.stopID == record.stopID) + 1) shouldEqual f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.seqNo)
     }
     dataStreamProcessorTest.stop
   }
@@ -370,12 +370,12 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 2
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 2
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg)(1).stopRecords.size shouldBe testLines2.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg)(1).stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 2
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg)(1).stopRecords.size shouldBe testLines2.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg)(1).stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
     dataStreamProcessorTest2.stop
 
@@ -408,10 +408,10 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.vehicleID == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.busRoute == f.testBusRoute1) shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.size shouldBe testLines1.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.vehicleID == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
     dataStreamProcessorTest.stop
   }
