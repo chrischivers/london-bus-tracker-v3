@@ -5,13 +5,13 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.HistoricalRecordsConfig
 import lbt.comon._
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.HistoricalTable
+import lbt.database.historical.{ArrivalRecord, HistoricalTable}
 
 import scalaz.Scalaz._
 import scalaz._
 
-case class StopDataRecordToPersist(seqNo: Int, busStopId: String, arrivalTime: Long)
-case class RecordedVehicleDataToPersist(vehicleReg: String, busRoute: BusRoute, stopArrivalRecords: List[StopDataRecordToPersist])
+//case class StopDataRecordToPersist(seqNo: Int, busStopId: String, arrivalTime: Long)
+case class RecordedVehicleDataToPersist(vehicleReg: String, busRoute: BusRoute, stopArrivalRecords: List[ArrivalRecord])
 
 class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsTable: BusDefinitionsTable, historicalTable: HistoricalTable) extends Actor with StrictLogging {
   val name: String = self.path.name
@@ -46,7 +46,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
       }
   }
 
-  def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop], vehicleLastUpdated: Long): StringValidation[List[StopDataRecordToPersist]] = {
+  def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop], vehicleLastUpdated: Long): StringValidation[List[ArrivalRecord]] = {
 
     val orderedStopsList: List[(Int, BusStop, Option[Long])] = busStopDefinitionList.zipWithIndex.map{case(stop, index) => (index, stop, stopArrivalRecords.get(stop))}
 
@@ -92,7 +92,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
       |@| stopArrivalTimesAreIncremental).tupled
       .map(_ => orderedStopListWithFutureTimesRemoved
         .filter(elem => elem._3.isDefined)
-        .map(elem => StopDataRecordToPersist(elem._1 + 1, elem._2.stopID, elem._3.get)))
+        .map(elem => ArrivalRecord(elem._1 + 1, elem._2.stopID, elem._3.get)))
     }
 
   override def postStop: Unit = logger.info(s"Vehicle $name has been killed")

@@ -49,6 +49,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
     val newBusRoute = BusRoute("521", "inbound")
     f.testDefinitionsTable.getBusRouteDefinitions().get(newBusRoute) shouldBe empty
     f.testDefinitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(List(newBusRoute)))
+    Thread.sleep(5000)
     f.testDefinitionsTable.getBusRouteDefinitions().get(f.testBusRoute1) shouldBe defined
     f.testDefinitionsTable.getBusRouteDefinitions().get(f.testBusRoute2) shouldBe defined
     f.testDefinitionsTable.getBusRouteDefinitions().get(newBusRoute) shouldBe defined

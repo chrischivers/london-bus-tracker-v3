@@ -196,7 +196,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get().toInt shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get().toInt shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines.size
@@ -220,14 +220,13 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     eventually {
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
     }
-
     eventually {
       f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
       val historicalRecord = f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head
@@ -261,7 +260,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 0
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 0
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
     }
@@ -291,7 +290,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 0
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 0
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
     }
@@ -322,7 +321,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
@@ -369,7 +368,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 2
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 2
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 2
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
@@ -407,7 +406,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
-      f.testHistoricalTable.numberInsertsRequested.get() shouldBe 1
+      f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size

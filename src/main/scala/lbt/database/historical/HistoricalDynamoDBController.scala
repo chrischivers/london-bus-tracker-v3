@@ -21,7 +21,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-case class HistoricalDBItem(ROUTE_ID_DIRECTION: String, JOURNEY_SECTION_ID: String, VEHICLE_REG: String, JOURNEY_START_TIME_MILLIS: Long, JOURNEY_START_MIN_OF_DAY: Int, JOURNEY_START_DAY_OF_WEEK: Int, BUS_STOP_SEQ_NO: Int, BUS_STOP_ID: String, BUS_STOP_ARRIVAL_TIME_MILLIS: Long)
+case class HistoricalDBItem(ROUTE_ID_DIRECTION: String, JOURNEY_ID: String, VEHICLE_REG: String, JOURNEY_START_TIME_MILLIS: Long, JOURNEY_START_SECOND_OF_WEEK: Int, ARRIVAL_RECORD: String)
 
 case class ArrivalRecord(seqNo: Int, stopID: String, arrivalTime: Long)
 case class Journey(busRoute: BusRoute, vehicleReg: String, startingTime: Long)
@@ -39,14 +39,14 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
   object Attributes {
     val routeIDDirection = "ROUTE_ID_DIRECTION" //Hash Key
-    val journeySectionID = "JOURNEY_SECTION_ID" //Range Key
+    val journeyID = "JOURNEY_ID" //Range Key
     val vehicleReg = "VEHICLE_REG"
     val journeyStartTimeMills = "JOURNEY_START_TIME_MILLIS"
-    val journeyStartMinOfDay = "JOURNEY_START_MIN_OF_DAY"
-    val journeyStartDayOfWeek = "JOURNEY_START_DAY_OF_WEEK"
-    val busStopSeqNo = "BUS_STOP_SEQ_NO"
-    val busStopID = "BUS_STOP_ID"
-    val busStopArrivalTimeMillis = "BUS_STOP_ARRIVAL_TIME_MILLIS"
+    val journeyStartSecondOfWeek= "JOURNEY_START_SECOND_OF_WEEK"
+    val arrivalRecord = "ARRIVAL_RECORD"
+//    val busStopSeqNo = "BUS_STOP_SEQ_NO"
+//    val busStopID = "BUS_STOP_ID"
+//    val busStopArrivalTimeMillis = "BUS_STOP_ARRIVAL_TIME_MILLIS"
 
   }
 
@@ -58,33 +58,27 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     val busStopIDSecondaryIndexName = "BusStopIDIndex"
 
     override val hashAttributeName = Attributes.routeIDDirection
-    override def rangeAttributeName = Some(Attributes.journeySectionID)
+    override def rangeAttributeName = Some(Attributes.journeyID)
     override def primaryKeyOf(historicalItem: HistoricalDBItem) =
       Map(Attributes.routeIDDirection -> historicalItem.ROUTE_ID_DIRECTION,
-        Attributes.journeySectionID -> historicalItem.JOURNEY_SECTION_ID)
+        Attributes.journeyID -> historicalItem.JOURNEY_ID)
     override def toAttributeMap(historicalItem: HistoricalDBItem) =
       Map(
         Attributes.routeIDDirection -> historicalItem.ROUTE_ID_DIRECTION,
-        Attributes.journeySectionID -> historicalItem.JOURNEY_SECTION_ID,
+        Attributes.journeyID -> historicalItem.JOURNEY_ID,
         Attributes.vehicleReg -> historicalItem.VEHICLE_REG,
         Attributes.journeyStartTimeMills -> historicalItem.JOURNEY_START_TIME_MILLIS,
-        Attributes.journeyStartMinOfDay -> historicalItem.JOURNEY_START_MIN_OF_DAY,
-        Attributes.journeyStartDayOfWeek -> historicalItem.JOURNEY_START_DAY_OF_WEEK,
-        Attributes.busStopSeqNo -> historicalItem.BUS_STOP_SEQ_NO,
-        Attributes.busStopID -> historicalItem.BUS_STOP_ID,
-        Attributes.busStopArrivalTimeMillis -> historicalItem.BUS_STOP_ARRIVAL_TIME_MILLIS
+        Attributes.journeyStartSecondOfWeek -> historicalItem.JOURNEY_START_SECOND_OF_WEEK,
+        Attributes.arrivalRecord -> historicalItem.ARRIVAL_RECORD
       )
     override def fromAttributeMap(item: collection.mutable.Map[String, AttributeValue]) =
       HistoricalDBItem(
         ROUTE_ID_DIRECTION = item(Attributes.routeIDDirection),
-        JOURNEY_SECTION_ID = item(Attributes.journeySectionID),
+        JOURNEY_ID = item(Attributes.journeyID),
         VEHICLE_REG = item(Attributes.vehicleReg),
         JOURNEY_START_TIME_MILLIS = item(Attributes.journeyStartTimeMills),
-        JOURNEY_START_DAY_OF_WEEK = item(Attributes.journeyStartDayOfWeek),
-        JOURNEY_START_MIN_OF_DAY = item(Attributes.journeyStartMinOfDay),
-        BUS_STOP_SEQ_NO = item(Attributes.busStopSeqNo),
-        BUS_STOP_ID = item(Attributes.busStopID),
-        BUS_STOP_ARRIVAL_TIME_MILLIS = item(Attributes.busStopArrivalTimeMillis)
+        JOURNEY_START_SECOND_OF_WEEK = item(Attributes.journeyStartSecondOfWeek),
+        ARRIVAL_RECORD = item(Attributes.arrivalRecord)
       )
   }
 
@@ -92,24 +86,20 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
   def insertHistoricalRecordIntoDB(vehicleRecordedData: RecordedVehicleDataToPersist): Unit = {
     val journeyStartTime = vehicleRecordedData.stopArrivalRecords.head.arrivalTime
-    val historicalItemsToPersist = vehicleRecordedData.stopArrivalRecords.map(record => {
+    val historicalItemToPersist =
       HistoricalDBItem(
         ROUTE_ID_DIRECTION = write(vehicleRecordedData.busRoute),
-        JOURNEY_SECTION_ID = generateJourneySectionKey(journeyStartTime, vehicleRecordedData.vehicleReg, record.seqNo),
+        JOURNEY_ID = generateJourneyIdKey(journeyStartTime, vehicleRecordedData.vehicleReg),
         VEHICLE_REG = vehicleRecordedData.vehicleReg,
         JOURNEY_START_TIME_MILLIS = journeyStartTime,
-        JOURNEY_START_DAY_OF_WEEK = new DateTime(journeyStartTime).getDayOfWeek,
-        JOURNEY_START_MIN_OF_DAY = new DateTime(journeyStartTime).getMinuteOfDay,
-        BUS_STOP_SEQ_NO = record.seqNo,
-        BUS_STOP_ID = record.busStopId,
-        BUS_STOP_ARRIVAL_TIME_MILLIS = record.arrivalTime
+        JOURNEY_START_SECOND_OF_WEEK = getSecondsOfWeek(journeyStartTime),
+        ARRIVAL_RECORD = write(vehicleRecordedData.stopArrivalRecords)
       )
-    })
     numberInsertsRequested.incrementAndGet()
-    mapper.batchDump(historicalItemsToPersist).onComplete {
+    mapper.batchDump(Seq(historicalItemToPersist)).onComplete {
       case Success(_) => numberInsertsCompleted.incrementAndGet()
       case Failure(e) => numberInsertsFailed.incrementAndGet()
-        logger.error("An error has occurred inserting items to Historical DB :" + historicalItemsToPersist, e)
+        logger.error("An error has occurred inserting item into Historical DB :" + historicalItemToPersist, e)
     }
   }
 
@@ -136,42 +126,43 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     Await.result(mappedResult, 30 seconds)
   }
 
-  def loadHistoricalRecordsFromDbByStopID(stopID: String, limit: Int): List[HistoricalStopRecordFromDb]  = {
-    logger.info(s"Loading historical record from DB from stopID $stopID")
-    numberGetsRequested.incrementAndGet()
-    val mappedResult = for {
-      result <- mapper.query[HistoricalDBItem](historicalSerializer.busStopIDSecondaryIndexName, Attributes.busStopID, stopID, None, true, limit)
-      mappedResult = parseStopQueryResult(result)
-    } yield mappedResult.toList
-
-    Await.result(mappedResult, 30 seconds)
-  }
+//  def loadHistoricalRecordsFromDbByStopID(stopID: String, limit: Int): List[HistoricalStopRecordFromDb]  = {
+//    logger.info(s"Loading historical record from DB from stopID $stopID")
+//    numberGetsRequested.incrementAndGet()
+//    val mappedResult = for {
+//      result <- mapper.query[HistoricalDBItem](historicalSerializer.busStopIDSecondaryIndexName, Attributes.busStopID, stopID, None, true, limit)
+//      mappedResult = parseStopQueryResult(result)
+//    } yield mappedResult.toList
+//
+//    Await.result(mappedResult, 30 seconds)
+//  }
 
 
   private def parseJourneyQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalJourneyRecordFromDb] = {
-    val groupedResult = result.groupBy(x => Journey(parse(x.ROUTE_ID_DIRECTION).extract[BusRoute], x.VEHICLE_REG, x.JOURNEY_START_TIME_MILLIS))
-      groupedResult.map{
-        case(journey, historicalDBItem) =>
-          HistoricalJourneyRecordFromDb(
-          journey,
-          historicalDBItem.sortBy(_.BUS_STOP_SEQ_NO).map(record =>
-            ArrivalRecord(record.BUS_STOP_SEQ_NO, record.BUS_STOP_ID, record.BUS_STOP_ARRIVAL_TIME_MILLIS)
-          ).toList
-        )
-      }.toSeq
+      result.map { res =>
+        HistoricalJourneyRecordFromDb(
+          Journey(parse(res.ROUTE_ID_DIRECTION).extract[BusRoute], res.VEHICLE_REG, res.JOURNEY_START_TIME_MILLIS),
+          parse(res.ARRIVAL_RECORD).extract[List[ArrivalRecord]]
+            .sortBy(arrRec => arrRec.arrivalTime))
+      }.sortBy(arrivalRecord => arrivalRecord.journey.startingTime)(Ordering[Long].reverse)
   }
 
-  private def parseStopQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalStopRecordFromDb] = {
-    result.map(item =>
-        HistoricalStopRecordFromDb(
-          item.BUS_STOP_ID,
-          item.BUS_STOP_ARRIVAL_TIME_MILLIS,
-          Journey(parse(item.ROUTE_ID_DIRECTION).extract[BusRoute], item.VEHICLE_REG, item.JOURNEY_START_TIME_MILLIS)
-        ))
+//  private def parseStopQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalStopRecordFromDb] = {
+//    result.map(item =>
+//        HistoricalStopRecordFromDb(
+//          item.BUS_STOP_ID,
+//          item.BUS_STOP_ARRIVAL_TIME_MILLIS,
+//          Journey(parse(item.ROUTE_ID_DIRECTION).extract[BusRoute], item.VEHICLE_REG, item.JOURNEY_START_TIME_MILLIS)
+//        ))
+//  }
+
+  private def generateJourneyIdKey(journeyStartTimeMillis: Long, vehicleID: String) = {
+    vehicleID + "-" + journeyStartTimeMillis
   }
 
-  private def generateJourneySectionKey(journeyStartTimeMillis: Long, vehicleID: String, seqNo: Int) = {
-    vehicleID + "-" + journeyStartTimeMillis + "-" + "%03d".format(seqNo)
+  private def getSecondsOfWeek(journeyStartTime: Long): Int = {
+    val dateTime = new DateTime(journeyStartTime)
+      dateTime.getDayOfWeek * dateTime.getSecondOfDay
   }
 
   def createHistoricalTableIfNotExisting = {
@@ -184,35 +175,35 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
             Schema.provisionedThroughput(15L, 5L))
           .withAttributeDefinitions(
             Schema.stringAttribute(Attributes.routeIDDirection),
-            Schema.stringAttribute(Attributes.journeySectionID),
-            Schema.stringAttribute(Attributes.vehicleReg),
-            Schema.stringAttribute(Attributes.busStopID))
+            Schema.stringAttribute(Attributes.journeyID),
+            Schema.stringAttribute(Attributes.vehicleReg))
+//            Schema.numberAttribute(Attributes.journeyStartSecondOfWeek))
           .withKeySchema(
             Schema.hashKey(Attributes.routeIDDirection),
-            Schema.rangeKey(Attributes.journeySectionID))
+            Schema.rangeKey(Attributes.journeyID))
           .withGlobalSecondaryIndexes(
             new GlobalSecondaryIndex()
               .withIndexName(historicalSerializer.vehicleRegSecondaryIndexName)
               .withKeySchema(
                 Schema.hashKey(Attributes.vehicleReg),
-                Schema.rangeKey(Attributes.journeySectionID))
-              .withProvisionedThroughput(
-                Schema.provisionedThroughput(10L, 5L))
-              .withProjection(
-                new Projection()
-                  .withProjectionType(ProjectionType.ALL)
-              ),
-            new GlobalSecondaryIndex()
-              .withIndexName(historicalSerializer.busStopIDSecondaryIndexName)
-              .withKeySchema(
-                Schema.hashKey(Attributes.busStopID),
-                Schema.rangeKey(Attributes.journeySectionID))
+                Schema.rangeKey(Attributes.journeyID))
               .withProvisionedThroughput(
                 Schema.provisionedThroughput(10L, 5L))
               .withProjection(
                 new Projection()
                   .withProjectionType(ProjectionType.ALL)
               )
+//            new GlobalSecondaryIndex()
+//              .withIndexName(historicalSerializer.busStopIDSecondaryIndexName)
+//              .withKeySchema(
+//                Schema.hashKey(Attributes.journeyStartSecondOfWeek),
+//                Schema.rangeKey(Attributes.journeyID))
+//              .withProvisionedThroughput(
+//                Schema.provisionedThroughput(10L, 5L))
+//              .withProjection(
+//                new Projection()
+//                  .withProjectionType(ProjectionType.ALL)
+//              )
           )
 
       val createTableCommand = Future(sdkClient.createTableAsync(tableRequest).get())

@@ -196,8 +196,8 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
       val routeDef = definitions(route)
       val fromStopID = routeDef(routeDef.size / 3).stopID
       val toStopID = routeDef((routeDef.size / 3) * 2).stopID
-      val fromTime = System.currentTimeMillis() + (60000 * 3)
-      val toTime = System.currentTimeMillis() + (60000 * 7)
+      val fromTime = System.currentTimeMillis() + 12000
+      val toTime = System.currentTimeMillis() + 20000
       get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID + "&fromTime=" + fromTime + "&toTime=" + toTime) {
         status should equal(200)
         toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID), Some(fromTime), Some(toTime)))

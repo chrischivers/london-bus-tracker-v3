@@ -46,13 +46,21 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
   }
 
   def getHistoricalRecordFromDbByStop(stopID: String, fromTime: Option[Long] = None, toTime: Option[Long] = None, busRoute: Option[BusRoute] = None, vehicleReg: Option[String] = None, limit: Int = 100): List[HistoricalStopRecordFromDb] = {
-    historicalDBController.loadHistoricalRecordsFromDbByStopID(stopID, limit)
+    val routesContainingStops = busDefinitionsTable.getBusRouteDefinitions().filter(route => route._2.exists(stop => stop.stopID == stopID)).keys
+    val routesContainingStopsWithFilter = busRoute match {
+      case Some(thisRoute) => routesContainingStops.filter(route => route == thisRoute)
+      case None => routesContainingStops
+    }
+
+    routesContainingStopsWithFilter.flatMap(route => getHistoricalRecordFromDbByBusRoute(route, None, None, fromTime, toTime, vehicleReg)).toList
+      .flatMap(rec => rec.stopRecords.find(stop => stop.stopID == stopID)
+        .map(arrivalRecord => HistoricalStopRecordFromDb(arrivalRecord.stopID, arrivalRecord.arrivalTime, rec.journey))
       .filter(stopRec =>
-          (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
+        (fromTime.isEmpty || stopRec.arrivalTime >= fromTime.get) &&
           (toTime.isEmpty || stopRec.arrivalTime <= toTime.get))
       .filter(rec =>
         (vehicleReg.isEmpty || rec.journey.vehicleReg == vehicleReg.get) &&
-        (busRoute.isEmpty || rec.journey.busRoute == busRoute.get))
+          (busRoute.isEmpty || rec.journey.busRoute == busRoute.get)))
   }
 
   def deleteTable = historicalDBController.deleteHistoricalTable
