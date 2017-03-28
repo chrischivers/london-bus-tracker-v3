@@ -2,6 +2,7 @@ package lbt.servlet
 
 import com.typesafe.scalalogging.StrictLogging
 import lbt.Main
+import lbt.comon.Commons.BusRouteDefinitions
 import lbt.comon._
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.{HistoricalJourneyRecordFromDb, HistoricalTable}
@@ -61,30 +62,15 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     val toStopID = params.get("toStopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
+    val fromSecOfWeek = params.get("fromSecOfWeek")
+    val toSecOfWeek = params.get("toSecOfWeek")
     val vehicleReg = params.get("vehicleID")
-    val definitions = busDefinitionsTable.getBusRouteDefinitions()(busRoute)
-    logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, vehicleReg $vehicleReg")
-
-    def getBusStop(stopID: String): Option[BusStop] = definitions.find(x => x.stopID == stopID)
+    logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, fromSecOfWeek $fromSecOfWeek, toSecOfWeek $toSecOfWeek, vehicleReg $vehicleReg")
 
     if (validateBusRoute(Some(busRoute))) {
       if (validateFromToStops(Some(busRoute), fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
-          compactRender(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), vehicleReg).map { rec =>
-            ("journey" ->
-              ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
-                ("vehicleReg" -> rec.journey.vehicleReg) ~
-                ("startingTime" -> rec.journey.startingTime)) ~
-              ("stopRecords" ->
-              rec.stopRecords.map(stopRec =>
-                ("seqNo" -> stopRec.seqNo) ~
-                  ("busStop" ->
-                    ("stopID" -> stopRec.stopID) ~
-                    ("stopName" -> getBusStop(stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
-                    ("longitude" -> getBusStop(stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
-                    ("latitude" -> getBusStop(stopRec.stopID).map(_.latitude).getOrElse(0.0))
-                  ) ~ ("arrivalTime" -> stopRec.arrivalTime)))
-          })
+          compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), fromSecOfWeek.map(_.toInt), toSecOfWeek.map(_.toInt), vehicleReg), busDefinitionsTable.getBusRouteDefinitions()))
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
       } else NotFound(s"No records found for bus route $busRoute, from stop: $fromStopID and to stop: $toStopID")
     } else NotFound(s"No records found for bus route $busRoute")
@@ -96,32 +82,19 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     val toStopID = params.get("toStopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
+    val fromSecOfWeek = params.get("fromSecOfWeek")
+    val toSecOfWeek = params.get("toSecOfWeek")
     val busRoute = for {
       route <- params.get("route")
       direction <- params.get("direction")
       busRoute = BusRoute(route, direction)
     } yield busRoute
-    logger.info(s"/vehicle request received for $vehicleReg, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, busRoute $busRoute")
+    logger.info(s"/vehicle request received for $vehicleReg, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, fromSecOfWeek $fromSecOfWeek, toSecOfWeek $toSecOfWeek, busRoute $busRoute")
 
     if (validateBusRoute(busRoute)) {
       if (validateFromToStops(busRoute, fromStopID, toStopID)) {
         if (validateFromToTime(fromTime, toTime)) {
-          compactRender(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute).map { rec =>
-            ("journey" ->
-              ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
-                ("vehicleReg" -> rec.journey.vehicleReg) ~
-                ("startingTime" -> rec.journey.startingTime)) ~
-            ("stopRecords" ->
-              rec.stopRecords.map(stopRec =>
-                ("seqNo" -> stopRec.seqNo) ~
-                  ("busStop" ->
-                    ("stopID" -> stopRec.stopID) ~
-                    ("stopName" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.journey.busRoute.name, rec.journey.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
-                    ("longitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.journey.busRoute.name, rec.journey.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
-                    ("latitude" -> busDefinitionsTable.getBusRouteDefinitions()(BusRoute(rec.journey.busRoute.name, rec.journey.busRoute.direction)).find(x => x.stopID == stopRec.stopID).map(_.latitude).getOrElse(0.0))
-                    ) ~
-                  ("arrivalTime" -> stopRec.arrivalTime)))
-          })
+          compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), fromSecOfWeek.map(_.toInt), toSecOfWeek.map(_.toInt), busRoute), busDefinitionsTable.getBusRouteDefinitions()))
         } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
       } else NotFound(s"No records found for vehicle reg $vehicleReg, from stop: $fromStopID and to stop: $toStopID")
     } else NotFound(s"No records found for vehicle reg $vehicleReg and bus route ${busRoute.get}")
@@ -131,13 +104,15 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     val stopID = params("stopID")
     val fromTime = params.get("fromTime")
     val toTime = params.get("toTime")
+    val fromSecOfWeek = params.get("fromSecOfWeek")
+    val toSecOfWeek = params.get("toSecOfWeek")
     val vehicleReg = params.get("vehicleID")
     val busRoute = for {
       route <- params.get("route")
       direction <- params.get("direction")
       busRoute = BusRoute(route, direction)
     } yield busRoute
-    logger.info(s"/stop request received for $stopID, fromTime $fromTime, toTime $toTime, vehiclReg $vehicleReg, busRoute $busRoute")
+    logger.info(s"/stop request received for $stopID, fromTime $fromTime, toTime $toTime, fromSecOfWeek $fromSecOfWeek, toSecOfWeek $toSecOfWeek, vehicleReg $vehicleReg, busRoute $busRoute")
 
     if (validateBusRoute(busRoute)) {
       if (validateStopID(stopID)) {
@@ -145,13 +120,14 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
 
           busDefinitionsTable.getBusRouteDefinitions().flatMap(x => x._2).find(stop => stop.stopID == stopID) match {
             case Some(stopDetails) =>
-              compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), busRoute, vehicleReg).map { rec =>
+              compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), fromSecOfWeek.map(_.toInt), toSecOfWeek.map(_.toInt), busRoute, vehicleReg).map { rec =>
                 ("stopID" -> rec.stopID) ~
                 ("arrivalTime" -> rec.arrivalTime) ~
                 ("journey" ->
                    ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
                     ("vehicleReg" -> rec.journey.vehicleReg) ~
-                     ("startingTime" -> rec.journey.startingTime))
+                     ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
+                     ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek))
               })
             case None => NotFound(s"No records found for stopID: $stopID")
           }
@@ -230,6 +206,28 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
         fromTime.get < toTime.get
       } else false
     } else true
+  }
+
+  private def renderHistoricalJourneyRecordListToJValue(historicalJourneyRecordFromDb: List[HistoricalJourneyRecordFromDb], busRouteDefinitions: BusRouteDefinitions): JValue = {
+
+    def getBusStop(route: BusRoute, stopID: String): Option[BusStop] = busRouteDefinitions(route).find(x => x.stopID == stopID)
+
+    historicalJourneyRecordFromDb.map { rec =>
+      ("journey" ->
+        ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
+          ("vehicleReg" -> rec.journey.vehicleReg) ~
+          ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
+          ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek)) ~
+        ("stopRecords" ->
+          rec.stopRecords.map(stopRec =>
+            ("seqNo" -> stopRec.seqNo) ~
+              ("busStop" ->
+                  ("stopID" -> stopRec.stopID) ~
+                  ("stopName" -> getBusStop(rec.journey.busRoute, stopRec.stopID).map(_.stopName).getOrElse("N/A")) ~
+                  ("longitude" -> getBusStop(rec.journey.busRoute, stopRec.stopID).map(_.longitude).getOrElse(0.0)) ~
+                  ("latitude" -> getBusStop(rec.journey.busRoute, stopRec.stopID).map(_.latitude).getOrElse(0.0))
+                ) ~ ("arrivalTime" -> stopRec.arrivalTime)))
+    }
   }
 }
 

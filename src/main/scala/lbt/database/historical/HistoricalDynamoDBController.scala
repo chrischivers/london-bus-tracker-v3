@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
 case class HistoricalDBItem(ROUTE_ID_DIRECTION: String, JOURNEY_ID: String, VEHICLE_REG: String, JOURNEY_START_TIME_MILLIS: Long, JOURNEY_START_SECOND_OF_WEEK: Int, ARRIVAL_RECORD: String)
 
 case class ArrivalRecord(seqNo: Int, stopID: String, arrivalTime: Long)
-case class Journey(busRoute: BusRoute, vehicleReg: String, startingTime: Long)
+case class Journey(busRoute: BusRoute, vehicleReg: String, startingTimeMillis: Long, startingSecondOfWeek: Int)
 case class HistoricalJourneyRecordFromDb(journey: Journey, stopRecords: List[ArrivalRecord])
 case class HistoricalStopRecordFromDb(stopID: String, arrivalTime: Long, journey: Journey)
 
@@ -55,7 +55,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     override val tableName = databaseConfig.historicalRecordsTableName
 
     val vehicleRegSecondaryIndexName = "VehicleRegIndex"
-    val busStopIDSecondaryIndexName = "BusStopIDIndex"
+    val journeyStartSecondOfWeekIndexName = "JourneyStartSecondOFWeekIndex"
 
     override val hashAttributeName = Attributes.routeIDDirection
     override def rangeAttributeName = Some(Attributes.journeyID)
@@ -126,35 +126,15 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     Await.result(mappedResult, 30 seconds)
   }
 
-//  def loadHistoricalRecordsFromDbByStopID(stopID: String, limit: Int): List[HistoricalStopRecordFromDb]  = {
-//    logger.info(s"Loading historical record from DB from stopID $stopID")
-//    numberGetsRequested.incrementAndGet()
-//    val mappedResult = for {
-//      result <- mapper.query[HistoricalDBItem](historicalSerializer.busStopIDSecondaryIndexName, Attributes.busStopID, stopID, None, true, limit)
-//      mappedResult = parseStopQueryResult(result)
-//    } yield mappedResult.toList
-//
-//    Await.result(mappedResult, 30 seconds)
-//  }
-
 
   private def parseJourneyQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalJourneyRecordFromDb] = {
       result.map { res =>
         HistoricalJourneyRecordFromDb(
-          Journey(parse(res.ROUTE_ID_DIRECTION).extract[BusRoute], res.VEHICLE_REG, res.JOURNEY_START_TIME_MILLIS),
+          Journey(parse(res.ROUTE_ID_DIRECTION).extract[BusRoute], res.VEHICLE_REG, res.JOURNEY_START_TIME_MILLIS, res.JOURNEY_START_SECOND_OF_WEEK),
           parse(res.ARRIVAL_RECORD).extract[List[ArrivalRecord]]
             .sortBy(arrRec => arrRec.arrivalTime))
-      }.sortBy(arrivalRecord => arrivalRecord.journey.startingTime)(Ordering[Long].reverse)
+      }.sortBy(arrivalRecord => arrivalRecord.journey.startingTimeMillis)(Ordering[Long].reverse)
   }
-
-//  private def parseStopQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalStopRecordFromDb] = {
-//    result.map(item =>
-//        HistoricalStopRecordFromDb(
-//          item.BUS_STOP_ID,
-//          item.BUS_STOP_ARRIVAL_TIME_MILLIS,
-//          Journey(parse(item.ROUTE_ID_DIRECTION).extract[BusRoute], item.VEHICLE_REG, item.JOURNEY_START_TIME_MILLIS)
-//        ))
-//  }
 
   private def generateJourneyIdKey(journeyStartTimeMillis: Long, vehicleID: String) = {
     vehicleID + "-" + journeyStartTimeMillis
@@ -172,12 +152,12 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
         new CreateTableRequest()
           .withTableName(databaseConfig.historicalRecordsTableName)
           .withProvisionedThroughput(
-            Schema.provisionedThroughput(15L, 5L))
+            Schema.provisionedThroughput(5L, 8L))
           .withAttributeDefinitions(
             Schema.stringAttribute(Attributes.routeIDDirection),
             Schema.stringAttribute(Attributes.journeyID),
-            Schema.stringAttribute(Attributes.vehicleReg))
-//            Schema.numberAttribute(Attributes.journeyStartSecondOfWeek))
+            Schema.stringAttribute(Attributes.vehicleReg),
+            Schema.numberAttribute(Attributes.journeyStartSecondOfWeek))
           .withKeySchema(
             Schema.hashKey(Attributes.routeIDDirection),
             Schema.rangeKey(Attributes.journeyID))
@@ -188,23 +168,23 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
                 Schema.hashKey(Attributes.vehicleReg),
                 Schema.rangeKey(Attributes.journeyID))
               .withProvisionedThroughput(
-                Schema.provisionedThroughput(10L, 5L))
+                Schema.provisionedThroughput(5L, 8L))
               .withProjection(
                 new Projection()
                   .withProjectionType(ProjectionType.ALL)
-              )
-//            new GlobalSecondaryIndex()
-//              .withIndexName(historicalSerializer.busStopIDSecondaryIndexName)
-//              .withKeySchema(
-//                Schema.hashKey(Attributes.journeyStartSecondOfWeek),
-//                Schema.rangeKey(Attributes.journeyID))
-//              .withProvisionedThroughput(
-//                Schema.provisionedThroughput(10L, 5L))
-//              .withProjection(
-//                new Projection()
-//                  .withProjectionType(ProjectionType.ALL)
-//              )
-          )
+              ))
+          .withGlobalSecondaryIndexes(
+            new GlobalSecondaryIndex()
+              .withIndexName(historicalSerializer.journeyStartSecondOfWeekIndexName)
+              .withKeySchema(
+                Schema.hashKey(Attributes.journeyStartSecondOfWeek),
+                Schema.rangeKey(Attributes.journeyID))
+              .withProvisionedThroughput(
+                Schema.provisionedThroughput(5L, 8L))
+              .withProjection(
+                new Projection()
+                  .withProjectionType(ProjectionType.ALL)
+              ))
 
       val createTableCommand = Future(sdkClient.createTableAsync(tableRequest).get())
       Await.result(createTableCommand, 20 seconds)

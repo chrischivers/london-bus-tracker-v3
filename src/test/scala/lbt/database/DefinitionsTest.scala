@@ -58,6 +58,7 @@ class DefinitionsTest extends fixture.FunSuite with ScalaFutures {
 
   test("Sequence is kept in order when loaded from web and retrieved from db") { f =>
     val busDefinitions = f.testDefinitionsTable.getBusRouteDefinitions()
+    println(busDefinitions.get(f.testBusRoute1).get)
     busDefinitions.get(f.testBusRoute1) shouldBe defined
     busDefinitions(f.testBusRoute1).head.stopName should include("Conduit Street")
     busDefinitions(f.testBusRoute1).last.stopName should include("Crystal Palace")
