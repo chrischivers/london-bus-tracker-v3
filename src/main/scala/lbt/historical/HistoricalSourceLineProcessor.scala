@@ -68,10 +68,10 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     }
 
     def isInPast(): StringValidation[Unit] = {
+      //TODO is this working with clock change?
       if (sourceLine.arrival_TimeStamp - System.currentTimeMillis() > 0) ().successNel
       else "Arrival time in past".failureNel
     }
-
       (validRouteAndStop(busRoute)
       |@| notOnIgnoreList()
       |@| isInPast()).tupled.map {
