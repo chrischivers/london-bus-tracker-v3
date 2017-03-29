@@ -142,7 +142,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
   private def getSecondsOfWeek(journeyStartTime: Long): Int = {
     val dateTime = new DateTime(journeyStartTime)
-      dateTime.getDayOfWeek * dateTime.getSecondOfDay
+    (dateTime.getDayOfWeek * 86400) + dateTime.getSecondOfDay
   }
 
   def createHistoricalTableIfNotExisting = {
