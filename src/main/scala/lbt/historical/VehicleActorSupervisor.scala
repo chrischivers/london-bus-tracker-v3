@@ -12,43 +12,35 @@ import lbt.database.historical.HistoricalTable
 import scala.concurrent.duration._
 
 case class GetCurrentActors()
-
 case class GetArrivalRecords(vehicleID: VehicleActorID)
-
 case class PersistToDB()
-
 case class PersistAndRemoveInactiveVehicles()
-
+case class ValidationError(busRoute: BusRoute, reason: String)
+case class GetValidationErrorMap()
 case class VehicleActorID(vehicleReg: String, busRoute: BusRoute) {
   override def toString: String = vehicleReg + "-" + busRoute.name + "-" + busRoute.direction
 }
+
 
 class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historicalRecordsConfig: HistoricalRecordsConfig, historicalTable: HistoricalTable) extends Actor with StrictLogging {
   logger.info("Vehicle Actor Supervisor Actor Created")
   implicit val timeout = Timeout(10 seconds)
 
-  def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter)
+  def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter, Map.empty)
 
-  def active(currentActors: Map[VehicleActorID, (ActorRef, Long)], linesUntilCleanup: Int): Receive = {
+  def active(currentActors: Map[VehicleActorID, (ActorRef, Long)], linesUntilCleanup: Int, validationErrorCount: Map[BusRoute, Int]): Receive = {
     case vsl: ValidatedSourceLine => {
       val vehicleActorID = VehicleActorID(vsl.vehicleReg, vsl.busRoute)
       currentActors.get(vehicleActorID) match {
         case Some((actorRef, _)) =>
           actorRef ! vsl
-          context.become(active(currentActors + (vehicleActorID -> (actorRef, System.currentTimeMillis())), linesUntilCleanup - 1))
+          context.become(active(currentActors + (vehicleActorID -> (actorRef, System.currentTimeMillis())), linesUntilCleanup - 1, validationErrorCount))
         case None =>
           val newVehicle = createNewActor(vehicleActorID)
           newVehicle ! vsl
-          context.become(active(currentActors + (vehicleActorID -> (newVehicle, System.currentTimeMillis())), linesUntilCleanup - 1))
+          context.become(active(currentActors + (vehicleActorID -> (newVehicle, System.currentTimeMillis())), linesUntilCleanup - 1, validationErrorCount))
       }
       if (linesUntilCleanup <= 0) self ! PersistAndRemoveInactiveVehicles
-    }
-    case GetCurrentActors => sender ! currentActors
-    case GetArrivalRecords(vehicleID) => currentActors.get(vehicleID) match {
-      case Some((actorRef, _)) => sender ! (actorRef ? GetArrivalRecords(vehicleID))
-      case None =>
-        logger.error(s"Unable to get arrival records for $vehicleID. No such actor")
-        sender ! List.empty
     }
     case PersistAndRemoveInactiveVehicles =>
 //      logger.info("Checking for inactive vehicles, persisting and deleting...")
@@ -62,11 +54,21 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
         actorRef ! PersistToDB
         actorRef ! PoisonPill
       }
-      context.become(active(currentActorsSplit._2, historicalRecordsConfig.numberOfLinesToCleanupAfter))
+      context.become(active(currentActorsSplit._2, historicalRecordsConfig.numberOfLinesToCleanupAfter, validationErrorCount))
+    case ValidationError(route, _) =>
+      val currentErrorCount = validationErrorCount.get(route)
+      context.become(active(currentActors, linesUntilCleanup, validationErrorCount + (route -> currentErrorCount.map(_ + 1).getOrElse(1))))
+    case GetCurrentActors => sender ! currentActors
+    case GetArrivalRecords(vehicleID) => currentActors.get(vehicleID) match {
+      case Some((actorRef, _)) => sender ! (actorRef ? GetArrivalRecords(vehicleID))
+      case None =>
+        logger.error(s"Unable to get arrival records for $vehicleID. No such actor")
+        sender ! List.empty
+    }
+    case GetValidationErrorMap => sender ! validationErrorCount
   }
 
   def createNewActor(vehicleActorID: VehicleActorID): ActorRef = {
-   // logger.info(s"Creating new actor for vehicle ID $vehicleID")
     context.actorOf(Props(classOf[VehicleActor], vehicleActorID, historicalRecordsConfig, busDefinitionsTable, historicalTable), vehicleActorID.toString)
   }
 }

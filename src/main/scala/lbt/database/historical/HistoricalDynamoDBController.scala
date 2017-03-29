@@ -44,10 +44,6 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     val journeyStartTimeMills = "JOURNEY_START_TIME_MILLIS"
     val journeyStartSecondOfWeek= "JOURNEY_START_SECOND_OF_WEEK"
     val arrivalRecord = "ARRIVAL_RECORD"
-//    val busStopSeqNo = "BUS_STOP_SEQ_NO"
-//    val busStopID = "BUS_STOP_ID"
-//    val busStopArrivalTimeMillis = "BUS_STOP_ARRIVAL_TIME_MILLIS"
-
   }
 
   implicit object historicalSerializer extends DynamoDBSerializer[HistoricalDBItem] {

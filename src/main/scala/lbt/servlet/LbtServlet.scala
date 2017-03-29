@@ -161,12 +161,37 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
         Number Lines Processed Since Last Restart = {Await.result(dataStreamProcessor.numberLinesProcessedSinceRestart, 5 seconds)}<br/>
         Time of Last Restart = {Await.result(dataStreamProcessor.timeOfLastRestart, 5 seconds)}<br/>
         Number of Restarts = {Await.result(dataStreamProcessor.numberOfRestarts, 5 seconds)}<br/>
+
         <h2>Historical Message Processor</h2>
         Number Lines Processed = {historicalMessageProcessor.numberSourceLinesProcessed.get()}<br/>
         Number Lines Validated= {historicalMessageProcessor.numberSourceLinesValidated.get()}<br/>
         Number of Vehicle Actors ={Await.result(historicalMessageProcessor.getCurrentActors, 5 seconds).size}<br/>
       </body>
     </html>
+  }
+
+  get("/errorcount") {
+    <html>
+      <body>
+        <h1>Persist Error Counts</h1>
+        <table>
+        <tr>
+          <td>Bus Route</td>
+          <td>Count</td>
+        </tr>{Await.result(historicalMessageProcessor.getValidationErrorMap, 5 seconds).toList.sortBy(route => route._2).reverse.foreach(
+          route =>
+            <tr>
+              <td>
+                {route._1.name + " - " + route._1.direction}
+              </td>
+              <td>
+                {route._2}
+              </td>
+            </tr>
+        )}
+        </table>
+        </body>
+      </html>
   }
 
   notFound {

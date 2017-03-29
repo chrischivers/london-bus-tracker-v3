@@ -10,7 +10,6 @@ import lbt.database.historical.{ArrivalRecord, HistoricalTable}
 import scalaz.Scalaz._
 import scalaz._
 
-//case class StopDataRecordToPersist(seqNo: Int, busStopId: String, arrivalTime: Long)
 case class RecordedVehicleDataToPersist(vehicleReg: String, busRoute: BusRoute, stopArrivalRecords: List[ArrivalRecord])
 
 class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsTable: BusDefinitionsTable, historicalTable: HistoricalTable) extends Actor with StrictLogging {
@@ -42,7 +41,9 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
         case Success(completeList) =>
           logger.info(s"Persisting data for vehicle $name to DB")
           historicalTable.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleActorID.vehicleReg, route.get, completeList))
-        case Failure(e) => //logger.info(s"Failed validation before persisting. Stop Arrival Records. Error: $e. \n Stop Arrival Records: $stopArrivalRecords.")
+        case Failure(e) =>
+          context.parent ! ValidationError(route.get, e.toString())
+          logger.info(s"Failed validation before persisting for vehicle $name. Error: $e. \n StopArrivalRecords: $stopArrivalRecords")
       }
   }
 
@@ -95,5 +96,5 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
         .map(elem => ArrivalRecord(elem._1 + 1, elem._2.stopID, elem._3.get)))
     }
 
-  override def postStop: Unit = logger.info(s"Vehicle $name has been killed")
+ // override def postStop: Unit = logger.info(s"Vehicle $name has been killed")
 }

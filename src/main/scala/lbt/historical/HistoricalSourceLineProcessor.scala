@@ -91,6 +91,11 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
       listResult <- futureResult
     } yield listResult
   }
+
+  def getValidationErrorMap = {
+    implicit val timeout = Timeout(10 seconds)
+    (vehicleActorSupervisor ? GetValidationErrorMap).mapTo[Map[BusRoute, Int]]
+  }
 }
 
 

@@ -201,6 +201,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines.size
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.size shouldBe 0
     }
    // dataStreamProcessorTest.stop
   }
@@ -263,6 +264,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 0
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
+      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.size shouldBe 1
+      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.get(f.testBusRoute1) should be (defined)
     }
     dataStreamProcessorTest.stop
   }
@@ -293,6 +296,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 0
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
       f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
+      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.size shouldBe 1
+      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.get(f.testBusRoute1) should be (defined)
     }
     dataStreamProcessorTest.stop
   }
