@@ -43,7 +43,6 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
       if (linesUntilCleanup <= 0) self ! PersistAndRemoveInactiveVehicles
     }
     case PersistAndRemoveInactiveVehicles =>
-//      logger.info("Checking for inactive vehicles, persisting and deleting...")
       val currentTime = System.currentTimeMillis()
       val currentActorsSplit = currentActors.partition {
         case (_, (_, lastActivity)) => currentTime - lastActivity > historicalRecordsConfig.vehicleInactivityTimeBeforePersist
@@ -57,7 +56,8 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
       context.become(active(currentActorsSplit._2, historicalRecordsConfig.numberOfLinesToCleanupAfter, validationErrorCount))
     case ValidationError(route, _) =>
       val currentErrorCount = validationErrorCount.get(route)
-      context.become(active(currentActors, linesUntilCleanup, validationErrorCount + (route -> currentErrorCount.map(_ + 1).getOrElse(1))))
+      context.become(active(currentActors, linesUntilCleanup, validationErrorCount + (route -> currentErrorCount.map(count => count + 1).getOrElse(1))))
+      logger.info(s"validation error received. Error Map: " + validationErrorCount)
     case GetCurrentActors => sender ! currentActors
     case GetArrivalRecords(vehicleID) => currentActors.get(vehicleID) match {
       case Some((actorRef, _)) => sender ! (actorRef ? GetArrivalRecords(vehicleID))
@@ -65,7 +65,9 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
         logger.error(s"Unable to get arrival records for $vehicleID. No such actor")
         sender ! List.empty
     }
-    case GetValidationErrorMap => sender ! validationErrorCount
+    case GetValidationErrorMap =>
+      logger.info("Received request to get validation error map")
+      sender ! validationErrorCount
   }
 
   def createNewActor(vehicleActorID: VehicleActorID): ActorRef = {

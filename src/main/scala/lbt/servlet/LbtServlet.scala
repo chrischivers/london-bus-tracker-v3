@@ -137,6 +137,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
   }
 
   get("/status") {
+    logger.info("/status request received")
     <html>
       <body>
         <h1>Lbt Status</h1>
@@ -171,6 +172,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
   }
 
   get("/errorcount") {
+    logger.info("/errorcount request received")
     <html>
       <body>
         <h1>Persist Error Counts</h1>
@@ -178,16 +180,12 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
         <tr>
           <td>Bus Route</td>
           <td>Count</td>
-        </tr>{Await.result(historicalMessageProcessor.getValidationErrorMap, 5 seconds).toList.sortBy(route => route._2).reverse.foreach(
-          route =>
-            <tr>
-              <td>
-                {route._1.name + " - " + route._1.direction}
-              </td>
-              <td>
-                {route._2}
-              </td>
-            </tr>
+        </tr>
+        {Await.result(historicalMessageProcessor.getValidationErrorMap, 5 seconds).toList.sortBy(route => route._2).reverse.map(route =>
+         <tr>
+            <td>{route._1.name + " - " + route._1.direction}</td>
+            <td>{route._2}</td>
+         </tr>
         )}
         </table>
         </body>

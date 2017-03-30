@@ -47,7 +47,14 @@ trait LbtServletTestFixture {
     implicit val formats = DefaultFormats
 
     println("definitions: " + definitions)
+    //Complete route
     definitions(route).foreach(busStop => {
+      val message = SourceLineValidator("[1,\"" + busStop.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
+      historicalSourceLineProcessor.processSourceLine(message)
+    })
+
+    //Incomplete route (only 2 stops)
+    definitions(route).take(2).foreach(busStop => {
       val message = SourceLineValidator("[1,\"" + busStop.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
       historicalSourceLineProcessor.processSourceLine(message)
     })

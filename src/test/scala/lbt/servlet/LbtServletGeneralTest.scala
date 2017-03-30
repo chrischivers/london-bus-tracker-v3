@@ -97,6 +97,15 @@ class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matc
       status should equal(404)
     }
   }
+
+  test("Should get error count") {
+    get("/errorcount") {
+      status should equal(200)
+      println("BODY: " + body)
+      body should include(testBusRoutes.head.name + " - " + testBusRoutes.head.direction)
+    }
+  }
+
   protected override def afterAll(): Unit = {
     actorSystem.terminate().futureValue
     testDefinitionsTable.deleteTable
