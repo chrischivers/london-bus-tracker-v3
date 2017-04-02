@@ -5,7 +5,7 @@ import lbt.ConfigLoader
 import lbt.comon.BusRoute
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.{HistoricalTable}
+import lbt.database.historical.HistoricalTable
 import lbt.datasource.streaming.{DataStreamProcessor, SourceLineValidator}
 import lbt.historical.{HistoricalSourceLineProcessor, PersistAndRemoveInactiveVehicles}
 import net.liftweb.json.DefaultFormats
@@ -29,7 +29,7 @@ trait LbtServletTestFixture {
   val testBusRoutes = List(BusRoute("3", "outbound"), BusRoute("3", "inbound")) //TODO include more randomisation on routes
   testDefinitionsTable.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes), updateNewRoutesOnly = true)
 
-  Thread.sleep(1000)
+  Thread.sleep(2000)
 
   val definitions: BusRouteDefinitions = testDefinitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
 
@@ -54,10 +54,10 @@ trait LbtServletTestFixture {
     })
 
     //Incomplete route (only 2 stops)
-    definitions(route).take(2).foreach(busStop => {
-      val message = SourceLineValidator("[1,\"" + busStop.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
-      historicalSourceLineProcessor.processSourceLine(message)
-    })
+//    definitions(route).take(2).foreach(busStop => {
+//      val message = SourceLineValidator("[1,\"" + busStop.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + generateArrivalTime + "]").get
+//      historicalSourceLineProcessor.processSourceLine(message)
+//    })
   }
   Thread.sleep(1500)
   historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles

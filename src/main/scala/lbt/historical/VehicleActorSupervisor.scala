@@ -29,7 +29,7 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
   def receive = active(Map.empty, historicalRecordsConfig.numberOfLinesToCleanupAfter, Map.empty)
 
   def active(currentActors: Map[VehicleActorID, (ActorRef, Long)], linesUntilCleanup: Int, validationErrorCount: Map[BusRoute, Int]): Receive = {
-    case vsl: ValidatedSourceLine => {
+    case vsl: ValidatedSourceLine =>
       val vehicleActorID = VehicleActorID(vsl.vehicleReg, vsl.busRoute)
       currentActors.get(vehicleActorID) match {
         case Some((actorRef, _)) =>
@@ -41,7 +41,6 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
           context.become(active(currentActors + (vehicleActorID -> (newVehicle, System.currentTimeMillis())), linesUntilCleanup - 1, validationErrorCount))
       }
       if (linesUntilCleanup <= 0) self ! PersistAndRemoveInactiveVehicles
-    }
     case PersistAndRemoveInactiveVehicles =>
       val currentTime = System.currentTimeMillis()
       val currentActorsSplit = currentActors.partition {
@@ -57,7 +56,6 @@ class VehicleActorSupervisor(busDefinitionsTable: BusDefinitionsTable, historica
     case ValidationError(route, _) =>
       val currentErrorCount = validationErrorCount.get(route)
       context.become(active(currentActors, linesUntilCleanup, validationErrorCount + (route -> currentErrorCount.map(count => count + 1).getOrElse(1))))
-      logger.info(s"validation error received. Error Map: " + validationErrorCount)
     case GetCurrentActors => sender ! currentActors
     case GetArrivalRecords(vehicleID) => currentActors.get(vehicleID) match {
       case Some((actorRef, _)) => sender ! (actorRef ? GetArrivalRecords(vehicleID))

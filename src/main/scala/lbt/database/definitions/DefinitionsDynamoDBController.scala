@@ -74,7 +74,7 @@ class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val
       case Success(_) => numberInsertsCompleted.incrementAndGet()
         logger.info(s"Inserted definitions into DB for Bus Route $busRoute")
       case Failure(e) => numberInsertsFailed.incrementAndGet()
-        logger.error(s"An error has occurred inserting definition to DB for busRoute $busRoute")
+        logger.error(s"An error has occurred inserting definition to DB for busRoute $busRoute", e)
     }
   }
 

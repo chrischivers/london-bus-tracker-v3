@@ -36,7 +36,7 @@ class StandardTestFixture extends ScalatraSuite {
   val testBusRoute2 = BusRoute("3", "inbound")
   val getOnlyList = List(testBusRoute1, testBusRoute2)
   testDefinitionsTable.refreshBusRouteDefinitionFromWeb(getOnly = Some(getOnlyList), updateNewRoutesOnly = true)
-
+  Thread.sleep(2000)
   val definitions: BusRouteDefinitions = testDefinitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
   println("Definitions: " + definitions)
 

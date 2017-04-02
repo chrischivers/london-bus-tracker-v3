@@ -12,6 +12,7 @@ import org.scalatra.test.scalatest.{ScalatraFunSuite, ScalatraSuite}
 
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
+import scala.util.Random
 
 class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Matchers with BeforeAndAfterAll with Eventually with LbtServletTestFixture {
 
@@ -177,18 +178,18 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
     })
   }
 
-  test("should produce a 404 for invalid from and to stop ID") {
+  test("should produce a 400 for invalid from and to stop ID") {
     get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromStopID=" + definitions(testBusRoutes.head).head.stopID + "&toStopID=unknownToStopID") {
-      status should equal(404)
+      status should equal(400)
     }
     get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromStopID=UnknownFromStopID&toStopID=" + definitions(testBusRoutes.head)(2).stopID) {
-      status should equal(404)
+      status should equal(400)
     }
   }
 
-  test("should produce a 404 where from stop ID does not precede to stop ID") {
+  test("should produce a 400 where from stop ID does not precede to stop ID") {
     get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromStopID=" + definitions(testBusRoutes.head)(2).stopID + "&toStopID=" + definitions(testBusRoutes.head).head.stopID) {
-      status should equal(404)
+      status should equal(400)
     }
   }
 
@@ -199,7 +200,7 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
       val toStopID = routeDef((routeDef.size / 3) * 2).stopID
       val fromTime = now + 1000
       val toTime = now + 100000
-      get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID + "&fromTime=" + fromTime + "&toTime=" + toTime) {
+      get("/busroute/" + route.name + "/" + route.direction + "?fromStopID=" + fromStopID + "&toStopID=" + toStopID + "&fromArrivalTimeMillis=" + fromTime + "&toArrivalTimeMillis=" + toTime) {
         status should equal(200)
         toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, Some(fromStopID), Some(toStopID), Some(fromTime), Some(toTime)))
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].nonEmpty shouldBe true
@@ -214,12 +215,11 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
     testBusRoutes.foreach(route => {
       val fromTime = now + 4000
       val toTime = now + 7000
-      get("/busroute/" + route.name + "/" + route.direction + "?fromTime=" + fromTime + "&toTime=" + toTime) {
+      get("/busroute/" + route.name + "/" + route.direction + "?fromArrivalTimeMillis=" + fromTime + "&toArrivalTimeMillis=" + toTime) {
         status should equal(200)
-        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, Some(fromTime), Some(toTime)))
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, fromArrivalTimeMillis = Some(fromTime), toArrivalTimeMillis = Some(toTime)))
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
-          val stopsForRoute = definitions(route)
           record.journey.vehicleReg shouldEqual vehicleReg
           record.stopRecords.exists(rec => rec.arrivalTime < fromTime) shouldBe false
           record.stopRecords.exists(rec => rec.arrivalTime > toTime) shouldBe false
@@ -230,19 +230,20 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
 
   test("should produce a list of vehicles and their arrival times for a given stopSecInWeek window") {
     testBusRoutes.foreach(route => {
-      val nowDateTime = new DateTime(now)
-      val fromSecOfWeek = nowDateTime.getSecondOfDay * nowDateTime.getDayOfWeek
-      val toSecOfWeek = (nowDateTime.getSecondOfDay * nowDateTime.getDayOfWeek) + 10
-      get("/busroute/" + route.name + "/" + route.direction + "?fromSecOfWeek=" + fromSecOfWeek + "&toSecOfWeek=" + toSecOfWeek) {
-        status should equal(200)
-        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, None, None, Some(fromSecOfWeek), Some(toSecOfWeek)))
-        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
-        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
-          val stopsForRoute = definitions(route)
-          record.journey.vehicleReg shouldEqual vehicleReg
-          record.journey.startingSecondOfWeek shouldBe >= (fromSecOfWeek)
-          record.journey.startingSecondOfWeek shouldBe <= (toSecOfWeek)
-        })
+      get("/busroute/" + route.name + "/" + route.direction) {
+
+        val size = parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size
+        val secOfWeek = parse(body).extract[List[TransmittedIncomingHistoricalRecord]].apply(Random.nextInt(size)).journey.startingSecondOfWeek
+        get("/busroute/" + route.name + "/" + route.direction + "?fromJourneyStartSecOfWeek=" + secOfWeek + "&toJourneyStartSecOfWeek=" + secOfWeek) {
+          status should equal(200)
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, fromJourneyStartSecOfWeek = Some(secOfWeek), toJourneyStartSecOfWeek = Some(secOfWeek)))
+          parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 1
+          parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
+            record.journey.vehicleReg shouldEqual vehicleReg
+            record.journey.startingSecondOfWeek shouldBe >=(secOfWeek)
+            record.journey.startingSecondOfWeek shouldBe <=(secOfWeek)
+          })
+        }
       }
     })
   }
@@ -251,24 +252,24 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
     testBusRoutes.foreach(route => {
       val fromTime = now - 100000000
       val toTime = now - 10000000
-      get("/busroute/" + route.name + "/" + route.direction + "?fromTime=" + fromTime + "&toTime=" + toTime) {
+      get("/busroute/" + route.name + "/" + route.direction + "?fromArrivalTimeMillis=" + fromTime + "&toArrivalTimeMillis=" + toTime) {
         status should equal(200)
-        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, Some(fromTime), Some(toTime)))
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, fromArrivalTimeMillis = Some(fromTime), toArrivalTimeMillis = Some(toTime)))
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 0
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]] shouldBe List.empty
       }
     })
   }
 
-  test("should produce a 404 where fromTime does not precede toTime") {
-    get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromTime=" + System.currentTimeMillis() + 1 + "&toTime=" + System.currentTimeMillis()) {
-      status should equal(404)
+  test("should produce a 400 where fromTime does not precede toTime") {
+    get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromArrivalTimeMillis=" + System.currentTimeMillis() + 1 + "&toArrivalTimeMillis=" + System.currentTimeMillis()) {
+      status should equal(400)
     }
   }
 
-  test("should produce a 404 where time is not a valid Long") {
-    get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromTime=" + "NotALong" + "&toTime=" + System.currentTimeMillis()) {
-      status should equal(404)
+  test("should produce a 400 where time is not a valid Long") {
+    get("/busroute/" + testBusRoutes.head.name + "/" + testBusRoutes.head.direction + "?fromArrivalTimeMillis=" + "NotALong" + "&toArrivalTimeMillis=" + System.currentTimeMillis()) {
+      status should equal(400)
     }
   }
 
@@ -276,7 +277,7 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
     testBusRoutes.foreach(route => {
       get("/busroute/" + route.name + "/" + route.direction + "?vehicleID=" + vehicleReg) {
         status should equal(200)
-          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, None, None, None, None, None, None, Some(vehicleReg)))
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByBusRoute(route, vehicleReg = Some(vehicleReg)))
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].nonEmpty shouldBe true
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
           val stopsForRoute = definitions(route)

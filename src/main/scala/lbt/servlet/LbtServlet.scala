@@ -8,7 +8,7 @@ import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.{HistoricalJourneyRecordFromDb, HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.HistoricalSourceLineProcessor
-import org.scalatra.{NotFound, Ok, ScalatraServlet}
+import org.scalatra._
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import org.eclipse.jetty.server.Server
@@ -18,13 +18,16 @@ import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatra.servlet.ScalatraListener
 
+import scalaz.Scalaz._
+import scalaz._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 
 class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTable: HistoricalTable, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet with StrictLogging {
 
+  type StringValidation[T] = ValidationNel[String, T]
   implicit val formats = DefaultFormats
   val dtf: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")
 
@@ -52,7 +55,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     busDefinitionsTable.getBusRouteDefinitions().get(busRoute) match {
       case Some(stops) => compactRender(stops map (stop =>
         ("stopID" -> stop.stopID) ~ ("stopName" -> stop.stopName) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude)))
-      case None => NotFound(s"The route $busRoute could not be found")
+      case None => BadRequest(s"The route $busRoute could not be found")
     }
   }
 
@@ -60,80 +63,96 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     val busRoute = BusRoute(params("route"), params("direction"))
     val fromStopID = params.get("fromStopID")
     val toStopID = params.get("toStopID")
-    val fromTime = params.get("fromTime")
-    val toTime = params.get("toTime")
-    val fromSecOfWeek = params.get("fromSecOfWeek")
-    val toSecOfWeek = params.get("toSecOfWeek")
-    val vehicleReg = params.get("vehicleID")
-    logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, fromSecOfWeek $fromSecOfWeek, toSecOfWeek $toSecOfWeek, vehicleReg $vehicleReg")
+    val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
+    val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
+    val fromArrivalTimeSecOfWeek = params.get("fromArrivalTimeSecOfWeek")
+    val toArrivalTimeSecOfWeek = params.get("toArrivalTimeSecOfWeek")
+    val fromJourneyStartSecOfWeek = params.get("fromJourneyStartSecOfWeek")
+    val toJourneyStartSecOfWeek = params.get("toJourneyStartSecOfWeek")
+    val fromJourneyStartMillis = params.get("fromJourneyStartMillis")
+    val toJourneyStartMillis = params.get("toJourneyStartMillis")
+    val vehicleReg = params.get("vehicleReg")
+    logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, vehicleReg $vehicleReg")
 
-    if (validateBusRoute(Some(busRoute))) {
-      if (validateFromToStops(Some(busRoute), fromStopID, toStopID)) {
-        if (validateFromToTime(fromTime, toTime)) {
-          compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), fromSecOfWeek.map(_.toInt), toSecOfWeek.map(_.toInt), vehicleReg), busDefinitionsTable.getBusRouteDefinitions()))
-        } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
-      } else NotFound(s"No records found for bus route $busRoute, from stop: $fromStopID and to stop: $toStopID")
-    } else NotFound(s"No records found for bus route $busRoute")
+    (validateBusRoute(Some(busRoute)) |@|
+      validateFromToStops(Some(busRoute), fromStopID, toStopID) |@|
+      validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
+      validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek) |@|
+      validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
+      validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
+      case Success(()) => compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg), busDefinitionsTable.getBusRouteDefinitions()))
+      case Failure(e) =>
+        val error = s"Unable to process /busroute request due to $e"
+        logger.info(error)
+        BadRequest(error)
+    }
   }
 
   get("/vehicle/:vehicleReg") {
     val vehicleReg = params("vehicleReg")
-    val fromStopID = params.get("fromStopID")
-    val toStopID = params.get("toStopID")
-    val fromTime = params.get("fromTime")
-    val toTime = params.get("toTime")
-    val fromSecOfWeek = params.get("fromSecOfWeek")
-    val toSecOfWeek = params.get("toSecOfWeek")
+    val stopID = params.get("stopID")
+    val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
+    val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
+    val fromArrivalTimeSecOfWeek = params.get("fromArrivalTimeSecOfWeek")
+    val toArrivalTimeSecOfWeek = params.get("toArrivalTimeSecOfWeek")
+    val fromJourneyStartSecOfWeek = params.get("fromJourneyStartSecOfWeek")
+    val toJourneyStartSecOfWeek = params.get("toJourneyStartSecOfWeek")
+    val fromJourneyStartMillis = params.get("fromJourneyStartMillis")
+    val toJourneyStartMillis = params.get("toJourneyStartMillis")
     val busRoute = for {
       route <- params.get("route")
       direction <- params.get("direction")
       busRoute = BusRoute(route, direction)
     } yield busRoute
-    logger.info(s"/vehicle request received for $vehicleReg, fromStopID $fromStopID, toStopID $toStopID, fromTime $fromTime, toTime $toTime, fromSecOfWeek $fromSecOfWeek, toSecOfWeek $toSecOfWeek, busRoute $busRoute")
+    logger.info(s"/vehicle request received for $vehicleReg, stopID $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, busRoute $busRoute")
 
-    if (validateBusRoute(busRoute)) {
-      if (validateFromToStops(busRoute, fromStopID, toStopID)) {
-        if (validateFromToTime(fromTime, toTime)) {
-          compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromStopID, toStopID, fromTime.map(_.toLong), toTime.map(_.toLong), fromSecOfWeek.map(_.toInt), toSecOfWeek.map(_.toInt), busRoute), busDefinitionsTable.getBusRouteDefinitions()))
-        } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
-      } else NotFound(s"No records found for vehicle reg $vehicleReg, from stop: $fromStopID and to stop: $toStopID")
-    } else NotFound(s"No records found for vehicle reg $vehicleReg and bus route ${busRoute.get}")
+    (validateBusRoute(busRoute) |@|
+      validateStopID(stopID) |@|
+      validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
+      validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeMillis) |@|
+      validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
+      validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
+      case Success(()) => compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong),  fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute), busDefinitionsTable.getBusRouteDefinitions()))
+      case Failure(e) =>
+        val error = s"Unable to deliver /vehicle request due to $e"
+        logger.info(error)
+        BadRequest(error)
+    }
   }
 
   get("/stop/:stopID") {
     val stopID = params("stopID")
-    val fromTime = params.get("fromTime")
-    val toTime = params.get("toTime")
-    val fromSecOfWeek = params.get("fromSecOfWeek")
-    val toSecOfWeek = params.get("toSecOfWeek")
-    val vehicleReg = params.get("vehicleID")
+    val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
+    val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
+    val fromArrivalSecOfWeek = params.get("fromArrivalSecOfWeek")
+    val toArrivalSecOfWeek = params.get("toArrivalSecOfWeek")
+    val vehicleReg = params.get("vehicleReg")
     val busRoute = for {
       route <- params.get("route")
       direction <- params.get("direction")
       busRoute = BusRoute(route, direction)
     } yield busRoute
-    logger.info(s"/stop request received for $stopID, fromTime $fromTime, toTime $toTime, fromSecOfWeek $fromSecOfWeek, toSecOfWeek $toSecOfWeek, vehicleReg $vehicleReg, busRoute $busRoute")
+    logger.info(s"/stop request received for $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalSecOfWeek $fromArrivalSecOfWeek, toArrivalSecOfWeek $toArrivalSecOfWeek, vehicleReg $vehicleReg, busRoute $busRoute")
 
-    if (validateBusRoute(busRoute)) {
-      if (validateStopID(stopID)) {
-        if (validateFromToTime(fromTime, toTime)) {
 
-          busDefinitionsTable.getBusRouteDefinitions().flatMap(x => x._2).find(stop => stop.stopID == stopID) match {
-            case Some(stopDetails) =>
-              compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromTime.map(_.toLong), toTime.map(_.toLong), fromSecOfWeek.map(_.toInt), toSecOfWeek.map(_.toInt), busRoute, vehicleReg).map { rec =>
-                ("stopID" -> rec.stopID) ~
-                ("arrivalTime" -> rec.arrivalTime) ~
-                ("journey" ->
-                   ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
-                    ("vehicleReg" -> rec.journey.vehicleReg) ~
-                     ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
-                     ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek))
-              })
-            case None => NotFound(s"No records found for stopID: $stopID")
-          }
-        } else NotFound(s"Invalid time window (from after to $fromTime and $toTime")
-      } else NotFound(s"No records found for stopID: $stopID")
-    } else NotFound(s"No records found for stopID $stopID and bus route ${busRoute.get}")
+    (validateBusRoute(busRoute) |@|
+      validateStopID(Some(stopID)) |@|
+      validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
+      validateFromToSecOfWeek(fromArrivalSecOfWeek, toArrivalSecOfWeek)).tupled.map(_ => ()) match {
+      case Success(()) =>  compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg).map { rec =>
+        ("stopID" -> rec.stopID) ~
+          ("arrivalTime" -> rec.arrivalTime) ~
+          ("journey" ->
+            ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
+              ("vehicleReg" -> rec.journey.vehicleReg) ~
+              ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
+              ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek))
+      })
+      case Failure(e) =>
+        val error = s"Unable to process /stop request due to $e"
+        logger.info(error)
+        BadRequest(error)
+    }
   }
 
   get("/status") {
@@ -196,39 +215,57 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
     resourceNotFound()
   }
 
-  private def validateBusRoute(busRoute: Option[BusRoute]): Boolean = {
+  private def validateBusRoute(busRoute: Option[BusRoute]): StringValidation[Unit] = {
     if (busRoute.isDefined) {
-      busDefinitionsTable.getBusRouteDefinitions().get(busRoute.get).isDefined
-    } else true
+      if (busDefinitionsTable.getBusRouteDefinitions().get(busRoute.get).isDefined) ().successNel
+      else s"Invalid bus route $busRoute (not in definitions)".failureNel
+    } else ().successNel
   }
 
-  private def validateFromToStops(busRoute: Option[BusRoute], fromStopID: Option[String], toStopID: Option[String]): Boolean = {
+  private def validateFromToStops(busRoute: Option[BusRoute], fromStopID: Option[String], toStopID: Option[String]): StringValidation[Unit]  = {
     if (busRoute.isDefined) {
       val definition = busDefinitionsTable.getBusRouteDefinitions()(busRoute.get)
       if (fromStopID.isDefined && toStopID.isDefined) {
         if (definition.exists(stop => stop.stopID == fromStopID.get) && definition.exists(stop => stop.stopID == toStopID.get)) {
-          definition.indexWhere(stop => stop.stopID == fromStopID.get) <= definition.indexWhere(stop => stop.stopID == toStopID.get)
-        } else false
+          if (definition.indexWhere(stop => stop.stopID == fromStopID.get) <= definition.indexWhere(stop => stop.stopID == toStopID.get)) ().successNel
+          else s"Index of fromStopID $fromStopID does not come before toStopID $toStopID".failureNel
+        } else s"fromStopID $fromStopID and/or toStopID $toStopID not found in definitions".failureNel
       } else if (fromStopID.isDefined && toStopID.isEmpty) {
-        definition.exists(stop => stop.stopID == fromStopID.get)
+        if (definition.exists(stop => stop.stopID == fromStopID.get)) ().successNel
+        else s"fromStopID $fromStopID not found in definitions".failureNel
       } else if (fromStopID.isEmpty && toStopID.isDefined) {
-        definition.exists(stop => stop.stopID == toStopID.get)
-      } else true
-    } else true
+        if (definition.exists(stop => stop.stopID == toStopID.get)) ().successNel
+        else s"toStopID $toStopID not found in definitions".failureNel
+      } else ().successNel
+    } else ().successNel
   }
 
-  private def validateStopID(stopID: String): Boolean = {
-    busDefinitionsTable.getBusRouteDefinitions().exists(definition =>
-      definition._2.exists(stop => stop.stopID == stopID)
-    )
+  private def validateStopID(stopID: Option[String]): StringValidation[Unit] = {
+    if (stopID.isDefined) {
+      if (busDefinitionsTable.getBusRouteDefinitions().exists(definition =>
+        definition._2.exists(stop => stop.stopID == stopID.get))) ().successNel
+      else s"StopID $stopID does not exist in definitions".failureNel
+    } else ().successNel
   }
 
-  private def validateFromToTime(fromTime: Option[String], toTime: Option[String]): Boolean = {
+  private def validateFromToArrivalTimeMillis(fromTime: Option[String], toTime: Option[String]): StringValidation[Unit] = {
     if (fromTime.isDefined && toTime.isDefined) {
       if (Try(fromTime.get.toLong).toOption.isDefined && Try(toTime.get.toLong).toOption.isDefined) {
-        fromTime.get < toTime.get
-      } else false
-    } else true
+        if (fromTime.get.toLong <= toTime.get.toLong) ().successNel
+        else s"From time $fromTime does not come before toTime $toTime".failureNel
+      } else s"Unable to convert fromTime $fromTime and toTime $toTime to Long".failureNel
+    } else ().successNel
+  }
+
+  private def validateFromToSecOfWeek(fromJourneyStartSecOfWeek: Option[String], toJourneyStartSecOfWeek: Option[String]): StringValidation[Unit]  = {
+    if (fromJourneyStartSecOfWeek.isDefined && toJourneyStartSecOfWeek.isDefined) {
+      if (Try(fromJourneyStartSecOfWeek.get.toInt).toOption.isDefined && Try(toJourneyStartSecOfWeek.get.toInt).toOption.isDefined) {
+        if (fromJourneyStartSecOfWeek.get.toInt <= toJourneyStartSecOfWeek.get.toInt &&
+          fromJourneyStartSecOfWeek.get.toInt >= 0 &&
+          toJourneyStartSecOfWeek.get.toInt <= 604800) ().successNel
+        else s"fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek did not preceed toJourneyStartSecOfWeek $toJourneyStartSecOfWeek or did not faill within bounds (0 to 604800)".failureNel
+      } else s"Unable to convert fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek and toJourneyStartSecOfWeek $toJourneyStartSecOfWeek to Int".failureNel
+    } else ().successNel
   }
 
   private def renderHistoricalJourneyRecordListToJValue(historicalJourneyRecordFromDb: List[HistoricalJourneyRecordFromDb], busRouteDefinitions: BusRouteDefinitions): JValue = {

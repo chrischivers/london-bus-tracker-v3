@@ -22,5 +22,10 @@ object Commons {
       )
     }
   }
+
+  def getSecondsOfWeek(journeyStartTime: Long): Int = {
+    val dateTime = new DateTime(journeyStartTime)
+    ((dateTime.getDayOfWeek - 1) * 86400) + dateTime.getSecondOfDay
+  }
 }
 

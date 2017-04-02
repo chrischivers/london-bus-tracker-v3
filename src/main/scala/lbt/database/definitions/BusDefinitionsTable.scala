@@ -46,7 +46,7 @@ class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig
     val routeIDs = (updatedRouteList \ "id").extract[List[String]]
     val modeNames = (updatedRouteList \ "modeName").extract[List[String]]
     val routeSection = (updatedRouteList \ "routeSections").extract[List[JArray]]
-    val directions = routeSection.map(x => (x \ "direction")).map(y => y.extractOpt[List[String]].getOrElse(List(y.extract[String])).toSet)
+    val directions = routeSection.map(x => x \ "direction").map(y => y.extractOpt[List[String]].getOrElse(List(y.extract[String])).toSet)
 
     val allRoutes: Seq[((String, String), Set[String])] = routeIDs zip modeNames zip directions
     val busRoutes: Seq[((String, String), Set[String])] = allRoutes.filter(x => x._1._2 == "bus")
@@ -71,7 +71,7 @@ class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig
             insertBusRouteDefinitionIntoDB(busRoute, busStopList)
           }
         } catch {
-          case e: NoSuchElementException => logger.info("No Such Element Exception for route: " + route._1._1.toUpperCase + ", and direction: " + direction)
+          case e: NoSuchElementException => logger.error("No Such Element Exception for route: " + route._1._1.toUpperCase + ", and direction: " + direction, e)
           case e: Exception => logger.error("Uncaught exception ", e)
         }
         numberToProcess -= 1

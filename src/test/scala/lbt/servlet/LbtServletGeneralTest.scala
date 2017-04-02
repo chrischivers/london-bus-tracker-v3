@@ -91,10 +91,10 @@ class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matc
 
   test("Should produce a 404 for unspecified route or direction") {
     get("/stoplist/unknown-route/outbound") {
-      status should equal(404)
+      status should equal(400)
     }
     get("/stoplist/" + testBusRoutes.head.name + "/unknown-direction") {
-      status should equal(404)
+      status should equal(400)
     }
   }
 

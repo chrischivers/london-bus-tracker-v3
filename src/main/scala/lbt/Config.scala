@@ -26,7 +26,6 @@ object ConfigLoader {
     val dataBaseParamsPrefix = "database."
     val definitionsParamsPrefix = "dataSource.definitions."
     val historicalRecordsParamsPrefix = "lbt.historical-records."
-    val messagingParamsPrefix = "messaging.rabbitmq."
     LBTConfig(
       DataSourceConfig(
         defaultConfigFactory.getString(dataSourceStreamingParamsPrefix + "tfl-url"),

@@ -44,7 +44,7 @@ class LbtServletStopTest extends ScalatraFunSuite with ScalaFutures with Matcher
 
   test("should produce an empty list for an unknown stop ID") {
     get("/stop/" + "UNKNOWN") {
-      status should equal(404)
+      status should equal(400)
     }
   }
 
