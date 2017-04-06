@@ -6,7 +6,7 @@ import com.typesafe.scalalogging.StrictLogging
 import lbt.DataSourceConfig
 import lbt.comon.{Start, Stop}
 import lbt.datasource.BusDataSource
-import lbt.historical.{HistoricalSourceLineProcessor, VehicleActorSupervisor}
+import lbt.historical.{HistoricalSourceLineProcessor, VehicleActorParent}
 
 /**
  * Actor that iterates over live stream sending lines to be processed. On crash, the supervisor strategy restarts it

@@ -93,10 +93,12 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe joinedLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe joinedLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe joinedLines.size - 1
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
     dataStreamProcessorTest.stop
   }
+
+
 
   test("An actor should be created for each new vehicle received with a new route") { f=>
 
@@ -121,7 +123,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe 4
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe 4
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe 4
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 3
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 3
     }
     dataStreamProcessorTest.stop
   }
@@ -141,8 +143,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
-      f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.size shouldBe testLines.size
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getLiveArrivalRecords(f.testBusRoute1, "V123456").futureValue.size shouldBe testLines.size
     }
     dataStreamProcessorTest.stop
   }
@@ -168,8 +170,8 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithUpdated.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithUpdated.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
-      f.historicalSourceLineProcessor.getArrivalRecords("V123456", f.testBusRoute1).futureValue.apply(routeDefFromDb.head) shouldBe newArrivalTime
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getLiveArrivalRecords(f.testBusRoute1, "V123456").futureValue.apply(routeDefFromDb.head) shouldBe newArrivalTime
     }
     dataStreamProcessorTest.stop
   }
@@ -187,21 +189,21 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
 
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get().toInt shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get().toInt shouldBe testLines.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
-      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.size shouldBe 0
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.vehicleActorSupervisor.getValidationErrorMap.futureValue.size shouldBe 0
     }
    // dataStreamProcessorTest.stop
   }
@@ -219,18 +221,18 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
-      val historicalRecord = f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
+      val historicalRecord = f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head
       historicalRecord.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
     dataStreamProcessorTest.stop
@@ -253,19 +255,19 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesWithMissing.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesWithMissing.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 0
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
-      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.size shouldBe 1
-      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.get(f.testBusRoute1) should be (defined)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
+      f.vehicleActorSupervisor.getValidationErrorMap.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getValidationErrorMap.futureValue.get(f.testBusRoute1) should be (defined)
     }
     dataStreamProcessorTest.stop
   }
@@ -285,19 +287,19 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesLast4.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesLast4.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 0
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
-      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.size shouldBe 1
-      f.historicalSourceLineProcessor.getValidationErrorMap.futureValue.get(f.testBusRoute1) should be (defined)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe false
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe false
+      f.vehicleActorSupervisor.getValidationErrorMap.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getValidationErrorMap.futureValue.get(f.testBusRoute1) should be (defined)
     }
     dataStreamProcessorTest.stop
   }
@@ -317,22 +319,22 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
 
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesSecondHalf.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesSecondHalf.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID).splitAt(routeDefFromDb.size / 2)._2
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.stopID == record.stopID) + 1) shouldEqual f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.seqNo)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.busRoute == f.testBusRoute1) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLinesSecondHalf.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID).splitAt(routeDefFromDb.size / 2)._2
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => routeDefFromDb.indexWhere(x => x.stopID == record.stopID) + 1) shouldEqual f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.seqNo)
     }
     dataStreamProcessorTest.stop
   }
@@ -351,7 +353,7 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
 
     Thread.sleep(7000)
 
-    f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+    f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
     Thread.sleep(1000)
     dataStreamProcessorTest1.stop
     dataStreamProcessorTest1.processorControllerActor ! Kill
@@ -366,20 +368,20 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest2.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLines1.size + testLines2.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLines1.size + testLines2.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 2
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 2
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg)(1).stopRecords.size shouldBe testLines2.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg)(1).stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 2
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg)(1).stopRecords.size shouldBe testLines2.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg)(1).stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
     dataStreamProcessorTest2.stop
 
@@ -402,23 +404,25 @@ class HistoricalRecorderTest extends fixture.FunSuite with ScalaFutures with Eve
     dataStreamProcessorTest.start
 
     eventually {
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 1
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 1
     }
 
     eventually {
-      f.historicalSourceLineProcessor.vehicleActorSupervisor ! PersistAndRemoveInactiveVehicles
+      f.vehicleActorSupervisor.persistAndRemoveInactiveVehicles
       dataStreamProcessorTest.numberLinesProcessed.futureValue shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.numberSourceLinesProcessed.get() shouldBe testLinesDoubled.size
       f.historicalSourceLineProcessor.numberSourceLinesValidated.get() shouldBe testLinesDoubled.size
-      f.historicalSourceLineProcessor.getCurrentActors.futureValue.size shouldBe 0
+      f.vehicleActorSupervisor.getCurrentActors.futureValue.size shouldBe 0
       f.testHistoricalTable.historicalDBController.numberInsertsRequested.get() shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
-      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.exists(result => result.journey.vehicleReg == vehicleReg) shouldBe true
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.count(result => result.journey.busRoute == f.testBusRoute1) shouldBe 1
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.size shouldBe testLines1.size
+      f.testHistoricalTable.getHistoricalRecordFromDbByBusRoute(f.testBusRoute1).futureValue.filter(result => result.journey.vehicleReg == vehicleReg).head.stopRecords.map(record => record.stopID) shouldEqual routeDefFromDb.map(stop => stop.stopID)
     }
     dataStreamProcessorTest.stop
   }
+
+
 
   def sourceLineBackToLine(sourceLine: SourceLine): String = {
     "[1,\"" + sourceLine.stopID + "\",\"" + sourceLine.route + "\"," + sourceLine.direction + ",\"" + sourceLine.destinationText + "\",\"" + sourceLine.vehicleID + "\"," + sourceLine.arrival_TimeStamp + "]"

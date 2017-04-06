@@ -7,7 +7,7 @@ import lbt.comon._
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.{HistoricalJourneyRecordFromDb, HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
-import lbt.historical.HistoricalSourceLineProcessor
+import lbt.historical.{HistoricalRecordsFetcher, HistoricalSourceLineProcessor, VehicleActorSupervisor}
 import org.scalatra._
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
@@ -25,7 +25,7 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Try
 
 
-class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTable: HistoricalTable, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor)(implicit ec: ExecutionContext) extends ScalatraServlet with StrictLogging {
+class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: HistoricalTable, dataStreamProcessor: DataStreamProcessor, historicalMessageProcessor: HistoricalSourceLineProcessor, vehicleActorSupervisor: VehicleActorSupervisor, historicalRecordsFetcher: HistoricalRecordsFetcher)(implicit val executor: ExecutionContext) extends ScalatraServlet with StrictLogging with FutureSupport {
 
   type StringValidation[T] = ValidationNel[String, T]
   implicit val formats = DefaultFormats
@@ -80,7 +80,10 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek) |@|
       validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
       validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
-      case Success(()) => compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg), busDefinitionsTable.getBusRouteDefinitions()))
+      case Success(()) => for {
+        fromDB <- historicalRecordsFetcher.getsHistoricalRecordsByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg)
+        records = compactRender(renderHistoricalJourneyRecordListToJValue(fromDB, busDefinitionsTable.getBusRouteDefinitions()))
+      } yield records
       case Failure(e) =>
         val error = s"Unable to process /busroute request due to $e"
         logger.info(error)
@@ -112,7 +115,10 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeMillis) |@|
       validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
       validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
-      case Success(()) => compactRender(renderHistoricalJourneyRecordListToJValue(historicalRecordsTable.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong),  fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute), busDefinitionsTable.getBusRouteDefinitions()))
+      case Success(()) => for {
+        fromDB <- historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong),  fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute)
+        records = renderHistoricalJourneyRecordListToJValue(fromDB, busDefinitionsTable.getBusRouteDefinitions())
+      } yield records
       case Failure(e) =>
         val error = s"Unable to deliver /vehicle request due to $e"
         logger.info(error)
@@ -139,7 +145,10 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
       validateStopID(Some(stopID)) |@|
       validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
       validateFromToSecOfWeek(fromArrivalSecOfWeek, toArrivalSecOfWeek)).tupled.map(_ => ()) match {
-      case Success(()) =>  compactRender(historicalRecordsTable.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg).map { rec =>
+      case Success(()) =>
+         val records = historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg)
+        records.map(x =>
+            compactRender(x.map(rec =>
         ("stopID" -> rec.stopID) ~
           ("arrivalTime" -> rec.arrivalTime) ~
           ("journey" ->
@@ -147,7 +156,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
               ("vehicleReg" -> rec.journey.vehicleReg) ~
               ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
               ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek))
-      })
+          )))
       case Failure(e) =>
         val error = s"Unable to process /stop request due to $e"
         logger.info(error)
@@ -169,11 +178,11 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
 
 
         <h2>Historical Records Table</h2>
-        Number Inserts Requested = {historicalRecordsTable.historicalDBController.numberInsertsRequested.get()}<br/>
-        Number Inserts Completed = {historicalRecordsTable.historicalDBController.numberInsertsCompleted.get()}<br/>
-        Number Inserts Failed = {historicalRecordsTable.historicalDBController.numberInsertsFailed.get()}<br/>
-        Number Get Requests= {historicalRecordsTable.historicalDBController.numberGetsRequested.get()}<br/>
-        Number Delete Requests ={historicalRecordsTable.historicalDBController.numberDeletesRequested.get()}<br/>
+        Number Inserts Requested = {historicalTable.historicalDBController.numberInsertsRequested.get()}<br/>
+        Number Inserts Completed = {historicalTable.historicalDBController.numberInsertsCompleted.get()}<br/>
+        Number Inserts Failed = {historicalTable.historicalDBController.numberInsertsFailed.get()}<br/>
+        Number Get Requests= {historicalTable.historicalDBController.numberGetsRequested.get()}<br/>
+        Number Delete Requests ={historicalTable.historicalDBController.numberDeletesRequested.get()}<br/>
 
 
         <h2>Data Stream Processor</h2>
@@ -185,7 +194,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
         <h2>Historical Message Processor</h2>
         Number Lines Processed = {historicalMessageProcessor.numberSourceLinesProcessed.get()}<br/>
         Number Lines Validated= {historicalMessageProcessor.numberSourceLinesValidated.get()}<br/>
-        Number of Vehicle Actors ={Await.result(historicalMessageProcessor.getCurrentActors, 5 seconds).size}<br/>
+        Number of Vehicle Actors ={Await.result(vehicleActorSupervisor.getCurrentActors, 5 seconds).size}<br/>
       </body>
     </html>
   }
@@ -200,7 +209,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalRecordsTabl
           <td>Bus Route</td>
           <td>Count</td>
         </tr>
-        {Await.result(historicalMessageProcessor.getValidationErrorMap, 5 seconds).toList.sortBy(route => route._2).reverse.map(route =>
+        {Await.result(vehicleActorSupervisor.getValidationErrorMap, 5 seconds).toList.sortBy(route => route._2).reverse.map(route =>
          <tr>
             <td>{route._1.name + " - " + route._1.direction}</td>
             <td>{route._2}</td>

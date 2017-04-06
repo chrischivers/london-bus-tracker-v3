@@ -6,7 +6,7 @@ import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.{HistoricalTable, Journey}
 import lbt.datasource.streaming.DataStreamProcessor
-import lbt.historical.HistoricalSourceLineProcessor
+import lbt.historical.{HistoricalSourceLineProcessor, VehicleActorSupervisor}
 import lbt.servlet.LbtServlet
 import org.scalatra.test.scalatest.ScalatraSuite
 
@@ -16,8 +16,6 @@ case class TransmittedIncomingHistoricalRecord(journey: Journey, stopRecords: Li
 case class TransmittedIncomingHistoricalArrivalRecord(seqNo: Int, busStop: BusStop, arrivalTime: Long)
 case class TransmittedIncomingHistoricalStopRecord(stopID: String, arrivalTime: Long, journey: Journey)
 case class TransmittedBusRouteWithTowards(name: String, direction: String, towards: String)
-
-
 
 class StandardTestFixture extends ScalatraSuite {
 
@@ -31,6 +29,7 @@ class StandardTestFixture extends ScalatraSuite {
 
   val testDefinitionsTable = new BusDefinitionsTable(testDefinitionsConfig, testDBConfig)
   val testHistoricalTable = new HistoricalTable(testDBConfig, testDefinitionsTable)
+  val vehicleActorSupervisor = new VehicleActorSupervisor(actorSystem, testDefinitionsTable, testHistoricalRecordsConfig, testHistoricalTable)
 
   val testBusRoute1 = BusRoute("3", "outbound") //TODO include more randomisation on routes
   val testBusRoute2 = BusRoute("3", "inbound")
@@ -39,13 +38,9 @@ class StandardTestFixture extends ScalatraSuite {
   Thread.sleep(2000)
   val definitions: BusRouteDefinitions = testDefinitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
   println("Definitions: " + definitions)
-
-
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsTable, testHistoricalTable)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(testHistoricalRecordsConfig, testDefinitionsTable, vehicleActorSupervisor)
 
   val now = System.currentTimeMillis() + 5000
   val arrivalTimeAdder: Iterator[Int] = Stream.from(1).iterator
   def generateArrivalTime = now + (arrivalTimeAdder.next() * 1000)
-
-
 }

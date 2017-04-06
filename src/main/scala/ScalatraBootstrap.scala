@@ -14,7 +14,7 @@ import lbt.servlet.LbtServlet
 class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
-    context mount (new LbtServlet(Main.definitionsTable, Main.historicalTable, Main.dataStreamProcessor, Main.historicalSourceLineProcessor), "/*")
+    context mount (new LbtServlet(Main.definitionsTable, Main.historicalTable, Main.dataStreamProcessor, Main.historicalSourceLineProcessor, Main.vehicleActorSupervisor, Main.historicalRecordsProcessor), "/*")
     context.initParameters("org.scalatra.environment") = "production"
   }
 }

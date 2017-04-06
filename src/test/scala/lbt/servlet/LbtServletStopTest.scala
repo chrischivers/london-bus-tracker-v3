@@ -20,7 +20,7 @@ class LbtServletStopTest extends ScalatraFunSuite with ScalaFutures with Matcher
     timeout = scaled(30 seconds),
     interval = scaled(1 second))
 
-  addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor), "/*")
+  addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor, vehicleActorSupervisor, historicalRecordsFetcher), "/*")
 
   Thread.sleep(10000)
 
@@ -31,7 +31,7 @@ class LbtServletStopTest extends ScalatraFunSuite with ScalaFutures with Matcher
         get("/stop/" + stop.stopID) {
           status should equal(200)
           println("BODY: " + body)
-          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByStop(stop.stopID))
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByStop(stop.stopID).futureValue)
           parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]].foreach(record => {
             record.stopID shouldEqual stop.stopID
             record.journey.busRoute shouldEqual route

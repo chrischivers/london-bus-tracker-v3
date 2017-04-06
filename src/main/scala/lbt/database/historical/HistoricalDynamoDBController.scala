@@ -98,7 +98,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     }
   }
 
-  def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long], vehicleReg: Option[String]): List[HistoricalJourneyRecordFromDb] = {
+  def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long], vehicleReg: Option[String]): Future[List[HistoricalJourneyRecordFromDb]] = {
     logger.info(s"Loading historical record from DB for route $busRoute")
     numberGetsRequested.incrementAndGet()
 
@@ -113,16 +113,16 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     val filteredQueryRequest3 = addVehicleRegFilter(filteredQueryRequest2, vehicleReg)
 
 
-    val mappedResult = for {
+    for {
       result <- mapper.query[HistoricalDBItem](filteredQueryRequest3)
       mappedResult = parseJourneyQueryResult(result)
     } yield mappedResult.toList
-    println("MAPPED RESULT: " + Await.result(mappedResult, 30 seconds))
-    Await.result(mappedResult, 30 seconds)
+//    println("MAPPED RESULT: " + Await.result(mappedResult, 30 seconds))
+//    Await.result(mappedResult, 30 seconds)
   }
 
 
-  def loadHistoricalRecordsFromDbByVehicle(vehicleReg: String, stopID: Option[String] = None, busRoute: Option[BusRoute] = None, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long]): List[HistoricalJourneyRecordFromDb]  = {
+  def loadHistoricalRecordsFromDbByVehicle(vehicleReg: String, busRoute: Option[BusRoute] = None, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long]): Future[List[HistoricalJourneyRecordFromDb]]  = {
     logger.info(s"Loading historical record from DB for vehicle $vehicleReg")
     numberGetsRequested.incrementAndGet()
 
@@ -136,12 +136,11 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     val filteredQueryRequest2 = addStartMillisFilter(filteredQueryRequest1,fromJourneyStartMillis, toJourneyStartMillis)
     val filteredQueryRequest3 = addBusRouteFilter(filteredQueryRequest2, busRoute)
 
-    val mappedResult = for {
+    for {
       result <- mapper.query[HistoricalDBItem](filteredQueryRequest3)
       mappedResult = parseJourneyQueryResult(result)
     } yield mappedResult.toList
 
-    Await.result(mappedResult, 30 seconds)
   }
 
   private def parseJourneyQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalJourneyRecordFromDb] = {

@@ -20,14 +20,12 @@ import scalaz._
 
 case class ValidatedSourceLine(busRoute: BusRoute, busStop: BusStop, destinationText: String, vehicleReg: String, arrival_TimeStamp: Long)
 
-class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsConfig, definitionsTable: BusDefinitionsTable, historicalTable: HistoricalTable)(implicit actorSystem: ActorSystem, ec: ExecutionContext) extends StrictLogging {
+class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsConfig, definitionsTable: BusDefinitionsTable, vehicleActorSupervisor: VehicleActorSupervisor)(implicit ec: ExecutionContext) extends StrictLogging {
 
   val numberSourceLinesProcessed: AtomicLong = new AtomicLong(0)
   val numberSourceLinesValidated: AtomicLong = new AtomicLong(0)
 
   val definitions = definitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
-
-  val vehicleActorSupervisor = actorSystem.actorOf(Props(classOf[VehicleActorSupervisor], definitionsTable, historicalRecordsConfig, historicalTable))
 
   type StringValidation[T] = ValidationNel[String, T]
 
@@ -37,13 +35,15 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
     numberSourceLinesProcessed.incrementAndGet()
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
-        case Failure(e) => //logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
+        case Failure(e) =>
+          logger.info("DEFINITIONS: " + definitions)
+          logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
   }
 
   def handleValidatedSourceLine(validatedSourceLine: ValidatedSourceLine) = {
     numberSourceLinesValidated.incrementAndGet()
-    vehicleActorSupervisor ! validatedSourceLine
+    vehicleActorSupervisor.sendValidatedLine(validatedSourceLine)
   }
 
   def validateSourceLine(sourceLine: SourceLine): StringValidation[ValidatedSourceLine] = {
@@ -63,9 +63,7 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
       }
     }
 
-    def notOnIgnoreList(): StringValidation[Unit] = {
-      ().successNel
-    }
+    def notOnIgnoreList(): StringValidation[Unit] = ().successNel
 
     def isInPast(): StringValidation[Unit] = {
       //TODO is this working with clock change?
@@ -77,24 +75,6 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
       |@| isInPast()).tupled.map {
         x => ValidatedSourceLine(busRoute, x._1, sourceLine.destinationText, sourceLine.vehicleID, sourceLine.arrival_TimeStamp)
       }
-  }
-
-  def getCurrentActors = {
-    implicit val timeout = Timeout(10 seconds)
-    (vehicleActorSupervisor ? GetCurrentActors).mapTo[Map[String, ActorRef]]
-  }
-
-  def getArrivalRecords(vehicleReg: String, busRoute: BusRoute) = {
-    implicit val timeout = Timeout(10 seconds)
-    for {
-      futureResult <- (vehicleActorSupervisor ? GetArrivalRecords(VehicleActorID(vehicleReg, busRoute))).mapTo[Future[Map[BusStop, Long]]]
-      listResult <- futureResult
-    } yield listResult
-  }
-
-  def getValidationErrorMap = {
-    implicit val timeout = Timeout(10 seconds)
-    (vehicleActorSupervisor ? GetValidationErrorMap).mapTo[Map[BusRoute, Int]]
   }
 }
 

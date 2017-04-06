@@ -35,8 +35,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
         context.become(active(Some(vsl.busRoute), stopArrivalRecordsWithLastStop, busStopDefinitionList, System.currentTimeMillis()))
       }
     case GetArrivalRecords(_) => sender ! stopArrivalRecords
-
-    case PersistToDB =>
+     case PersistToDB =>
       validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList, lastUpdatedTime) match {
         case Success(completeList) =>
           logger.info(s"Persisting data for vehicle $name to DB")
@@ -48,9 +47,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
   }
 
   def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop], vehicleLastUpdated: Long): StringValidation[List[ArrivalRecord]] = {
-
     val orderedStopsList: List[(Int, BusStop, Option[Long])] = busStopDefinitionList.zipWithIndex.map{case(stop, index) => (index, stop, stopArrivalRecords.get(stop))}
-
     val orderedStopListWithFutureTimesRemoved: List[(Int, BusStop, Option[Long])] = orderedStopsList.map(stop => {
       if(stop._3.isDefined && stop._3.get > vehicleLastUpdated + historicalRecordsConfig.toleranceForFuturePredictions) (stop._1, stop._2, None)
       else stop

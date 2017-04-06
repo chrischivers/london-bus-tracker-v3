@@ -21,7 +21,7 @@ class LbtServletVehicleTest extends ScalatraFunSuite with ScalaFutures with Matc
     timeout = scaled(30 seconds),
     interval = scaled(1 second))
 
-  addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor), "/*")
+  addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor, vehicleActorSupervisor, historicalRecordsFetcher), "/*")
 
   Thread.sleep(10000)
 
@@ -29,7 +29,7 @@ class LbtServletVehicleTest extends ScalatraFunSuite with ScalaFutures with Matc
       get("/vehicle/" + vehicleReg) {
         status should equal(200)
         println("BODY: " + body)
-        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByVehicle(vehicleReg))
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByVehicle(vehicleReg).futureValue)
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
           record.journey.vehicleReg shouldEqual vehicleReg
           record.stopRecords.map(stopRecs => stopRecs.busStop) shouldEqual definitions(record.journey.busRoute)

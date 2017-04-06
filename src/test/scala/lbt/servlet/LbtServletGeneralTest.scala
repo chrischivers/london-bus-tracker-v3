@@ -20,7 +20,7 @@ class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matc
     timeout = scaled(30 seconds),
     interval = scaled(1 second))
 
-  addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor), "/*")
+  addServlet(new LbtServlet(testDefinitionsTable, testHistoricalTable, dataStreamProcessor, historicalSourceLineProcessor, vehicleActorSupervisor, historicalRecordsFetcher), "/*")
 
   Thread.sleep(10000)
 

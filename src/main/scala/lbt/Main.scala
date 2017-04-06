@@ -1,11 +1,12 @@
 package lbt
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, Props}
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.HistoricalTable
 import lbt.datasource.streaming.DataStreamProcessor
-import lbt.historical.HistoricalSourceLineProcessor
+import lbt.historical.{HistoricalRecordsFetcher, HistoricalSourceLineProcessor, VehicleActorParent, VehicleActorSupervisor}
 import lbt.servlet.LbtServlet
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object Main extends App {
@@ -22,10 +23,11 @@ object Main extends App {
   Thread.sleep(3000)
   definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
   Thread.sleep(3000)
+
   val historicalTable = new HistoricalTable(dBConfig, definitionsTable)
-
-  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(historicalRecordsConfig, definitionsTable, historicalTable)
-
+  val vehicleActorSupervisor = new VehicleActorSupervisor(actorSystem, definitionsTable, historicalRecordsConfig, historicalTable)
+  val historicalRecordsProcessor = new HistoricalRecordsFetcher(dBConfig, definitionsTable, vehicleActorSupervisor, historicalTable)
+  val historicalSourceLineProcessor = new HistoricalSourceLineProcessor(historicalRecordsConfig, definitionsTable, vehicleActorSupervisor)
   val dataStreamProcessor  = new DataStreamProcessor(dataSourceConfig, historicalSourceLineProcessor)
 
   LbtServlet.setUpServlet
