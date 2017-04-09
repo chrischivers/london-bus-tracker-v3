@@ -21,7 +21,7 @@ import org.scalatra.servlet.ScalatraListener
 import scalaz.Scalaz._
 import scalaz._
 import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.Try
 
 
@@ -76,12 +76,14 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
       val vehicleReg = params.get("vehicleReg")
       logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, vehicleReg $vehicleReg")
 
-      (validateBusRoute(Some(busRoute)) |@|
+      val validatedResult: Validation[NonEmptyList[String], Unit] = (validateBusRoute(Some(busRoute)) |@|
         validateFromToStops(Some(busRoute), fromStopID, toStopID) |@|
         validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
         validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek) |@|
         validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
-        validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
+        validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ())
+
+      override val is = validatedResult match {
         case Success(()) => for {
           combinedRecords <- historicalRecordsFetcher.getsHistoricalRecordsByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg)
           records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
@@ -89,7 +91,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
         case Failure(e) =>
           val error = s"Unable to process /busroute request due to $e"
           logger.info(error)
-          BadRequest(error)
+         Future(error)
       }
     }
   }
@@ -113,12 +115,14 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
       } yield busRoute
       logger.info(s"/vehicle request received for $vehicleReg, stopID $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, busRoute $busRoute")
 
-      (validateBusRoute(busRoute) |@|
+      val validatedResult = (validateBusRoute(busRoute) |@|
         validateStopID(stopID) |@|
         validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
         validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeMillis) |@|
         validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
-        validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
+        validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ())
+
+      override val is = validatedResult match {
         case Success(()) => for {
           combinedRecords <- historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute)
           records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
@@ -126,7 +130,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
         case Failure(e) =>
           val error = s"Unable to deliver /vehicle request due to $e"
           logger.info(error)
-          BadRequest(error)
+          Future(error)
       }
     }
   }
@@ -147,10 +151,12 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
       logger.info(s"/stop request received for $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalSecOfWeek $fromArrivalSecOfWeek, toArrivalSecOfWeek $toArrivalSecOfWeek, vehicleReg $vehicleReg, busRoute $busRoute")
 
 
-      (validateBusRoute(busRoute) |@|
+      val validatedResult = (validateBusRoute(busRoute) |@|
         validateStopID(Some(stopID)) |@|
         validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
-        validateFromToSecOfWeek(fromArrivalSecOfWeek, toArrivalSecOfWeek)).tupled.map(_ => ()) match {
+        validateFromToSecOfWeek(fromArrivalSecOfWeek, toArrivalSecOfWeek)).tupled.map(_ => ())
+
+      override val is = validatedResult match {
         case Success(()) =>
           val records = historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg)
           records.map(x =>
@@ -168,7 +174,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
         case Failure(e) =>
           val error = s"Unable to process /stop request due to $e"
           logger.info(error)
-          BadRequest(error)
+          Future(error)
       }
     }
   }
