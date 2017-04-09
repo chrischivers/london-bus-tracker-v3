@@ -91,7 +91,7 @@ class VehicleActorParent(busDefinitionsTable: BusDefinitionsTable, historicalRec
   }
 }
 
-class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefinitionsTable, historicalRecordsConfig: HistoricalRecordsConfig, historicalTable: HistoricalTable)(implicit ec: ExecutionContext) {
+class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefinitionsTable, historicalRecordsConfig: HistoricalRecordsConfig, historicalTable: HistoricalTable)(implicit ec: ExecutionContext) extends StrictLogging {
 
   private val vehicleActorParent = actorSystem.actorOf(Props(classOf[VehicleActorParent], definitionsTable, historicalRecordsConfig, historicalTable))
 
@@ -121,12 +121,14 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
       actorsForRoute = currentActors.filter(_._1.busRoute == busRoute).keys
       result <- Future.sequence(actorsForRoute.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
     } yield {
-      result.map(record =>
+      val yieldedResult = result.map(record =>
         HistoricalJourneyRecord(
           Journey(record._1.busRoute, record._1.vehicleReg, record._2.head.arrivalTime, Commons.getSecondsOfWeek(record._2.head.arrivalTime)),
           Source("Live"),
           record._2
         ))
+      logger.info("getLiveArrivalRecordsForRoute yielded result: " + yieldedResult)
+      yieldedResult
     }
   }
 

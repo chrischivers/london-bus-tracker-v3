@@ -81,16 +81,14 @@ class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val
   def loadBusRouteDefinitionsFromDB: BusRouteDefinitions = {
     logger.info("Loading Bus Route Definitions From DB")
     numberGetsRequested.incrementAndGet()
-    val mappedResult = for {
-      result <- mapper.scan[DefinitionsDBItem]()
-      groupedResult = result.groupBy(item => item.ROUTE_ID_DIRECTION)
-      mappedResult = groupedResult
+
+    val mappedResult = mapper.scan[DefinitionsDBItem]().map(result =>
+      result.groupBy(item => item.ROUTE_ID_DIRECTION)
         .map(result => parse(result._1).extract[BusRoute] ->
           result._2.sortBy(stop => stop.SEQUENCE_NO)
-            .map(stop => BusStop(stop.STOP_ID, stop.STOP_NAME, 0.0, 0.0)).toList)
-    } yield mappedResult
+            .map(stop => BusStop(stop.STOP_ID, stop.STOP_NAME, 0.0, 0.0)).toList))
 
-    Await.result(mappedResult, 60 seconds)
+    Await.result(mappedResult, 300 seconds)
   }
 
 

@@ -45,7 +45,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
           logger.info(s"Get Validated Arrival Records request sucessfully validated for $name")
          sender ! completeList
         case Failure(e) =>
-          logger.info(s"Get Validated Arrival Records request failed validation for $name. Reason: $e")
+          logger.debug(s"Get Validated Arrival Records request failed validation for $name. Reason: $e")
           sender ! List.empty
       }
      case PersistToDB =>
