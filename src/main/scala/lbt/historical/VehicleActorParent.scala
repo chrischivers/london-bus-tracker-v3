@@ -152,14 +152,14 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
     for {
       currentActors <- getCurrentActors
       actorsForRoute = currentActors.filter(vehicle => filteredRoutesContainingStop.contains(vehicle._1.busRoute)).keys
-      allRecords <- Future.sequence(actorsForRoute.map(getLiveArrivalRecords))
+      allRecords <- Future.sequence(actorsForRoute.map(getLiveValidatedArrivalRecords))
       allRecordsWithVehicleIDs = actorsForRoute.zip(allRecords)
-      result = allRecordsWithVehicleIDs.map(record => (record._1, record._2.head._2, record._2.find(_._1.stopID == stopID))).filter(_._3.isDefined).toList
+      result = allRecordsWithVehicleIDs.map(record => (record._1, record._2.head.arrivalTime, record._2.find(_.stopID == stopID))).filter(_._3.isDefined).toList
     } yield {
       result.map(record =>
         HistoricalStopRecord(
-          record._3.get._1.stopID,
-          record._3.get._2,
+          record._3.get.stopID,
+          record._3.get.arrivalTime,
           Journey(record._1.busRoute, record._1.vehicleReg, record._2, Commons.getSecondsOfWeek(record._2)),
           Source("Live")
         ))
