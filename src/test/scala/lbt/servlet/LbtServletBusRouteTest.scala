@@ -2,20 +2,19 @@ package lbt.servlet
 
 import akka.actor.Kill
 import lbt.TransmittedIncomingHistoricalRecord
-import lbt.comon.{BusRoute, BusStop}
-import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecordFromDb, Journey}
+import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecord}
 import lbt.datasource.streaming.SourceLineValidator
 import net.liftweb.json._
-import org.joda.time.DateTime
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.{BeforeAndAfterAll, FunSuite, FunSuiteLike, Matchers}
-import org.scalatra.test.scalatest.{ScalatraFunSuite, ScalatraSuite}
+import org.scalatest.{BeforeAndAfterAll, Matchers, OptionValues}
+import org.scalatra.test.scalatest.ScalatraFunSuite
+import org.specs2.matcher.OptionMatchers
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
 import scala.util.Random
 
-class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Matchers with BeforeAndAfterAll with Eventually with LbtServletTestFixture {
+class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Matchers with BeforeAndAfterAll with Eventually with OptionValues with LbtServletTestFixture {
 
   implicit val formats = DefaultFormats
   implicit val ec = ExecutionContext.Implicits.global
@@ -292,22 +291,69 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
 
   test("should produce a list of vehicles and their arrival times for a given route, including times for active vehicles that haven't yet been persisted") {
 
-    val liveBusRoute = testBusRoutes.head
-    val message = SourceLineValidator("[1,\"" + definitions(liveBusRoute).head.stopID + "\",\"" + liveBusRoute.name + "\"," + directionToInt(liveBusRoute.direction) + ",\"Any Place\",\"" + vehicleReg + "Y" + "\"," + System.currentTimeMillis() + 6000 + "]").get
+    testBusRoutes.foreach(route => {
+      val newVehicleReg = "Y1234"
+    val message = SourceLineValidator("[1,\"" + definitions(route).head.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + newVehicleReg + "\"," + (System.currentTimeMillis() + 6000) + "]").get
     historicalSourceLineProcessor.processSourceLine(message)
 
-    get("/busroute/" + liveBusRoute.name + "/" + liveBusRoute.direction) {
+    get("/busroute/" + route.name + "/" + route.direction) {
       status should equal(200)
       parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 2
       val result = parse(body).extract[List[TransmittedIncomingHistoricalRecord]]
-      result.head.stopRecords.size should equal(definitions(liveBusRoute).size)
-      result(1).stopRecords.size shouldBe 1
+      result.find(x => x.journey.busRoute == route && x.journey.vehicleReg == vehicleReg).map(_.stopRecords.size).value should equal (definitions(route).size)
+      result.find(x => x.journey.busRoute == route && x.journey.vehicleReg == newVehicleReg).map(_.stopRecords.size).value shouldBe 1
     }
+  })
   }
 
-  def toDbRecord(transmittedIncomingHistoricalRecordList: List[TransmittedIncomingHistoricalRecord]): List[HistoricalJourneyRecordFromDb] = {
+  test("should produce a list of vehicles and their arrival times for db and live vehicles, with live vehicles appearing first") {
+
+    testBusRoutes.foreach(route => {
+      val newVehicleReg = "Y1234"
+      val message = SourceLineValidator("[1,\"" + definitions(route).head.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + newVehicleReg + "\"," + (System.currentTimeMillis() + 6000) + "]").get
+      historicalSourceLineProcessor.processSourceLine(message)
+
+      get("/busroute/" + route.name + "/" + route.direction) {
+        status should equal(200)
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 2
+        val result = parse(body).extract[List[TransmittedIncomingHistoricalRecord]]
+        result.head.journey.vehicleReg should equal(newVehicleReg)
+        result(1).journey.vehicleReg should equal(vehicleReg)
+      }
+    })
+  }
+
+  test("live vehicles should update when an updated time is received") {
+
+    testBusRoutes.foreach(route => {
+      val newVehicleReg = "Y1234"
+      val firstArrivalTime = System.currentTimeMillis() + 6000
+      val message1 = SourceLineValidator("[1,\"" + definitions(route).head.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + newVehicleReg + "\"," + firstArrivalTime + "]").get
+      historicalSourceLineProcessor.processSourceLine(message1)
+
+      get("/busroute/" + route.name + "/" + route.direction) {
+        status should equal(200)
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 2
+        val result = parse(body).extract[List[TransmittedIncomingHistoricalRecord]]
+        result.find(x => x.journey.busRoute == route && x.journey.vehicleReg == newVehicleReg).map(_.stopRecords.head.arrivalTime).value shouldBe firstArrivalTime
+      }
+
+      val secondArrivalTime = firstArrivalTime + 5000
+      val message2 = SourceLineValidator("[1,\"" + definitions(route).head.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + newVehicleReg + "\"," + secondArrivalTime + "]").get
+      historicalSourceLineProcessor.processSourceLine(message2)
+      get("/busroute/" + route.name + "/" + route.direction) {
+        status should equal(200)
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 2
+        val result = parse(body).extract[List[TransmittedIncomingHistoricalRecord]]
+        result.find(x => x.journey.busRoute == route && x.journey.vehicleReg == newVehicleReg).map(_.stopRecords.head.arrivalTime).value shouldBe secondArrivalTime
+      }
+    })
+  }
+
+
+  def toDbRecord(transmittedIncomingHistoricalRecordList: List[TransmittedIncomingHistoricalRecord]): List[HistoricalJourneyRecord] = {
     transmittedIncomingHistoricalRecordList
-      .map(x => HistoricalJourneyRecordFromDb(x.journey, x.stopRecords
+      .map(x => HistoricalJourneyRecord(x.journey, x.source, x.stopRecords
         map(y => ArrivalRecord(y.seqNo, y.busStop.stopID, y.arrivalTime))))
   }
 

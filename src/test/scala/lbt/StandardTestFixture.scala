@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import lbt.comon.{BusRoute, BusStop}
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.{HistoricalTable, Journey}
+import lbt.database.historical.{HistoricalTable, Journey, Source}
 import lbt.datasource.streaming.DataStreamProcessor
 import lbt.historical.{HistoricalSourceLineProcessor, VehicleActorSupervisor}
 import lbt.servlet.LbtServlet
@@ -12,9 +12,9 @@ import org.scalatra.test.scalatest.ScalatraSuite
 
 import scala.concurrent.ExecutionContext
 
-case class TransmittedIncomingHistoricalRecord(journey: Journey, stopRecords: List[TransmittedIncomingHistoricalArrivalRecord])
+case class TransmittedIncomingHistoricalRecord(journey: Journey, source: Source, stopRecords: List[TransmittedIncomingHistoricalArrivalRecord])
 case class TransmittedIncomingHistoricalArrivalRecord(seqNo: Int, busStop: BusStop, arrivalTime: Long)
-case class TransmittedIncomingHistoricalStopRecord(stopID: String, arrivalTime: Long, journey: Journey)
+case class TransmittedIncomingHistoricalStopRecord(stopID: String, arrivalTime: Long, journey: Journey, source: Source)
 case class TransmittedBusRouteWithTowards(name: String, direction: String, towards: String)
 
 class StandardTestFixture extends ScalatraSuite {

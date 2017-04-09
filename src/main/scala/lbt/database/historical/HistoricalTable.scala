@@ -24,7 +24,7 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
    fromJourneyStartSecOfWeek: Option[Int] = None,
    toJourneyStartSecOfWeek: Option[Int] = None,
    vehicleReg: Option[String] = None)
-  : Future[List[HistoricalJourneyRecordFromDb]] = {
+  : Future[List[HistoricalJourneyRecord]] = {
 
     historicalDBController.loadHistoricalRecordsFromDbByBusRoute(busRoute, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, fromJourneyStartMillis, toJourneyStartMillis, vehicleReg)
    }
@@ -36,7 +36,7 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
    fromJourneyStartSecOfWeek: Option[Int] = None,
    toJourneyStartSecOfWeek: Option[Int] = None,
    busRoute: Option[BusRoute] = None)
-  : Future[List[HistoricalJourneyRecordFromDb]] = {
+  : Future[List[HistoricalJourneyRecord]] = {
 
     historicalDBController.loadHistoricalRecordsFromDbByVehicle(vehicleReg, busRoute, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, fromJourneyStartMillis, toJourneyStartMillis)
   }
@@ -49,7 +49,7 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
    toArrivalTimeSecOfWeek: Option[Int] = None,
    busRoute: Option[BusRoute] = None,
    vehicleReg: Option[String] = None)
-  : Future[List[HistoricalJourneyRecordFromDb]] = {
+  : Future[List[HistoricalJourneyRecord]] = {
     val routesContainingStops = busDefinitionsTable.getBusRouteDefinitions().filter(route => route._2.exists(stop => stop.stopID == stopID)).keys
     val routesContainingStopsWithFilter = busRoute match {
       case Some(thisRoute) => routesContainingStops.filter(route => route == thisRoute)

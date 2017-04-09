@@ -6,15 +6,16 @@ import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
 import lbt.HistoricalRecordsConfig
 import lbt.Main.{actorSystem, definitionsTable, historicalRecordsConfig, historicalTable}
-import lbt.comon.{BusRoute, BusStop}
+import lbt.comon.{BusRoute, BusStop, Commons}
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.{ArrivalRecord, HistoricalTable}
+import lbt.database.historical._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
 case class GetCurrentActors()
 case class GetArrivalRecords(vehicleID: VehicleActorID)
+case class GetValidatedArrivalRecords(vehicleID: VehicleActorID)
 case class GetLiveArrivalRecordsForBusRoute(busRoute: BusRoute)
 case class GetLiveArrivalRecordsForVehicleId(vehicleActorID: VehicleActorID)
 case class PersistToDB()
@@ -60,11 +61,23 @@ class VehicleActorParent(busDefinitionsTable: BusDefinitionsTable, historicalRec
     case ValidationError(route, _) =>
       val currentErrorCount = validationErrorCount.get(route)
       context.become(active(currentActors, linesUntilCleanup, validationErrorCount + (route -> currentErrorCount.map(count => count + 1).getOrElse(1))))
-    case GetCurrentActors => sender ! currentActors
-    case GetArrivalRecords(vehicleID) => currentActors.get(vehicleID) match {
-      case Some((actorRef, _)) => sender ! (actorRef ? GetArrivalRecords(vehicleID))
+    case GetCurrentActors =>
+      logger.info("Get Current Actors request received")
+      sender ! currentActors
+    case gar @ GetArrivalRecords(vehicleID) =>
+      logger.info(s"GetArrivalRecords request received for $vehicleID")
+      currentActors.get(vehicleID) match {
+      case Some((actorRef, _)) => sender ! (actorRef ? gar)
       case None =>
         logger.error(s"Unable to get arrival records for $vehicleID. No such actor")
+        sender ! List.empty
+    }
+    case gvar @ GetValidatedArrivalRecords(vehicleID) =>
+      logger.info(s"GetValidatedArrivalRecords request received for $vehicleID")
+      currentActors.get(vehicleID) match {
+      case Some((actorRef, _)) => sender ! (actorRef ? gvar).mapTo[List[ArrivalRecord]]
+      case None =>
+        logger.error(s"Unable to get validated arrival records for $vehicleID. No such actor")
         sender ! List.empty
     }
     case GetValidationErrorMap =>
@@ -73,6 +86,7 @@ class VehicleActorParent(busDefinitionsTable: BusDefinitionsTable, historicalRec
   }
 
   def createNewActor(vehicleActorID: VehicleActorID): ActorRef = {
+    logger.debug(s"New actor created $vehicleActorID")
     context.actorOf(Props(classOf[VehicleActor], vehicleActorID, historicalRecordsConfig, busDefinitionsTable, historicalTable), vehicleActorID.toString)
   }
 }
@@ -85,12 +99,68 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
     vehicleActorParent ! validatedSourceLine
   }
 
-  def getLiveArrivalRecords(busRoute: BusRoute, vehicleReg: String) = {
+  def getLiveArrivalRecords(vehicleActorID: VehicleActorID): Future[Map[BusStop, Long]] = {
     implicit val timeout = Timeout(10 seconds)
     for {
-      futureResult <- (vehicleActorParent ? GetArrivalRecords(VehicleActorID(vehicleReg, busRoute))).mapTo[Future[Map[BusStop, Long]]]
+      futureResult <- (vehicleActorParent ? GetArrivalRecords(vehicleActorID)).mapTo[Future[Map[BusStop, Long]]]
       listResult <- futureResult
     } yield listResult
+  }
+
+  def getLiveValidatedArrivalRecords(vehicleActorID: VehicleActorID): Future[List[ArrivalRecord]] = {
+    implicit val timeout = Timeout(10 seconds)
+    for {
+      futureResult <- (vehicleActorParent ? GetValidatedArrivalRecords(vehicleActorID)).mapTo[Future[List[ArrivalRecord]]]
+      listResult <- futureResult
+    } yield listResult
+  }
+
+  def getLiveArrivalRecordsForRoute(busRoute: BusRoute): Future[List[HistoricalJourneyRecord]] = {
+    for {
+      currentActors <- getCurrentActors
+      actorsForRoute = currentActors.filter(_._1.busRoute == busRoute).keys
+      result <- Future.sequence(actorsForRoute.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
+    } yield {
+      result.map(record =>
+        HistoricalJourneyRecord(
+          Journey(record._1.busRoute, record._1.vehicleReg, record._2.head.arrivalTime, Commons.getSecondsOfWeek(record._2.head.arrivalTime)),
+          Source("Live"),
+          record._2
+        ))
+    }
+  }
+
+  def getLiveArrivalRecordsForVehicle(vehicleReg: String): Future[List[HistoricalJourneyRecord]] = {
+    for {
+      currentActors <- getCurrentActors
+      actorsForVehicle = currentActors.filter(_._1.vehicleReg == vehicleReg).keys
+      result <- Future.sequence(actorsForVehicle.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
+    } yield {
+      result.map(record =>
+        HistoricalJourneyRecord(
+          Journey(record._1.busRoute, record._1.vehicleReg, record._2.head.arrivalTime, Commons.getSecondsOfWeek(record._2.head.arrivalTime)),
+          Source("Live"),
+          record._2
+        ))
+    }
+  }
+  //TODO combine these into one
+
+  def getLiveArrivalRecordsForStop(stopID: String): Future[List[HistoricalStopRecord]] = {
+    for {
+      currentActors <- getCurrentActors
+      allRecords <- Future.sequence(currentActors.map(vehicle => getLiveArrivalRecords(vehicle._1)))
+      allRecordsWithVehicleIDs = currentActors.keys.zip(allRecords)
+      result = allRecordsWithVehicleIDs.map(record => (record._1, record._2.head._2, record._2.find(_._1.stopID == stopID))).filter(_._3.isDefined).toList
+    } yield {
+      result.map(record =>
+        HistoricalStopRecord(
+          record._3.get._1.stopID,
+          record._3.get._2,
+          Journey(record._1.busRoute, record._1.vehicleReg, record._2, Commons.getSecondsOfWeek(record._2)),
+          Source("Live")
+        ))
+    }
   }
 
   def getValidationErrorMap = {
@@ -98,9 +168,9 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
     (vehicleActorParent ? GetValidationErrorMap).mapTo[Map[BusRoute, Int]]
   }
 
-  def getCurrentActors = {
+  def getCurrentActors: Future[Map[VehicleActorID, (ActorRef, Long)]] = {
     implicit val timeout = Timeout(10 seconds)
-    (vehicleActorParent ? GetCurrentActors).mapTo[Map[String, ActorRef]]
+    (vehicleActorParent ? GetCurrentActors).mapTo[Map[VehicleActorID, (ActorRef, Long)]]
   }
 
   def persistAndRemoveInactiveVehicles = {

@@ -90,7 +90,7 @@ class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val
             .map(stop => BusStop(stop.STOP_ID, stop.STOP_NAME, 0.0, 0.0)).toList)
     } yield mappedResult
 
-    Await.result(mappedResult, 30 seconds)
+    Await.result(mappedResult, 60 seconds)
   }
 
 

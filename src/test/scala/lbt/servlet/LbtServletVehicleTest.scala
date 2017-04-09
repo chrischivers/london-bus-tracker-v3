@@ -3,7 +3,8 @@ package lbt.servlet
 import akka.actor.Kill
 import lbt.TransmittedIncomingHistoricalRecord
 import lbt.comon.{BusRoute, BusStop}
-import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecordFromDb, Journey}
+import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecord, Journey}
+import lbt.datasource.streaming.SourceLineValidator
 import net.liftweb.json._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, FunSuite, FunSuiteLike, Matchers}
@@ -28,7 +29,6 @@ class LbtServletVehicleTest extends ScalatraFunSuite with ScalaFutures with Matc
   test("should produce a list of vehicles and their arrival times for a given vehicle ID") {
       get("/vehicle/" + vehicleReg) {
         status should equal(200)
-        println("BODY: " + body)
         toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByVehicle(vehicleReg).futureValue)
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
           record.journey.vehicleReg shouldEqual vehicleReg
@@ -45,11 +45,33 @@ class LbtServletVehicleTest extends ScalatraFunSuite with ScalaFutures with Matc
     }
   }
 
+  test("should produce a list of vehicles and their arrival times for a given vehicleID, including times for journeys that haven't yet been persisted") {
+
+    testBusRoutes.foreach(route => {
+      val newRoute = BusRoute("521", "inbound")
+      val message = SourceLineValidator("[1,\"" + definitions(newRoute).head.stopID + "\",\"" + newRoute.name + "\"," + directionToInt(newRoute.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + (System.currentTimeMillis() + 6000) + "]").get
+      historicalSourceLineProcessor.processSourceLine(message)
+
+      get("/vehicle/" + vehicleReg) {
+        status should equal(200)
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]).size shouldBe 3
+        toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalRecord]]) should equal(historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg).futureValue)
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].foreach(record => {
+          record.journey.vehicleReg shouldEqual vehicleReg
+          if (record.source.value == "DB") {
+            record.stopRecords.map(stopRecs => stopRecs.busStop) shouldEqual definitions(record.journey.busRoute)
+          }
+        })
+        parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe testBusRoutes.size + 1
+      }
+    })
+  }
+
   //TODO more tests here checking variables
 
-  def toDbRecord(transmittedIncomingHistoricalRecordList: List[TransmittedIncomingHistoricalRecord]): List[HistoricalJourneyRecordFromDb] = {
+  def toDbRecord(transmittedIncomingHistoricalRecordList: List[TransmittedIncomingHistoricalRecord]): List[HistoricalJourneyRecord] = {
     transmittedIncomingHistoricalRecordList
-      .map(x => HistoricalJourneyRecordFromDb(x.journey, x.stopRecords
+      .map(x => HistoricalJourneyRecord(x.journey, x.source, x.stopRecords
         map(y => ArrivalRecord(y.seqNo, y.busStop.stopID, y.arrivalTime))))
   }
 

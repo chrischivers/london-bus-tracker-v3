@@ -5,7 +5,7 @@ import lbt.Main
 import lbt.comon.Commons.BusRouteDefinitions
 import lbt.comon._
 import lbt.database.definitions.BusDefinitionsTable
-import lbt.database.historical.{HistoricalJourneyRecordFromDb, HistoricalTable}
+import lbt.database.historical.{HistoricalJourneyRecord, HistoricalTable}
 import lbt.datasource.streaming.{DataStreamProcessingController, DataStreamProcessor}
 import lbt.historical.{HistoricalRecordsFetcher, HistoricalSourceLineProcessor, VehicleActorSupervisor}
 import org.scalatra._
@@ -81,8 +81,8 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
       validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
       validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
       case Success(()) => for {
-        fromDB <- historicalRecordsFetcher.getsHistoricalRecordsByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg)
-        records = compactRender(renderHistoricalJourneyRecordListToJValue(fromDB, busDefinitionsTable.getBusRouteDefinitions()))
+        combinedRecords <- historicalRecordsFetcher.getsHistoricalRecordsByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg)
+        records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
       } yield records
       case Failure(e) =>
         val error = s"Unable to process /busroute request due to $e"
@@ -116,8 +116,8 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
       validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
       validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
       case Success(()) => for {
-        fromDB <- historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong),  fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute)
-        records = renderHistoricalJourneyRecordListToJValue(fromDB, busDefinitionsTable.getBusRouteDefinitions())
+        combinedRecords <- historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong),  fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute)
+        records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
       } yield records
       case Failure(e) =>
         val error = s"Unable to deliver /vehicle request due to $e"
@@ -149,13 +149,15 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
          val records = historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg)
         records.map(x =>
             compactRender(x.map(rec =>
-        ("stopID" -> rec.stopID) ~
+          ("stopID" -> rec.stopID) ~
           ("arrivalTime" -> rec.arrivalTime) ~
           ("journey" ->
             ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
               ("vehicleReg" -> rec.journey.vehicleReg) ~
               ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
-              ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek))
+              ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek)) ~
+            ("source" ->
+              ("value" -> rec.source.value))
           )))
       case Failure(e) =>
         val error = s"Unable to process /stop request due to $e"
@@ -277,7 +279,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
     } else ().successNel
   }
 
-  private def renderHistoricalJourneyRecordListToJValue(historicalJourneyRecordFromDb: List[HistoricalJourneyRecordFromDb], busRouteDefinitions: BusRouteDefinitions): JValue = {
+  private def renderHistoricalJourneyRecordListToJValue(historicalJourneyRecordFromDb: List[HistoricalJourneyRecord], busRouteDefinitions: BusRouteDefinitions): JValue = {
 
     def getBusStop(route: BusRoute, stopID: String): Option[BusStop] = busRouteDefinitions(route).find(x => x.stopID == stopID)
 
@@ -287,6 +289,8 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
           ("vehicleReg" -> rec.journey.vehicleReg) ~
           ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
           ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek)) ~
+        ("source" ->
+          ("value" -> rec.source.value)) ~
         ("stopRecords" ->
           rec.stopRecords.map(stopRec =>
             ("seqNo" -> stopRec.seqNo) ~

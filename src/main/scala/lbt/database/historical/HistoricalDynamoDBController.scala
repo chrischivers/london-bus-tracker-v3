@@ -20,11 +20,11 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 case class HistoricalDBItem(ROUTE_ID_DIRECTION: String, JOURNEY_ID: String, VEHICLE_REG: String, JOURNEY_START_TIME_MILLIS: Long, JOURNEY_START_SECOND_OF_WEEK: Int, ARRIVAL_RECORD: String)
-
+case class Source(value: String)
 case class ArrivalRecord(seqNo: Int, stopID: String, arrivalTime: Long)
 case class Journey(busRoute: BusRoute, vehicleReg: String, startingTimeMillis: Long, startingSecondOfWeek: Int)
-case class HistoricalJourneyRecordFromDb(journey: Journey, stopRecords: List[ArrivalRecord])
-case class HistoricalStopRecordFromDb(stopID: String, arrivalTime: Long, journey: Journey)
+case class HistoricalJourneyRecord(journey: Journey, source: Source, stopRecords: List[ArrivalRecord])
+case class HistoricalStopRecord(stopID: String, arrivalTime: Long, journey: Journey, source: Source)
 
 
 class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val ec: ExecutionContext) extends DatabaseControllers with StrictLogging {
@@ -98,7 +98,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     }
   }
 
-  def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long], vehicleReg: Option[String]): Future[List[HistoricalJourneyRecordFromDb]] = {
+  def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long], vehicleReg: Option[String]): Future[List[HistoricalJourneyRecord]] = {
     logger.info(s"Loading historical record from DB for route $busRoute")
     numberGetsRequested.incrementAndGet()
 
@@ -115,14 +115,12 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
     for {
       result <- mapper.query[HistoricalDBItem](filteredQueryRequest3)
-      mappedResult = parseJourneyQueryResult(result)
+      mappedResult = parseDBJourneyQueryResult(result)
     } yield mappedResult.toList
-//    println("MAPPED RESULT: " + Await.result(mappedResult, 30 seconds))
-//    Await.result(mappedResult, 30 seconds)
   }
 
 
-  def loadHistoricalRecordsFromDbByVehicle(vehicleReg: String, busRoute: Option[BusRoute] = None, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long]): Future[List[HistoricalJourneyRecordFromDb]]  = {
+  def loadHistoricalRecordsFromDbByVehicle(vehicleReg: String, busRoute: Option[BusRoute] = None, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long]): Future[List[HistoricalJourneyRecord]]  = {
     logger.info(s"Loading historical record from DB for vehicle $vehicleReg")
     numberGetsRequested.incrementAndGet()
 
@@ -138,15 +136,16 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
 
     for {
       result <- mapper.query[HistoricalDBItem](filteredQueryRequest3)
-      mappedResult = parseJourneyQueryResult(result)
+      mappedResult = parseDBJourneyQueryResult(result)
     } yield mappedResult.toList
 
   }
 
-  private def parseJourneyQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalJourneyRecordFromDb] = {
+  private def parseDBJourneyQueryResult(result: Seq[HistoricalDBItem]): Seq[HistoricalJourneyRecord] = {
       result.map { res =>
-        HistoricalJourneyRecordFromDb(
+        HistoricalJourneyRecord(
           Journey(parse(res.ROUTE_ID_DIRECTION).extract[BusRoute], res.VEHICLE_REG, res.JOURNEY_START_TIME_MILLIS, res.JOURNEY_START_SECOND_OF_WEEK),
+          Source("DB"),
           parse(res.ARRIVAL_RECORD).extract[List[ArrivalRecord]]
             .sortBy(arrRec => arrRec.arrivalTime))
       }.sortBy(arrivalRecord => arrivalRecord.journey.startingTimeMillis)(Ordering[Long].reverse)

@@ -3,7 +3,7 @@ package lbt.servlet
 import akka.actor.Kill
 import lbt.TransmittedBusRouteWithTowards
 import lbt.comon.{BusRoute, BusStop}
-import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecordFromDb, Journey}
+import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecord, Journey}
 import net.liftweb.json._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, FunSuite, FunSuiteLike, Matchers}
@@ -101,7 +101,6 @@ class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matc
   test("Should get error count") {
     get("/errorcount") {
       status should equal(200)
-      println("BODY: " + body)
       body should include(testBusRoutes.head.name + " - " + testBusRoutes.head.direction)
     }
   }

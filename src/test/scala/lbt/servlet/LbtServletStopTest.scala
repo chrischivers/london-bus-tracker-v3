@@ -1,8 +1,10 @@
 package lbt.servlet
 
 import akka.actor.Kill
+import lbt.comon.BusRoute
 import lbt.{TransmittedIncomingHistoricalRecord, TransmittedIncomingHistoricalStopRecord}
-import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecordFromDb, HistoricalStopRecordFromDb}
+import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecord, HistoricalStopRecord}
+import lbt.datasource.streaming.SourceLineValidator
 import net.liftweb.json._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, Matchers}
@@ -30,8 +32,7 @@ class LbtServletStopTest extends ScalatraFunSuite with ScalaFutures with Matcher
       routeDef.foreach(stop => {
         get("/stop/" + stop.stopID) {
           status should equal(200)
-          println("BODY: " + body)
-          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]]) should equal(testHistoricalTable.getHistoricalRecordFromDbByStop(stop.stopID).futureValue)
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]]) should equal(historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stop.stopID).futureValue)
           parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]].foreach(record => {
             record.stopID shouldEqual stop.stopID
             record.journey.busRoute shouldEqual route
@@ -48,11 +49,45 @@ class LbtServletStopTest extends ScalatraFunSuite with ScalaFutures with Matcher
     }
   }
 
+  test("should produce a list of arrival history for a given stop, including for live vehicles not yet persisted") {
+
+      testBusRoutes.foreach(route => {
+        val newRoute = BusRoute("521", "inbound")
+        val newStop = definitions(newRoute).head.stopID
+        val message = SourceLineValidator("[1,\"" + newStop + "\",\"" + newRoute.name + "\"," + directionToInt(newRoute.direction) + ",\"Any Place\",\"" + vehicleReg + "\"," + (System.currentTimeMillis() + 6000) + "]").get
+        historicalSourceLineProcessor.processSourceLine(message)
+
+
+      val routeDef = definitions(route)
+      routeDef.foreach(stop => {
+        get("/stop/" + stop.stopID) {
+          status should equal(200)
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]]) should equal(historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stop.stopID).futureValue)
+          parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]].foreach(record => {
+            record.stopID shouldEqual stop.stopID
+            record.journey.busRoute shouldEqual route
+          })
+          parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]].size shouldBe testBusRoutes.flatMap(route => definitions(route)).count(route => route.stopID == stop.stopID)
+        }
+      })
+
+        get("/stop/" + newStop) {
+          status should equal(200)
+          toDbRecord(parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]]) should equal(historicalRecordsFetcher.getHistoricalRecordFromDbByStop(newStop).futureValue)
+          parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]].size shouldBe 1
+          parse(body).extract[List[TransmittedIncomingHistoricalStopRecord]].foreach(record => {
+            record.stopID shouldEqual newStop
+            record.journey.busRoute shouldEqual newRoute
+          })
+        }
+    })
+  }
+
   //TODO more tests here checking variables
 
-  def toDbRecord(transmittedIncomingHistoricalStopRecordList: List[TransmittedIncomingHistoricalStopRecord]): List[HistoricalStopRecordFromDb] = {
+  def toDbRecord(transmittedIncomingHistoricalStopRecordList: List[TransmittedIncomingHistoricalStopRecord]): List[HistoricalStopRecord] = {
     transmittedIncomingHistoricalStopRecordList
-      .map(x => HistoricalStopRecordFromDb(x.stopID, x.arrivalTime, x.journey))
+      .map(x => HistoricalStopRecord(x.stopID, x.arrivalTime, x.journey, x.source))
   }
 
   protected override def afterAll(): Unit = {

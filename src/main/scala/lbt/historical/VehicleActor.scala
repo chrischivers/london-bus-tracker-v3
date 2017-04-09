@@ -25,6 +25,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
             ): Receive = {
 
     case vsl: ValidatedSourceLine =>
+      logger.debug(s"validated source line $vsl received by $name")
       assert(vsl.vehicleReg + "-" + vsl.busRoute.name + "-" + vsl.busRoute.direction == name)
 
       if (route.isEmpty) {
@@ -34,30 +35,42 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
         val stopArrivalRecordsWithLastStop = stopArrivalRecords + (vsl.busStop -> vsl.arrival_TimeStamp)
         context.become(active(Some(vsl.busRoute), stopArrivalRecordsWithLastStop, busStopDefinitionList, System.currentTimeMillis()))
       }
-    case GetArrivalRecords(_) => sender ! stopArrivalRecords
+    case GetArrivalRecords(_) =>
+      logger.info(s"Get Arrival Records request received for $name")
+      sender ! stopArrivalRecords
+    case GetValidatedArrivalRecords(_) =>
+      logger.info(s"Get Validated Arrival Records request received for $name")
+      validateRecords(route.get, stopArrivalRecords, busStopDefinitionList, lastUpdatedTime) match {
+        case Success(completeList) =>
+          logger.info(s"Get Validated Arrival Records request sucessfully validated for $name")
+         sender ! completeList
+        case Failure(e) =>
+          logger.info(s"Get Validated Arrival Records request failed validation for $name. Reason: $e")
+          sender ! List.empty
+      }
      case PersistToDB =>
-      validateBeforePersist(route.get, stopArrivalRecords, busStopDefinitionList, lastUpdatedTime) match {
+      validateRecords(route.get, stopArrivalRecords, busStopDefinitionList, lastUpdatedTime) match {
         case Success(completeList) =>
           logger.info(s"Persisting data for vehicle $name to DB")
           historicalTable.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleActorID.vehicleReg, route.get, completeList))
         case Failure(e) =>
-          context.parent ! ValidationError(route.get, e.toString())
           logger.info(s"Failed validation before persisting for vehicle $name. Error: $e. \n StopArrivalRecords: $stopArrivalRecords")
+          context.parent ! ValidationError(route.get, e.toString())
       }
   }
 
-  def validateBeforePersist(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop], vehicleLastUpdated: Long): StringValidation[List[ArrivalRecord]] = {
+  def validateRecords(route: BusRoute, stopArrivalRecords: Map[BusStop, Long], busStopDefinitionList: List[BusStop], vehicleLastUpdated: Long): StringValidation[List[ArrivalRecord]] = {
     val orderedStopsList: List[(Int, BusStop, Option[Long])] = busStopDefinitionList.zipWithIndex.map{case(stop, index) => (index, stop, stopArrivalRecords.get(stop))}
     val orderedStopListWithFutureTimesRemoved: List[(Int, BusStop, Option[Long])] = orderedStopsList.map(stop => {
-      if(stop._3.isDefined && stop._3.get > vehicleLastUpdated + historicalRecordsConfig.toleranceForFuturePredictions) (stop._1, stop._2, None)
+      if (stop._3.isDefined && stop._3.get > vehicleLastUpdated + historicalRecordsConfig.toleranceForFuturePredictions) (stop._1, stop._2, None)
       else stop
     })
 
-    def minimumNumberOfRecordsReceived: StringValidation[Unit] = {
-      val numberOfRecordsWithData = orderedStopListWithFutureTimesRemoved.count(rec => rec._3.isDefined)
-      if(numberOfRecordsWithData >= historicalRecordsConfig.minimumNumberOfStopsToPersist) ().successNel
-      else s"Not enough stops to persist. Number of stops: $numberOfRecordsWithData. Minimum ${historicalRecordsConfig.minimumNumberOfStopsToPersist}".failureNel
-    }
+//    def minimumNumberOfRecordsReceived: StringValidation[Unit] = {
+//      val numberOfRecordsWithData = orderedStopListWithFutureTimesRemoved.count(rec => rec._3.isDefined)
+//      if (numberOfRecordsWithData >= historicalRecordsConfig.minimumNumberOfStopsToPersist) ().successNel
+//      else s"Not enough stops to persist. Number of stops: $numberOfRecordsWithData. Minimum ${historicalRecordsConfig.minimumNumberOfStopsToPersist}".failureNel
+//    }
 
     def noGapsInSequence: StringValidation[Unit] = {
       val orderedExisting = orderedStopListWithFutureTimesRemoved.filter(elem => elem._3.isDefined)
@@ -85,8 +98,9 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
       helper(0)
     }
 
-    (minimumNumberOfRecordsReceived
-      |@| noGapsInSequence
+    (
+      //minimumNumberOfRecordsReceived |@|
+      noGapsInSequence
       |@| stopArrivalTimesAreIncremental).tupled
       .map(_ => orderedStopListWithFutureTimesRemoved
         .filter(elem => elem._3.isDefined)

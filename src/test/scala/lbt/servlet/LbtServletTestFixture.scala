@@ -29,7 +29,7 @@ trait LbtServletTestFixture {
   val historicalRecordsFetcher = new HistoricalRecordsFetcher(testDBConfig, testDefinitionsTable, vehicleActorSupervisor, testHistoricalTable)
 
   val testBusRoutes = List(BusRoute("3", "outbound"), BusRoute("3", "inbound")) //TODO include more randomisation on routes
-  testDefinitionsTable.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes), updateNewRoutesOnly = true)
+  testDefinitionsTable.refreshBusRouteDefinitionFromWeb(getOnly = Some(testBusRoutes :+ BusRoute("521", "inbound")), updateNewRoutesOnly = true)
 
   Thread.sleep(2000)
 
