@@ -154,9 +154,10 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
       actorsForRoute = currentActors.filter(vehicle => filteredRoutesContainingStop.contains(vehicle._1.busRoute)).keys
       allRecords <- Future.sequence(actorsForRoute.map(getLiveValidatedArrivalRecords))
       allRecordsWithVehicleIDs = actorsForRoute.zip(allRecords)
-      result = allRecordsWithVehicleIDs.map(record => (record._1, record._2.head.arrivalTime, record._2.find(_.stopID == stopID))).filter(_._3.isDefined).toList
     } yield {
-      result.map(record =>
+      val filteredRecords = allRecordsWithVehicleIDs.filter(rec => rec._2.nonEmpty)
+      filteredRecords.map(record => (record._1, record._2.head.arrivalTime, record._2.find(_.stopID == stopID))).filter(_._3.isDefined).toList
+      .map(record =>
         HistoricalStopRecord(
           record._3.get.stopID,
           record._3.get.arrivalTime,
