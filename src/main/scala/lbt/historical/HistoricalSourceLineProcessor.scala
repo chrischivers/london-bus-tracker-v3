@@ -36,7 +36,7 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
       validateSourceLine(sourceLine) match {
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
         case Failure(e) =>
-          logger.info("DEFINITIONS: " + definitions)
+//          logger.info("DEFINITIONS: " + definitions)
           logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
   }
