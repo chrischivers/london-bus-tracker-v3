@@ -119,16 +119,17 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
     for {
       currentActors <- getCurrentActors
       actorsForRoute = currentActors.filter(_._1.busRoute == busRoute).keys
-      result <- Future.sequence(actorsForRoute.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
+      listOfFutures = actorsForRoute.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList
+      sequence <- Future.sequence(listOfFutures)
     } yield {
-      val yieldedResult = result.map(record =>
+      val filteredRecords = sequence.filter(rec => rec._2.nonEmpty)
+      val historicalJourneyRecords = filteredRecords.map(record =>
         HistoricalJourneyRecord(
           Journey(record._1.busRoute, record._1.vehicleReg, record._2.head.arrivalTime, Commons.getSecondsOfWeek(record._2.head.arrivalTime)),
           Source("Live"),
           record._2
         ))
-      logger.info("getLiveArrivalRecordsForRoute yielded result: " + yieldedResult)
-      yieldedResult
+      historicalJourneyRecords
     }
   }
 

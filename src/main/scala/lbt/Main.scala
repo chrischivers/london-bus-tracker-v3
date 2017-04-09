@@ -1,6 +1,7 @@
 package lbt
 
 import akka.actor.{ActorSystem, Props}
+import lbt.comon.BusRoute
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.database.historical.HistoricalTable
 import lbt.datasource.streaming.DataStreamProcessor
@@ -21,7 +22,7 @@ object Main extends App {
 
   definitionsTable.updateBusRouteDefinitionsFromDB
   Thread.sleep(3000)
-  definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true)
+  definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(List(BusRoute("3", "inbound"))))
   Thread.sleep(3000)
 
   val historicalTable = new HistoricalTable(dBConfig, definitionsTable)

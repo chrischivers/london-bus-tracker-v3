@@ -21,7 +21,7 @@ import org.scalatra.servlet.ScalatraListener
 import scalaz.Scalaz._
 import scalaz._
 import scala.concurrent.duration._
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Try
 
 
@@ -61,121 +61,109 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
   }
 
   get("/busroute/:route/:direction") {
-    new AsyncResult {
-      val busRoute = BusRoute(params("route"), params("direction"))
-      val fromStopID = params.get("fromStopID")
-      val toStopID = params.get("toStopID")
-      val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
-      val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
-      val fromArrivalTimeSecOfWeek = params.get("fromArrivalTimeSecOfWeek")
-      val toArrivalTimeSecOfWeek = params.get("toArrivalTimeSecOfWeek")
-      val fromJourneyStartSecOfWeek = params.get("fromJourneyStartSecOfWeek")
-      val toJourneyStartSecOfWeek = params.get("toJourneyStartSecOfWeek")
-      val fromJourneyStartMillis = params.get("fromJourneyStartMillis")
-      val toJourneyStartMillis = params.get("toJourneyStartMillis")
-      val vehicleReg = params.get("vehicleReg")
-      logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, vehicleReg $vehicleReg")
+    val busRoute = BusRoute(params("route"), params("direction"))
+    val fromStopID = params.get("fromStopID")
+    val toStopID = params.get("toStopID")
+    val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
+    val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
+    val fromArrivalTimeSecOfWeek = params.get("fromArrivalTimeSecOfWeek")
+    val toArrivalTimeSecOfWeek = params.get("toArrivalTimeSecOfWeek")
+    val fromJourneyStartSecOfWeek = params.get("fromJourneyStartSecOfWeek")
+    val toJourneyStartSecOfWeek = params.get("toJourneyStartSecOfWeek")
+    val fromJourneyStartMillis = params.get("fromJourneyStartMillis")
+    val toJourneyStartMillis = params.get("toJourneyStartMillis")
+    val vehicleReg = params.get("vehicleReg")
+    logger.info(s"/busroute request received for $busRoute, fromStopID $fromStopID, toStopID $toStopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, vehicleReg $vehicleReg")
 
-      val validatedResult: Validation[NonEmptyList[String], Unit] = (validateBusRoute(Some(busRoute)) |@|
-        validateFromToStops(Some(busRoute), fromStopID, toStopID) |@|
-        validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
-        validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek) |@|
-        validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
-        validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ())
-
-      override val is = validatedResult match {
-        case Success(()) => for {
-          combinedRecords <- historicalRecordsFetcher.getsHistoricalRecordsByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg)
-          records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
-        } yield records
-        case Failure(e) =>
-          val error = s"Unable to process /busroute request due to $e"
-          logger.info(error)
-         Future(error)
-      }
+    (validateBusRoute(Some(busRoute)) |@|
+      validateFromToStops(Some(busRoute), fromStopID, toStopID) |@|
+      validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
+      validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek) |@|
+      validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
+      validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
+      case Success(()) => for {
+        combinedRecords <- historicalRecordsFetcher.getsHistoricalRecordsByBusRoute(busRoute, fromStopID, toStopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), vehicleReg)
+        records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
+      } yield records
+      case Failure(e) =>
+        val error = s"Unable to process /busroute request due to $e"
+        logger.info(error)
+        BadRequest(error)
     }
   }
 
   get("/vehicle/:vehicleReg") {
-    new AsyncResult {
-      val vehicleReg = params("vehicleReg")
-      val stopID = params.get("stopID")
-      val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
-      val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
-      val fromArrivalTimeSecOfWeek = params.get("fromArrivalTimeSecOfWeek")
-      val toArrivalTimeSecOfWeek = params.get("toArrivalTimeSecOfWeek")
-      val fromJourneyStartSecOfWeek = params.get("fromJourneyStartSecOfWeek")
-      val toJourneyStartSecOfWeek = params.get("toJourneyStartSecOfWeek")
-      val fromJourneyStartMillis = params.get("fromJourneyStartMillis")
-      val toJourneyStartMillis = params.get("toJourneyStartMillis")
-      val busRoute = for {
-        route <- params.get("route")
-        direction <- params.get("direction")
-        busRoute = BusRoute(route, direction)
-      } yield busRoute
-      logger.info(s"/vehicle request received for $vehicleReg, stopID $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, busRoute $busRoute")
+    val vehicleReg = params("vehicleReg")
+    val stopID = params.get("stopID")
+    val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
+    val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
+    val fromArrivalTimeSecOfWeek = params.get("fromArrivalTimeSecOfWeek")
+    val toArrivalTimeSecOfWeek = params.get("toArrivalTimeSecOfWeek")
+    val fromJourneyStartSecOfWeek = params.get("fromJourneyStartSecOfWeek")
+    val toJourneyStartSecOfWeek = params.get("toJourneyStartSecOfWeek")
+    val fromJourneyStartMillis = params.get("fromJourneyStartMillis")
+    val toJourneyStartMillis = params.get("toJourneyStartMillis")
+    val busRoute = for {
+      route <- params.get("route")
+      direction <- params.get("direction")
+      busRoute = BusRoute(route, direction)
+    } yield busRoute
+    logger.info(s"/vehicle request received for $vehicleReg, stopID $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalTimeSecOfWeek $fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek $toArrivalTimeSecOfWeek, fromJourneyStartSecOfWeek $fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek $toJourneyStartSecOfWeek, fromJourneyStartMillis $fromJourneyStartMillis, toJourneyStartMilis $toJourneyStartMillis, busRoute $busRoute")
 
-      val validatedResult = (validateBusRoute(busRoute) |@|
-        validateStopID(stopID) |@|
-        validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
-        validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeMillis) |@|
-        validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
-        validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ())
-
-      override val is = validatedResult match {
-        case Success(()) => for {
-          combinedRecords <- historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute)
-          records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
-        } yield records
-        case Failure(e) =>
-          val error = s"Unable to deliver /vehicle request due to $e"
-          logger.info(error)
-          Future(error)
-      }
+    (validateBusRoute(busRoute) |@|
+      validateStopID(stopID) |@|
+      validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
+      validateFromToSecOfWeek(fromArrivalTimeSecOfWeek, toArrivalTimeMillis) |@|
+      validateFromToArrivalTimeMillis(fromJourneyStartMillis, toJourneyStartMillis) |@|
+      validateFromToSecOfWeek(fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)).tupled.map(_ => ()) match {
+      case Success(()) => for {
+        combinedRecords <- historicalRecordsFetcher.getHistoricalRecordFromDbByVehicle(vehicleReg, stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong),  fromArrivalTimeSecOfWeek.map(_.toInt), toArrivalTimeSecOfWeek.map(_.toInt), fromJourneyStartMillis.map(_.toLong), toJourneyStartMillis.map(_.toLong), fromJourneyStartSecOfWeek.map(_.toInt), toJourneyStartSecOfWeek.map(_.toInt), busRoute)
+        records = compactRender(renderHistoricalJourneyRecordListToJValue(combinedRecords, busDefinitionsTable.getBusRouteDefinitions()))
+      } yield records
+      case Failure(e) =>
+        val error = s"Unable to deliver /vehicle request due to $e"
+        logger.info(error)
+        BadRequest(error)
     }
   }
 
   get("/stop/:stopID") {
-    new AsyncResult {
-      val stopID = params("stopID")
-      val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
-      val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
-      val fromArrivalSecOfWeek = params.get("fromArrivalSecOfWeek")
-      val toArrivalSecOfWeek = params.get("toArrivalSecOfWeek")
-      val vehicleReg = params.get("vehicleReg")
-      val busRoute = for {
-        route <- params.get("route")
-        direction <- params.get("direction")
-        busRoute = BusRoute(route, direction)
-      } yield busRoute
-      logger.info(s"/stop request received for $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalSecOfWeek $fromArrivalSecOfWeek, toArrivalSecOfWeek $toArrivalSecOfWeek, vehicleReg $vehicleReg, busRoute $busRoute")
+    val stopID = params("stopID")
+    val fromArrivalTimeMillis = params.get("fromArrivalTimeMillis")
+    val toArrivalTimeMillis = params.get("toArrivalTimeMillis")
+    val fromArrivalSecOfWeek = params.get("fromArrivalSecOfWeek")
+    val toArrivalSecOfWeek = params.get("toArrivalSecOfWeek")
+    val vehicleReg = params.get("vehicleReg")
+    val busRoute = for {
+      route <- params.get("route")
+      direction <- params.get("direction")
+      busRoute = BusRoute(route, direction)
+    } yield busRoute
+    logger.info(s"/stop request received for $stopID, fromArrivalTimeMillis $fromArrivalTimeMillis, toArrivalTimeMillis $toArrivalTimeMillis, fromArrivalSecOfWeek $fromArrivalSecOfWeek, toArrivalSecOfWeek $toArrivalSecOfWeek, vehicleReg $vehicleReg, busRoute $busRoute")
 
 
-      val validatedResult = (validateBusRoute(busRoute) |@|
-        validateStopID(Some(stopID)) |@|
-        validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
-        validateFromToSecOfWeek(fromArrivalSecOfWeek, toArrivalSecOfWeek)).tupled.map(_ => ())
-
-      override val is = validatedResult match {
-        case Success(()) =>
-          val records = historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg)
-          records.map(x =>
+    (validateBusRoute(busRoute) |@|
+      validateStopID(Some(stopID)) |@|
+      validateFromToArrivalTimeMillis(fromArrivalTimeMillis, toArrivalTimeMillis) |@|
+      validateFromToSecOfWeek(fromArrivalSecOfWeek, toArrivalSecOfWeek)).tupled.map(_ => ()) match {
+      case Success(()) =>
+         val records = historicalRecordsFetcher.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis.map(_.toLong), toArrivalTimeMillis.map(_.toLong), fromArrivalSecOfWeek.map(_.toInt), toArrivalSecOfWeek.map(_.toInt), busRoute, vehicleReg)
+        records.map(x =>
             compactRender(x.map(rec =>
-              ("stopID" -> rec.stopID) ~
-                ("arrivalTime" -> rec.arrivalTime) ~
-                ("journey" ->
-                  ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
-                    ("vehicleReg" -> rec.journey.vehicleReg) ~
-                    ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
-                    ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek)) ~
-                ("source" ->
-                  ("value" -> rec.source.value))
-            )))
-        case Failure(e) =>
-          val error = s"Unable to process /stop request due to $e"
-          logger.info(error)
-          Future(error)
-      }
+          ("stopID" -> rec.stopID) ~
+          ("arrivalTime" -> rec.arrivalTime) ~
+          ("journey" ->
+            ("busRoute" -> ("name" -> rec.journey.busRoute.name) ~ ("direction" -> rec.journey.busRoute.direction)) ~
+              ("vehicleReg" -> rec.journey.vehicleReg) ~
+              ("startingTimeMillis" -> rec.journey.startingTimeMillis) ~
+              ("startingSecondOfWeek" -> rec.journey.startingSecondOfWeek)) ~
+            ("source" ->
+              ("value" -> rec.source.value))
+          )))
+      case Failure(e) =>
+        val error = s"Unable to process /stop request due to $e"
+        logger.info(error)
+        BadRequest(error)
     }
   }
 
