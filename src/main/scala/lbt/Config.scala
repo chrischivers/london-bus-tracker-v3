@@ -1,8 +1,12 @@
 package lbt
 
 import com.typesafe.config.ConfigFactory
+import lbt.comon.BusRoute
+import net.liftweb.json._
 
-case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int, timeWindowToAcceptLines: Int, numberEmptyIteratorCasesBeforeRestart: Int, simulationIterator: Option[Iterator[String]] = None)
+import scala.collection.JavaConversions._
+
+case class DataSourceConfig(sourceUrl: String, username: String, password: String, authScopeURL: String, authScopePort: Int, timeout: Int, linesToDisregard: Int, waitTimeAfterClose: Int, cacheTimeToLiveSeconds: Int, timeWindowToAcceptLines: Int, numberEmptyIteratorCasesBeforeRestart: Int, getOnlyRoutes: Option[List[BusRoute]], simulationIterator: Option[Iterator[String]] = None)
 
 case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, definitionsCachedTime: Int)
 
@@ -19,6 +23,7 @@ case class LBTConfig(
 
 object ConfigLoader {
 
+  implicit val formats = DefaultFormats
   private val defaultConfigFactory = ConfigFactory.load()
 
   val defaultConfig: LBTConfig = {
@@ -38,7 +43,11 @@ object ConfigLoader {
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "wait-time-after-close"),
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "cache-time-to-live-seconds"),
         defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "time-window-to-accept-lines"),
-        defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-empty-iterator-cases-before-restart")
+        defaultConfigFactory.getInt(dataSourceStreamingParamsPrefix + "number-empty-iterator-cases-before-restart"),
+        defaultConfigFactory.getStringList(dataSourceStreamingParamsPrefix + "get-only-routes").toList.map(rec => parse(rec).extract[BusRoute]) match {
+          case Nil => None
+          case x => Some(x)
+        }
       ),
       DatabaseConfig(
         defaultConfigFactory.getString(dataBaseParamsPrefix + "bus-definitions-table-name"),

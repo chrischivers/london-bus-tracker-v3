@@ -22,7 +22,7 @@ object Main extends App {
 
   definitionsTable.updateBusRouteDefinitionsFromDB
   Thread.sleep(3000)
-  definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = Some(List(BusRoute("3", "inbound"), BusRoute("3", "outbound"))))
+  definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = dataSourceConfig.getOnlyRoutes)
   Thread.sleep(3000)
 
   val historicalTable = new HistoricalTable(dBConfig, definitionsTable)
