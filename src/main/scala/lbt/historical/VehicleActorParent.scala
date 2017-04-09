@@ -119,17 +119,15 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
     for {
       currentActors <- getCurrentActors
       actorsForRoute = currentActors.filter(_._1.busRoute == busRoute).keys
-      listOfFutures = actorsForRoute.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList
-      sequence <- Future.sequence(listOfFutures)
+      sequence <- Future.sequence(actorsForRoute.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
     } yield {
       val filteredRecords = sequence.filter(rec => rec._2.nonEmpty)
-      val historicalJourneyRecords = filteredRecords.map(record =>
+      filteredRecords.map(record =>
         HistoricalJourneyRecord(
           Journey(record._1.busRoute, record._1.vehicleReg, record._2.head.arrivalTime, Commons.getSecondsOfWeek(record._2.head.arrivalTime)),
           Source("Live"),
           record._2
         ))
-      historicalJourneyRecords
     }
   }
 
@@ -137,9 +135,10 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
     for {
       currentActors <- getCurrentActors
       actorsForVehicle = currentActors.filter(_._1.vehicleReg == vehicleReg).keys
-      result <- Future.sequence(actorsForVehicle.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
+      sequence <- Future.sequence(actorsForVehicle.map(vehicleID => getLiveValidatedArrivalRecords(vehicleID).map(y => vehicleID -> y)).toList)
     } yield {
-      result.map(record =>
+      val filteredRecords = sequence.filter(rec => rec._2.nonEmpty)
+      filteredRecords.map(record =>
         HistoricalJourneyRecord(
           Journey(record._1.busRoute, record._1.vehicleReg, record._2.head.arrivalTime, Commons.getSecondsOfWeek(record._2.head.arrivalTime)),
           Source("Live"),
