@@ -29,6 +29,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
 
   type StringValidation[T] = ValidationNel[String, T]
   implicit val formats = DefaultFormats
+  implicit val futureWaitDuration = 20 seconds
   val dtf: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss")
 
   get("/streamstart") {
@@ -188,15 +189,15 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
 
 
         <h2>Data Stream Processor</h2>
-        Number Lines Processed = {Await.result(dataStreamProcessor.numberLinesProcessed, 5 seconds)}<br/>
-        Number Lines Processed Since Last Restart = {Await.result(dataStreamProcessor.numberLinesProcessedSinceRestart, 5 seconds)}<br/>
-        Time of Last Restart = {Await.result(dataStreamProcessor.timeOfLastRestart, 5 seconds)}<br/>
-        Number of Restarts = {Await.result(dataStreamProcessor.numberOfRestarts, 5 seconds)}<br/>
+        Number Lines Processed = {Await.result(dataStreamProcessor.numberLinesProcessed, futureWaitDuration)}<br/>
+        Number Lines Processed Since Last Restart = {Await.result(dataStreamProcessor.numberLinesProcessedSinceRestart, futureWaitDuration)}<br/>
+        Time of Last Restart = {Await.result(dataStreamProcessor.timeOfLastRestart, futureWaitDuration)}<br/>
+        Number of Restarts = {Await.result(dataStreamProcessor.numberOfRestarts, futureWaitDuration)}<br/>
 
         <h2>Historical Message Processor</h2>
         Number Lines Processed = {historicalMessageProcessor.numberSourceLinesProcessed.get()}<br/>
         Number Lines Validated= {historicalMessageProcessor.numberSourceLinesValidated.get()}<br/>
-        Number of Vehicle Actors ={Await.result(vehicleActorSupervisor.getCurrentActors, 5 seconds).size}<br/>
+        Number of Vehicle Actors ={Await.result(vehicleActorSupervisor.getCurrentActors, futureWaitDuration).size}<br/>
       </body>
     </html>
   }
@@ -211,7 +212,7 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
           <td>Bus Route</td>
           <td>Count</td>
         </tr>
-        {Await.result(vehicleActorSupervisor.getValidationErrorMap, 5 seconds).toList.sortBy(route => route._2).reverse.map(route =>
+        {Await.result(vehicleActorSupervisor.getValidationErrorMap, futureWaitDuration).toList.sortBy(route => route._2).reverse.map(route =>
          <tr>
             <td>{route._1.name + " - " + route._1.direction}</td>
             <td>{route._2}</td>

@@ -42,7 +42,8 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
   }
 
   def getHistoricalRecordFromDbByStop
-  (stopID: String,
+  (filteredRoutesContainingStop: List[BusRoute],
+   stopID: String,
    fromArrivalTimeMillis: Option[Long] = None,
    toArrivalTimeMillis: Option[Long] = None,
    fromArrivalTimeSecOfWeek: Option[Int] = None,
@@ -50,12 +51,8 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
    busRoute: Option[BusRoute] = None,
    vehicleReg: Option[String] = None)
   : Future[List[HistoricalJourneyRecord]] = {
-    val routesContainingStops = busDefinitionsTable.getBusRouteDefinitions().filter(route => route._2.exists(stop => stop.stopID == stopID)).keys
-    val routesContainingStopsWithFilter = busRoute match {
-      case Some(thisRoute) => routesContainingStops.filter(route => route == thisRoute)
-      case None => routesContainingStops
-    }
-   Future.sequence(routesContainingStopsWithFilter.map(route => getHistoricalRecordFromDbByBusRoute(route, None, None, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek, vehicleReg))).map(_.flatten).map(_.toList)
+
+   Future.sequence(filteredRoutesContainingStop.map(route => getHistoricalRecordFromDbByBusRoute(route, None, None, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek, vehicleReg))).map(_.flatten).map(_.toList)
   }
 
   def deleteTable = historicalDBController.deleteHistoricalTable

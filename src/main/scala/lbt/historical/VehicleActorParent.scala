@@ -146,11 +146,12 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
   }
   //TODO combine these into one
 
-  def getLiveArrivalRecordsForStop(stopID: String): Future[List[HistoricalStopRecord]] = {
+  def getLiveArrivalRecordsForStop(filteredRoutesContainingStop: List[BusRoute], stopID: String): Future[List[HistoricalStopRecord]] = {
     for {
       currentActors <- getCurrentActors
-      allRecords <- Future.sequence(currentActors.map(vehicle => getLiveArrivalRecords(vehicle._1)))
-      allRecordsWithVehicleIDs = currentActors.keys.zip(allRecords)
+      actorsForRoute = currentActors.filter(vehicle => filteredRoutesContainingStop.contains(vehicle._1.busRoute)).keys
+      allRecords <- Future.sequence(actorsForRoute.map(getLiveArrivalRecords))
+      allRecordsWithVehicleIDs = actorsForRoute.zip(allRecords)
       result = allRecordsWithVehicleIDs.map(record => (record._1, record._2.head._2, record._2.find(_._1.stopID == stopID))).filter(_._3.isDefined).toList
     } yield {
       result.map(record =>
@@ -164,12 +165,12 @@ class VehicleActorSupervisor(actorSystem: ActorSystem, definitionsTable: BusDefi
   }
 
   def getValidationErrorMap = {
-    implicit val timeout = Timeout(10 seconds)
+    implicit val timeout = Timeout(30 seconds)
     (vehicleActorParent ? GetValidationErrorMap).mapTo[Map[BusRoute, Int]]
   }
 
   def getCurrentActors: Future[Map[VehicleActorID, (ActorRef, Long)]] = {
-    implicit val timeout = Timeout(10 seconds)
+    implicit val timeout = Timeout(30 seconds)
     (vehicleActorParent ? GetCurrentActors).mapTo[Map[VehicleActorID, (ActorRef, Long)]]
   }
 

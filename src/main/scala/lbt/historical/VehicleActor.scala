@@ -54,7 +54,7 @@ class VehicleActor(vehicleActorID: VehicleActorID, historicalRecordsConfig: Hist
           logger.info(s"Persisting data for vehicle $name to DB")
           historicalTable.insertHistoricalRecordIntoDB(RecordedVehicleDataToPersist(vehicleActorID.vehicleReg, route.get, completeList))
         case Failure(e) =>
-          logger.info(s"Failed validation before persisting for vehicle $name. Error: $e. \n StopArrivalRecords: $stopArrivalRecords")
+          logger.debug(s"Failed validation before persisting for vehicle $name. Error: $e. \n StopArrivalRecords: $stopArrivalRecords")
           context.parent ! ValidationError(route.get, e.toString())
       }
   }

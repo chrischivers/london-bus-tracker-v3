@@ -28,10 +28,13 @@ class HistoricalRecordsFetcher(dbConfig: DatabaseConfig, busDefinitionsTable: Bu
    vehicleReg: Option[String] = None)
   : Future[List[HistoricalJourneyRecord]] = {
 
+    val recordsFromDB = historicalTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromJourneyStartMillis, toJourneyStartMillis, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, vehicleReg)
+    val recordsFromLiveActors = vehicleActorSupervisor.getLiveArrivalRecordsForRoute(busRoute)
+
     val combinedRecords = for {
-      recordsFromDB <- historicalTable.getHistoricalRecordFromDbByBusRoute(busRoute, fromJourneyStartMillis, toJourneyStartMillis, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, vehicleReg)
-      recordsFromLiveActors <- vehicleActorSupervisor.getLiveArrivalRecordsForRoute(busRoute)
-    } yield recordsFromLiveActors ++ recordsFromDB
+      y <- recordsFromLiveActors
+      x <- recordsFromDB
+    } yield x ++ y
 
     filterHistoricalJourneyRecordListByTimeAndStops(combinedRecords, fromStopID, toStopID, fromArrivalTimeMillis, toArrivalTimeMillis, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek)
   }
@@ -50,10 +53,13 @@ class HistoricalRecordsFetcher(dbConfig: DatabaseConfig, busDefinitionsTable: Bu
    busRoute: Option[BusRoute] = None)
   : Future[List[HistoricalJourneyRecord]] = {
 
+    val recordsFromDB = historicalTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromJourneyStartMillis, toJourneyStartMillis, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, busRoute)
+    val recordsFromLiveActors = vehicleActorSupervisor.getLiveArrivalRecordsForVehicle(vehicleReg)
+
     val combinedRecords = for {
-      recordsFromDB <- historicalTable.getHistoricalRecordFromDbByVehicle(vehicleReg, fromJourneyStartMillis, toJourneyStartMillis, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, busRoute)
-      recordsFromLiveActors <- vehicleActorSupervisor.getLiveArrivalRecordsForVehicle(vehicleReg)
-    } yield recordsFromLiveActors ++ recordsFromDB
+      x <- recordsFromLiveActors
+      y <- recordsFromDB
+    } yield x ++ y
     filterHistoricalJourneyRecordListByTimeAndStops(combinedRecords, stopID, stopID, fromArrivalTimeMillis, toArrivalTimeMillis, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek)
 
   }
@@ -68,16 +74,27 @@ class HistoricalRecordsFetcher(dbConfig: DatabaseConfig, busDefinitionsTable: Bu
    vehicleReg: Option[String] = None)
   : Future[List[HistoricalStopRecord]] = {
 
+    val routesContainingStops = busDefinitionsTable.getBusRouteDefinitions().filter(route => route._2.exists(stop => stop.stopID == stopID)).keys.toList
+    val routesContainingStopsWithFilter = busRoute match {
+      case Some(thisRoute) => routesContainingStops.filter(route => route == thisRoute)
+      case None => routesContainingStops
+    }
+
+    val historicalJourneyRecordsFromDB = historicalTable.getHistoricalRecordFromDbByStop(routesContainingStopsWithFilter, stopID, fromArrivalTimeMillis, toArrivalTimeMillis, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek, busRoute, vehicleReg)
+    val recordsFromLiveActors = vehicleActorSupervisor.getLiveArrivalRecordsForStop(routesContainingStopsWithFilter, stopID)
+
     for {
-      historicalJourneyRecords <- historicalTable.getHistoricalRecordFromDbByStop(stopID, fromArrivalTimeMillis, toArrivalTimeMillis, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek, busRoute, vehicleReg)
-      recordsFromDBFormatted = historicalJourneyRecords.flatMap(rec => rec.stopRecords.find(stop => stop.stopID == stopID)
+      x <- recordsFromLiveActors
+      y <- historicalJourneyRecordsFromDB
+
+    } yield {
+      val formattedDBRecords = y.flatMap(rec => rec.stopRecords.find(stop => stop.stopID == stopID)
         .map(arrivalRecord => HistoricalStopRecord(arrivalRecord.stopID, arrivalRecord.arrivalTime, rec.journey, rec.source))
         .filter(stopRec =>
           (fromArrivalTimeMillis.isEmpty || stopRec.arrivalTime >= fromArrivalTimeMillis.get) &&
             (toArrivalTimeMillis.isEmpty || stopRec.arrivalTime <= toArrivalTimeMillis.get)))
-
-      recordsFromLiveActors <- vehicleActorSupervisor.getLiveArrivalRecordsForStop(stopID)
-    } yield recordsFromLiveActors ++ recordsFromDBFormatted
+      x ++ formattedDBRecords
+    }
   }
 
   private def filterHistoricalJourneyRecordListByTimeAndStops
