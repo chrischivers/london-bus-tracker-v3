@@ -6,7 +6,7 @@ case class Start()
 case class Stop()
 
 
-case class BusStop(stopID: String, stopName: String, longitude: Double, latitude: Double)
+case class BusStop(stopID: String, stopName: String, latitude: Double, longitude: Double)
 
 case class BusRoute(name: String, direction: String)
 
