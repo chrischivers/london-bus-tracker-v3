@@ -13,6 +13,7 @@ case class BusRoute(name: String, direction: String)
 object Commons {
 
   type BusRouteDefinitions = Map[BusRoute, List[BusStop]]
+  type BusStopDefinitions = Map[String, BusStop]
 
   def toDirection(directionInt: Int): String = {
     directionInt match {

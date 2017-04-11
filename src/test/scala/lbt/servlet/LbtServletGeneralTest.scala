@@ -3,14 +3,14 @@ package lbt.servlet
 import akka.actor.Kill
 import lbt.TransmittedBusRouteWithTowards
 import lbt.comon.{BusRoute, BusStop}
-import lbt.database.historical.{ArrivalRecord, HistoricalJourneyRecord, Journey}
 import net.liftweb.json._
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.{BeforeAndAfterAll, FunSuite, FunSuiteLike, Matchers}
-import org.scalatra.test.scalatest.{ScalatraFunSuite, ScalatraSuite}
+import org.scalatest.{BeforeAndAfterAll, Matchers}
+import org.scalatra.test.scalatest.ScalatraFunSuite
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration._
+import scala.util.Random
 
 class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matchers with BeforeAndAfterAll with Eventually with LbtServletTestFixture {
 
@@ -64,7 +64,7 @@ class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matc
     get("/routelist") {
       status should equal(200)
       parse(body).extract[List[BusRoute]].foreach(route =>
-        testBusRoutes should contain(route)
+        testBusRoutes :+ BusRoute("521", "inbound") should contain(route)
       )
     }
   }
@@ -102,6 +102,14 @@ class LbtServletGeneralTest extends ScalatraFunSuite with ScalaFutures with Matc
     get("/errorcount") {
       status should equal(200)
       body should include(testBusRoutes.head.name + " - " + testBusRoutes.head.direction)
+    }
+  }
+
+  test("Should get stop details for a given stopID") {
+    val stop = definitions.head._2(Random.nextInt(definitions.head._2.size))
+    get("/stopdetails/" + stop.stopID) {
+      status should equal(200)
+      parse(body).extract[BusStop] shouldEqual stop
     }
   }
 

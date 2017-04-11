@@ -60,6 +60,15 @@ class LbtServlet(busDefinitionsTable: BusDefinitionsTable, historicalTable: Hist
     }
   }
 
+  get("/stopdetails/:stopID") {
+    val stopID = params("stopID")
+    logger.info(s"/stopdetails request received for $stopID")
+    busDefinitionsTable.getBusStopDefinitions().get(stopID) match {
+      case Some(stop) => compactRender(("stopID" -> stop.stopID) ~ ("stopName" -> stop.stopName) ~ ("longitude" -> stop.longitude) ~ ("latitude" -> stop.latitude))
+      case None => BadRequest(s"The stop $stopID could not be found")
+    }
+  }
+
   get("/busroute/:route/:direction") {
     val busRoute = BusRoute(params("route"), params("direction"))
     val fromStopID = params.get("fromStopID")

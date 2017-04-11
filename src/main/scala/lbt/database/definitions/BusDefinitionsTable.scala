@@ -1,7 +1,7 @@
 package lbt.database.definitions
 
 import com.typesafe.scalalogging.StrictLogging
-import lbt.comon.Commons.BusRouteDefinitions
+import lbt.comon.Commons.{BusRouteDefinitions, BusStopDefinitions}
 import lbt.comon._
 import lbt.database._
 import lbt.{DatabaseConfig, DefinitionsConfig}
@@ -17,20 +17,28 @@ class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig
   val definitionsDBController = new DefinitionsDynamoDBController(dbConfig)(ec)
 
   private var numberToProcess: Long = 0
-  private var definitionsCache: BusRouteDefinitions = Map.empty
+  private var routeDefinitionsCache: BusRouteDefinitions = Map.empty
+  private var stopDefinitions: BusStopDefinitions = Map.empty
 
   def insertBusRouteDefinitionIntoDB(busRoute: BusRoute, busStops: List[BusStop]) = {
     definitionsDBController.insertRouteIntoDB(busRoute, busStops)
   }
 
   def getBusRouteDefinitions(forceDBRefresh: Boolean = false): BusRouteDefinitions = {
-    if (definitionsCache.isEmpty || forceDBRefresh) updateBusRouteDefinitionsFromDB
-    definitionsCache
+    if (routeDefinitionsCache.isEmpty || forceDBRefresh) updateBusRouteAndStopDefinitionsFromDB
+    routeDefinitionsCache
   }
 
-  def updateBusRouteDefinitionsFromDB: Unit = {
-    definitionsCache = definitionsDBController.loadBusRouteDefinitionsFromDB
+  def getBusStopDefinitions(forceDBRefresh: Boolean = false): BusStopDefinitions = {
+    if (stopDefinitions.isEmpty || forceDBRefresh) updateBusRouteAndStopDefinitionsFromDB
+    stopDefinitions
+  }
+
+  def updateBusRouteAndStopDefinitionsFromDB: Unit = {
+    routeDefinitionsCache = definitionsDBController.loadBusRouteDefinitionsFromDB
     logger.info("Bus Route Definitions cache updated from database")
+    stopDefinitions = routeDefinitionsCache.values.flatten.toList.map(x => x.stopID -> x).toMap
+    logger.info("Stop Definitions cache updated from database")
   }
 
   def refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly: Boolean = false, getOnly: Option[List[BusRoute]] = None): Unit = {
@@ -94,7 +102,7 @@ class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig
     }
 
     logger.info("Bus Route Definitions update complete")
-    updateBusRouteDefinitionsFromDB
+    updateBusRouteAndStopDefinitionsFromDB
     logger.info("Bus Route Definitions cache updated from database")
   }
 

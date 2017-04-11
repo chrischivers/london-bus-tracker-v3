@@ -20,7 +20,7 @@ object Main extends App {
 
   val definitionsTable = new BusDefinitionsTable(definitionsConfig, dBConfig)
 
-  definitionsTable.updateBusRouteDefinitionsFromDB
+  definitionsTable.updateBusRouteAndStopDefinitionsFromDB
   Thread.sleep(3000)
   definitionsTable.refreshBusRouteDefinitionFromWeb(updateNewRoutesOnly = true, getOnly = dataSourceConfig.getOnlyRoutes)
   Thread.sleep(3000)
