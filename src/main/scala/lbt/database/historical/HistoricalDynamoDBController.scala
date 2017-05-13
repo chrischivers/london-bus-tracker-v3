@@ -110,7 +110,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     queryRequest.withKeyConditions(Map(Attributes.routeIDDirection -> new Condition()
       .withComparisonOperator(ComparisonOperator.EQ)
       .withAttributeValueList(new AttributeValue().withS(write(busRoute)))).asJava)
-      .setScanIndexForward(false)
+      .withScanIndexForward(false)
 
     val filteredQueryRequest1 = addStartSecOfWeekFilter(queryRequest, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)
     val filteredQueryRequest2 = addStartMillisFilter(filteredQueryRequest1,fromJourneyStartMillis, toJourneyStartMillis)
@@ -132,7 +132,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
       queryRequest.withKeyConditions(Map(Attributes.vehicleReg -> new Condition()
         .withComparisonOperator(ComparisonOperator.EQ)
         .withAttributeValueList(new AttributeValue().withS(vehicleReg))).asJava)
-        .setScanIndexForward(false)
+        .withScanIndexForward(false)
 
     val filteredQueryRequest1 = addStartSecOfWeekFilter(queryRequest, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)
     val filteredQueryRequest2 = addStartMillisFilter(filteredQueryRequest1,fromJourneyStartMillis, toJourneyStartMillis)
