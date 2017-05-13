@@ -100,6 +100,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     }
   }
 
+
   def loadHistoricalRecordsFromDbByBusRoute(busRoute: BusRoute, fromJourneyStartSecOfWeek: Option[Int], toJourneyStartSecOfWeek: Option[Int], fromJourneyStartMillis: Option[Long], toJourneyStartMillis: Option[Long], vehicleReg: Option[String], limit: Int): Future[List[HistoricalJourneyRecord]] = {
     logger.info(s"Loading historical record from DB for route $busRoute")
     numberGetsRequested.incrementAndGet()
@@ -109,6 +110,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
     queryRequest.withKeyConditions(Map(Attributes.routeIDDirection -> new Condition()
       .withComparisonOperator(ComparisonOperator.EQ)
       .withAttributeValueList(new AttributeValue().withS(write(busRoute)))).asJava)
+      .setScanIndexForward(false)
 
     val filteredQueryRequest1 = addStartSecOfWeekFilter(queryRequest, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)
     val filteredQueryRequest2 = addStartMillisFilter(filteredQueryRequest1,fromJourneyStartMillis, toJourneyStartMillis)
@@ -130,6 +132,7 @@ class HistoricalDynamoDBController(databaseConfig: DatabaseConfig)(implicit val 
       queryRequest.withKeyConditions(Map(Attributes.vehicleReg -> new Condition()
         .withComparisonOperator(ComparisonOperator.EQ)
         .withAttributeValueList(new AttributeValue().withS(vehicleReg))).asJava)
+        .setScanIndexForward(false)
 
     val filteredQueryRequest1 = addStartSecOfWeekFilter(queryRequest, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek)
     val filteredQueryRequest2 = addStartMillisFilter(filteredQueryRequest1,fromJourneyStartMillis, toJourneyStartMillis)
