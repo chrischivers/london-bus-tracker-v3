@@ -24,7 +24,7 @@ case class DefinitionsDBItem(ROUTE_ID_DIRECTION: String, SEQUENCE_NO: Int, STOP_
 
 class DefinitionsDynamoDBController(databaseConfig: DatabaseConfig)(implicit val ec: ExecutionContext) extends DatabaseControllers with StrictLogging {
 
-  val credentials = new ProfileCredentialsProvider("default")
+  val credentials = new ProfileCredentialsProvider("lbt")
   val sdkClient = new AmazonDynamoDBAsyncClient(credentials)
   sdkClient.setRegion(Region.getRegion(Regions.US_WEST_2))
   val client = new AmazonDynamoDBScalaClient(sdkClient)

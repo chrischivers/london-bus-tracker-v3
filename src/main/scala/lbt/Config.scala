@@ -12,14 +12,13 @@ case class DefinitionsConfig(sourceAllUrl: String, sourceSingleUrl: String, defi
 
 case class DatabaseConfig(busDefinitionsTableName: String, historicalRecordsTableName: String)
 
-case class HistoricalRecordsConfig(vehicleInactivityTimeBeforePersist: Long, numberOfLinesToCleanupAfter: Int, minimumNumberOfStopsToPersist: Int, toleranceForFuturePredictions: Long)
+case class HistoricalRecordsConfig(vehicleInactivityTimeBeforePersist: Long, numberOfLinesToCleanupAfter: Int, minimumNumberOfStopsToPersist: Int, toleranceForFuturePredictions: Long, defaultRetrievalLimit: Int)
 
 case class LBTConfig(
                    dataSourceConfig: DataSourceConfig,
                    databaseConfig: DatabaseConfig,
                    definitionsConfig: DefinitionsConfig,
-                   historicalRecordsConfig: HistoricalRecordsConfig
-                      )
+                   historicalRecordsConfig: HistoricalRecordsConfig)
 
 object ConfigLoader {
 
@@ -62,7 +61,8 @@ object ConfigLoader {
         defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "vehicle-inactivity-time-before-persist"),
         defaultConfigFactory.getInt(historicalRecordsParamsPrefix + "lines-to-cleanup-after"),
         defaultConfigFactory.getInt(historicalRecordsParamsPrefix + "minimum-number-of-stops-for-persist"),
-        defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "tolerance-for-future-predictions")
+        defaultConfigFactory.getLong(historicalRecordsParamsPrefix + "tolerance-for-future-predictions"),
+        defaultConfigFactory.getInt(historicalRecordsParamsPrefix + "default-retrieval-limit")
       )
     )
 

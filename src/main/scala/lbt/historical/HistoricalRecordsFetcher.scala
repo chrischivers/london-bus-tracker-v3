@@ -32,8 +32,8 @@ class HistoricalRecordsFetcher(dbConfig: DatabaseConfig, busDefinitionsTable: Bu
     val recordsFromLiveActors = vehicleActorSupervisor.getLiveArrivalRecordsForRoute(busRoute)
 
     val combinedRecords = for {
-      y <- recordsFromLiveActors
-      x <- recordsFromDB
+      x <- recordsFromLiveActors
+      y <- recordsFromDB
     } yield x ++ y
 
     filterHistoricalJourneyRecordListByTimeAndStops(combinedRecords, fromStopID, toStopID, fromArrivalTimeMillis, toArrivalTimeMillis, fromArrivalTimeSecOfWeek, toArrivalTimeSecOfWeek)

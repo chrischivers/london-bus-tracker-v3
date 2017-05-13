@@ -24,7 +24,7 @@ trait LbtServletTestFixture {
   val testHistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 1000, numberOfLinesToCleanupAfter = 0)
 
   val testDefinitionsTable = new BusDefinitionsTable(testDefinitionsConfig, testDBConfig)
-  val testHistoricalTable = new HistoricalTable(testDBConfig, testDefinitionsTable)
+  val testHistoricalTable = new HistoricalTable(testDBConfig, testHistoricalRecordsConfig, testDefinitionsTable)
   val vehicleActorSupervisor = new VehicleActorSupervisor(actorSystem, testDefinitionsTable, testHistoricalRecordsConfig, testHistoricalTable)
   val historicalRecordsFetcher = new HistoricalRecordsFetcher(testDBConfig, testDefinitionsTable, vehicleActorSupervisor, testHistoricalTable)
 

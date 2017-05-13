@@ -102,11 +102,14 @@ class BusDefinitionsTable(defConfig: DefinitionsConfig, dbConfig: DatabaseConfig
     }
 
     logger.info("Bus Route Definitions update complete")
+    Thread.sleep(10000)
     updateBusRouteAndStopDefinitionsFromDB
     logger.info("Bus Route Definitions cache updated from database")
   }
 
   def deleteTable = definitionsDBController.deleteTable
+
+  def createTableIfNotExisting = definitionsDBController.createDefinitionsTableIfNotExisting
 
 }
 

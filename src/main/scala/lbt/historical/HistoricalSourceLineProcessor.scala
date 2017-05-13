@@ -25,7 +25,7 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
   val numberSourceLinesProcessed: AtomicLong = new AtomicLong(0)
   val numberSourceLinesValidated: AtomicLong = new AtomicLong(0)
 
-  val definitions = definitionsTable.getBusRouteDefinitions(forceDBRefresh = true)
+  def definitions = definitionsTable.getBusRouteDefinitions()
 
   type StringValidation[T] = ValidationNel[String, T]
 
@@ -37,7 +37,7 @@ class HistoricalSourceLineProcessor(historicalRecordsConfig: HistoricalRecordsCo
         case Success(validSourceLine) => handleValidatedSourceLine(validSourceLine)
         case Failure(e) =>
 //          logger.info("DEFINITIONS: " + definitions)
-          logger.debug(s"Failed validation for sourceLine $sourceLine. Error: $e")
+          logger.info(s"Failed validation for sourceLine $sourceLine. Error: $e")
       }
   }
 

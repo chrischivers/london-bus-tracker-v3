@@ -1,14 +1,14 @@
 package lbt.database.historical
 
 import com.typesafe.scalalogging.StrictLogging
-import lbt.DatabaseConfig
+import lbt.{DatabaseConfig, HistoricalRecordsConfig}
 import lbt.comon.{BusRoute, Commons}
 import lbt.database.definitions.BusDefinitionsTable
 import lbt.historical.{RecordedVehicleDataToPersist, VehicleActorParent, VehicleActorSupervisor}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefinitionsTable)(implicit ec: ExecutionContext) extends StrictLogging {
+class HistoricalTable(dbConfig: DatabaseConfig, historicalRecordsConfig: HistoricalRecordsConfig, busDefinitionsTable: BusDefinitionsTable)(implicit ec: ExecutionContext) extends StrictLogging {
 
   val historicalDBController = new HistoricalDynamoDBController(dbConfig)(ec)
   var numberToProcess: Long = 0
@@ -26,7 +26,7 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
    vehicleReg: Option[String] = None)
   : Future[List[HistoricalJourneyRecord]] = {
 
-    historicalDBController.loadHistoricalRecordsFromDbByBusRoute(busRoute, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, fromJourneyStartMillis, toJourneyStartMillis, vehicleReg)
+    historicalDBController.loadHistoricalRecordsFromDbByBusRoute(busRoute, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, fromJourneyStartMillis, toJourneyStartMillis, vehicleReg, historicalRecordsConfig.defaultRetrievalLimit)
    }
 
   def getHistoricalRecordFromDbByVehicle
@@ -38,7 +38,7 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
    busRoute: Option[BusRoute] = None)
   : Future[List[HistoricalJourneyRecord]] = {
 
-    historicalDBController.loadHistoricalRecordsFromDbByVehicle(vehicleReg, busRoute, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, fromJourneyStartMillis, toJourneyStartMillis)
+    historicalDBController.loadHistoricalRecordsFromDbByVehicle(vehicleReg, busRoute, fromJourneyStartSecOfWeek, toJourneyStartSecOfWeek, fromJourneyStartMillis, toJourneyStartMillis, historicalRecordsConfig.defaultRetrievalLimit)
   }
 
   def getHistoricalRecordFromDbByStop
@@ -56,6 +56,8 @@ class HistoricalTable(dbConfig: DatabaseConfig, busDefinitionsTable: BusDefiniti
   }
 
   def deleteTable = historicalDBController.deleteHistoricalTable
+
+  def createTableIfNotExisting = historicalDBController.createHistoricalTableIfNotExisting
 
 }
 

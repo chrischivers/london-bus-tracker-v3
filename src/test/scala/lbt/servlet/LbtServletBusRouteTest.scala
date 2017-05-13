@@ -310,11 +310,12 @@ class LbtServletBusRouteTest extends ScalatraFunSuite with ScalaFutures with Mat
 
     testBusRoutes.foreach(route => {
       val newVehicleReg = "Y1234"
-      val message = SourceLineValidator("[1,\"" + definitions(route).head.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + newVehicleReg + "\"," + (System.currentTimeMillis() + 6000) + "]").get
+      val message = SourceLineValidator("[1,\"" + definitions(route).head.stopID + "\",\"" + route.name + "\"," + directionToInt(route.direction) + ",\"Any Place\",\"" + newVehicleReg + "\"," + (System.currentTimeMillis() + 60000) + "]").get
       historicalSourceLineProcessor.processSourceLine(message)
 
       get("/busroute/" + route.name + "/" + route.direction) {
         status should equal(200)
+        println("BODY: " + body)
         parse(body).extract[List[TransmittedIncomingHistoricalRecord]].size shouldBe 2
         val result = parse(body).extract[List[TransmittedIncomingHistoricalRecord]]
         result.head.journey.vehicleReg should equal(newVehicleReg)

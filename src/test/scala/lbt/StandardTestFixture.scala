@@ -28,7 +28,7 @@ class StandardTestFixture extends ScalatraSuite {
   val testHistoricalRecordsConfig: HistoricalRecordsConfig = ConfigLoader.defaultConfig.historicalRecordsConfig.copy(vehicleInactivityTimeBeforePersist = 5000, numberOfLinesToCleanupAfter = 0, toleranceForFuturePredictions = 600000)
 
   val testDefinitionsTable = new BusDefinitionsTable(testDefinitionsConfig, testDBConfig)
-  val testHistoricalTable = new HistoricalTable(testDBConfig, testDefinitionsTable)
+  val testHistoricalTable = new HistoricalTable(testDBConfig, testHistoricalRecordsConfig, testDefinitionsTable)
   val vehicleActorSupervisor = new VehicleActorSupervisor(actorSystem, testDefinitionsTable, testHistoricalRecordsConfig, testHistoricalTable)
 
   val testBusRoute1 = BusRoute("3", "outbound") //TODO include more randomisation on routes
